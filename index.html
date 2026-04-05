@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="he" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Miki Kaplin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="nav-logo">MK</a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#contact" class="nav-cta">Contact</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <div class="hero-grid"></div>
+      <div class="hero-glow"></div>
+    </div>
+    <div class="container hero-content">
+      <p class="hero-eyebrow">Hello, I'm</p>
+      <h1 class="hero-title">
+        <span class="hero-name">Miki Kaplin</span>
+      </h1>
+      <p class="hero-subtitle">Developer &amp; Creator</p>
+      <p class="hero-desc">
+        Building elegant digital experiences that combine clean code with thoughtful design.
+      </p>
+      <div class="hero-actions">
+        <a href="#portfolio" class="btn btn-primary">View My Work</a>
+        <a href="#contact" class="btn btn-ghost">Get In Touch</a>
+      </div>
+      <div class="hero-scroll">
+        <span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about section" id="about">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">Who I Am</p>
+        <h2 class="section-title">About Me</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>
+            I'm a passionate developer with a love for building products that make a difference.
+            With years of experience across the full stack, I bring ideas from concept to production
+            with precision and care.
+          </p>
+          <p>
+            I believe in writing clean, maintainable code and creating user experiences that feel
+            effortless. When I'm not coding, you'll find me exploring new technologies and pushing
+            the boundaries of what's possible on the web.
+          </p>
+          <div class="about-stats">
+            <div class="stat">
+              <span class="stat-num">5+</span>
+              <span class="stat-label">Years Experience</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">30+</span>
+              <span class="stat-label">Projects Done</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">20+</span>
+              <span class="stat-label">Happy Clients</span>
+            </div>
+          </div>
+        </div>
+        <div class="about-visual">
+          <div class="about-card">
+            <div class="about-avatar">MK</div>
+            <div class="about-badges">
+              <span class="badge">JavaScript</span>
+              <span class="badge">React</span>
+              <span class="badge">Node.js</span>
+              <span class="badge">Python</span>
+              <span class="badge">UI/UX</span>
+              <span class="badge">DevOps</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services section" id="services">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">What I Do</p>
+        <h2 class="section-title">Services</h2>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">&#9881;</div>
+          <h3>Web Development</h3>
+          <p>Full-stack web applications built with modern frameworks, optimized for performance and scalability.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">&#9998;</div>
+          <h3>UI/UX Design</h3>
+          <p>Clean, intuitive interfaces designed with users in mind. From wireframes to polished final products.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">&#128196;</div>
+          <h3>Consulting</h3>
+          <p>Technical consulting to help teams make the right architectural decisions and build better products.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">&#128640;</div>
+          <h3>DevOps &amp; Deployment</h3>
+          <p>CI/CD pipelines, cloud infrastructure, and deployment automation to ship faster and more reliably.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section class="portfolio section" id="portfolio">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">My Work</p>
+        <h2 class="section-title">Portfolio</h2>
+      </div>
+      <div class="portfolio-grid">
+        <div class="portfolio-card">
+          <div class="portfolio-img" style="--hue: 220"></div>
+          <div class="portfolio-info">
+            <span class="portfolio-tag">Web App</span>
+            <h3>Project Alpha</h3>
+            <p>A full-stack SaaS platform with real-time collaboration features.</p>
+            <a href="#" class="portfolio-link">View Project &rarr;</a>
+          </div>
+        </div>
+        <div class="portfolio-card">
+          <div class="portfolio-img" style="--hue: 280"></div>
+          <div class="portfolio-info">
+            <span class="portfolio-tag">Mobile</span>
+            <h3>Project Beta</h3>
+            <p>Cross-platform mobile application serving thousands of daily users.</p>
+            <a href="#" class="portfolio-link">View Project &rarr;</a>
+          </div>
+        </div>
+        <div class="portfolio-card">
+          <div class="portfolio-img" style="--hue: 160"></div>
+          <div class="portfolio-info">
+            <span class="portfolio-tag">E-Commerce</span>
+            <h3>Project Gamma</h3>
+            <p>High-performance e-commerce solution with custom checkout flow.</p>
+            <a href="#" class="portfolio-link">View Project &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact section" id="contact">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">Let's Talk</p>
+        <h2 class="section-title">Get In Touch</h2>
+      </div>
+      <div class="contact-wrapper">
+        <div class="contact-info">
+          <p class="contact-intro">
+            Have a project in mind or just want to say hello? I'd love to hear from you.
+            Send me a message and I'll get back to you as soon as possible.
+          </p>
+          <ul class="contact-details">
+            <li>
+              <span class="contact-icon">&#9993;</span>
+              <a href="mailto:miki@mkaplin.com">miki@mkaplin.com</a>
+            </li>
+            <li>
+              <span class="contact-icon">&#127757;</span>
+              <a href="https://mkaplin.com" target="_blank" rel="noopener">mkaplin.com</a>
+            </li>
+          </ul>
+          <div class="social-links">
+            <a href="https://github.com/mikikaplin-netizen" target="_blank" rel="noopener" class="social-link">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+              GitHub
+            </a>
+            <a href="https://linkedin.com/in/mikikaplin" target="_blank" rel="noopener" class="social-link">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              LinkedIn
+            </a>
+          </div>
+        </div>
+        <form class="contact-form" id="contactForm">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required />
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Miki Kaplin. All rights reserved.</p>
+      <a href="https://mkaplin.com" class="footer-link">mkaplin.com</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

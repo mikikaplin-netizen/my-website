@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="he" dir="ltr">
+<html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Miki Kaplin</title>
+  <title>מיכאל קאפלין | אפיון, עיצוב ופיתוח אתרים</title>
+  <meta name="description" content="מיכאל קאפלין – מתמחה באפיון, עיצוב ופיתוח אתרים. יוצר נוכחות דיגיטלית שמביאה תוצאות." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -14,14 +15,14 @@
   <!-- NAVBAR -->
   <nav class="navbar" id="navbar">
     <div class="nav-container">
-      <a href="#hero" class="nav-logo">MK</a>
+      <a href="#hero" class="nav-logo">מיכאל קאפלין</a>
       <ul class="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#portfolio">Portfolio</a></li>
-        <li><a href="#contact" class="nav-cta">Contact</a></li>
+        <li><a href="#about">אודות</a></li>
+        <li><a href="#services">שירותים</a></li>
+        <li><a href="#portfolio">פרויקטים</a></li>
+        <li><a href="#contact" class="nav-cta">בואו נדבר</a></li>
       </ul>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <button class="nav-toggle" id="navToggle" aria-label="תפריט">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -34,68 +35,88 @@
       <div class="hero-glow"></div>
     </div>
     <div class="container hero-content">
-      <p class="hero-eyebrow">Hello, I'm</p>
-      <h1 class="hero-title">
-        <span class="hero-name">Miki Kaplin</span>
-      </h1>
-      <p class="hero-subtitle">Developer &amp; Creator</p>
-      <p class="hero-desc">
-        Building elegant digital experiences that combine clean code with thoughtful design.
-      </p>
-      <div class="hero-actions">
-        <a href="#portfolio" class="btn btn-primary">View My Work</a>
-        <a href="#contact" class="btn btn-ghost">Get In Touch</a>
+      <div class="hero-inner">
+        <div class="hero-text">
+          <p class="hero-eyebrow">אפיון · עיצוב · פיתוח</p>
+          <h1 class="hero-title">
+            האתר שלך הוא<br />
+            <span class="hero-highlight">הרושם הראשון.</span><br />
+            בואו נעשה אותו<br />
+            <span class="hero-name">בלתי נשכח.</span>
+          </h1>
+          <p class="hero-desc">
+            אני מיכאל קאפלין — מלווה עסקים וארגונים לנוכחות דיגיטלית שמשדרת מקצועיות,
+            מייצרת אמון ומניעה לפעולה.
+          </p>
+          <div class="hero-actions">
+            <a href="#portfolio" class="btn btn-primary">הפרויקטים שלי</a>
+            <a href="#contact" class="btn btn-ghost">דברו איתי</a>
+          </div>
+        </div>
+        <div class="hero-image-wrap">
+          <div class="hero-image-ring">
+            <img
+              src="https://placehold.co/420x420/6c63ff/ffffff?text=מ׳ק"
+              alt="מיכאל קאפלין"
+              class="hero-photo"
+              width="420"
+              height="420"
+            />
+          </div>
+          <div class="hero-badge hero-badge-1">
+            <span class="badge-icon">✦</span>
+            <span>עיצוב UI/UX</span>
+          </div>
+          <div class="hero-badge hero-badge-2">
+            <span class="badge-icon">⬡</span>
+            <span>פיתוח מותאם</span>
+          </div>
+        </div>
       </div>
-      <div class="hero-scroll">
-        <span></span>
-      </div>
+      <div class="hero-scroll"><span></span></div>
     </div>
   </section>
 
   <!-- ABOUT -->
   <section class="about section" id="about">
     <div class="container">
-      <div class="section-header">
-        <p class="section-label">Who I Am</p>
-        <h2 class="section-title">About Me</h2>
-      </div>
       <div class="about-grid">
-        <div class="about-text">
-          <p>
-            I'm a passionate developer with a love for building products that make a difference.
-            With years of experience across the full stack, I bring ideas from concept to production
-            with precision and care.
+        <div class="about-image-col">
+          <div class="about-image-frame">
+            <img
+              src="https://placehold.co/400x500/111118/a78bfa?text=מיכאל+קאפלין"
+              alt="מיכאל קאפלין"
+              class="about-photo"
+              width="400"
+              height="500"
+            />
+            <div class="about-image-tag">
+              <span>+30 פרויקטים</span>
+            </div>
+          </div>
+        </div>
+        <div class="about-text-col">
+          <p class="section-label">מי אני</p>
+          <h2 class="section-title">מאחורי כל אתר<br />עומד סיפור</h2>
+          <p class="about-lead">
+            אני מאמין שאתר טוב הוא הרבה יותר מאוסף עמודים יפים — הוא הכלי החד-ביותר שלך לבנות אמון, להעביר ערך ולהפוך מבקרים ללקוחות.
           </p>
-          <p>
-            I believe in writing clean, maintainable code and creating user experiences that feel
-            effortless. When I'm not coding, you'll find me exploring new technologies and pushing
-            the boundaries of what's possible on the web.
+          <p class="about-body">
+            עם שנים של ניסיון בתחום, פיתחתי תהליך עבודה שמתחיל בהבנה עמוקה של העסק שלך ומסתיים בנוכחות דיגיטלית שמדברת בשפה של הלקוחות שלך.
+            כל פרויקט מקבל ממני תשומת לב מלאה — מהאפיון הראשוני ועד להשקה הסופית.
           </p>
           <div class="about-stats">
             <div class="stat">
               <span class="stat-num">5+</span>
-              <span class="stat-label">Years Experience</span>
+              <span class="stat-label">שנות ניסיון</span>
             </div>
             <div class="stat">
               <span class="stat-num">30+</span>
-              <span class="stat-label">Projects Done</span>
+              <span class="stat-label">פרויקטים</span>
             </div>
             <div class="stat">
-              <span class="stat-num">20+</span>
-              <span class="stat-label">Happy Clients</span>
-            </div>
-          </div>
-        </div>
-        <div class="about-visual">
-          <div class="about-card">
-            <div class="about-avatar">MK</div>
-            <div class="about-badges">
-              <span class="badge">JavaScript</span>
-              <span class="badge">React</span>
-              <span class="badge">Node.js</span>
-              <span class="badge">Python</span>
-              <span class="badge">UI/UX</span>
-              <span class="badge">DevOps</span>
+              <span class="stat-num">100%</span>
+              <span class="stat-label">מחויבות</span>
             </div>
           </div>
         </div>
@@ -107,29 +128,40 @@
   <section class="services section" id="services">
     <div class="container">
       <div class="section-header">
-        <p class="section-label">What I Do</p>
-        <h2 class="section-title">Services</h2>
+        <p class="section-label">מה אני עושה</p>
+        <h2 class="section-title">שלושה שלבים.<br />תוצאה אחת מנצחת.</h2>
+        <p class="section-sub">
+          כל אתר מוצלח עובר תהליך אחד ברור — ואני מלווה אותך לאורך כל הדרך.
+        </p>
       </div>
       <div class="services-grid">
         <div class="service-card">
-          <div class="service-icon">&#9881;</div>
-          <h3>Web Development</h3>
-          <p>Full-stack web applications built with modern frameworks, optimized for performance and scalability.</p>
+          <div class="service-num">01</div>
+          <div class="service-icon">🗺️</div>
+          <h3>אפיון</h3>
+          <p>
+            לפני שמצייר פיקסל אחד, אני מבין את העסק, הקהל והמטרות שלך.
+            האפיון מניח את היסודות להצלחה — ומונע שינויים יקרים בהמשך.
+          </p>
+        </div>
+        <div class="service-card service-card--featured">
+          <div class="service-num">02</div>
+          <div class="service-icon">🎨</div>
+          <h3>עיצוב</h3>
+          <p>
+            עיצוב שמסביר את הסיפור שלך בשפה ויזואלית. ממשקים נקיים, חוויית משתמש אינטואיטיבית
+            ואסתטיקה שמשדרת את הערכים של המותג.
+          </p>
+          <div class="service-featured-tag">פופולרי</div>
         </div>
         <div class="service-card">
-          <div class="service-icon">&#9998;</div>
-          <h3>UI/UX Design</h3>
-          <p>Clean, intuitive interfaces designed with users in mind. From wireframes to polished final products.</p>
-        </div>
-        <div class="service-card">
-          <div class="service-icon">&#128196;</div>
-          <h3>Consulting</h3>
-          <p>Technical consulting to help teams make the right architectural decisions and build better products.</p>
-        </div>
-        <div class="service-card">
-          <div class="service-icon">&#128640;</div>
-          <h3>DevOps &amp; Deployment</h3>
-          <p>CI/CD pipelines, cloud infrastructure, and deployment automation to ship faster and more reliably.</p>
+          <div class="service-num">03</div>
+          <div class="service-icon">⚙️</div>
+          <h3>פיתוח</h3>
+          <p>
+            קוד נקי, ביצועים מהירים ואתרים שעובדים מעולה בכל מכשיר.
+            הפיתוח הוא שם שהחזון הופך למציאות.
+          </p>
         </div>
       </div>
     </div>
@@ -139,37 +171,78 @@
   <section class="portfolio section" id="portfolio">
     <div class="container">
       <div class="section-header">
-        <p class="section-label">My Work</p>
-        <h2 class="section-title">Portfolio</h2>
+        <p class="section-label">עבודות נבחרות</p>
+        <h2 class="section-title">תוצאות שמדברות<br />בעד עצמן</h2>
+        <p class="section-sub">
+          כל פרויקט הוא שותפות — הנה כמה מהדברים שבנינו יחד.
+        </p>
       </div>
       <div class="portfolio-grid">
-        <div class="portfolio-card">
-          <div class="portfolio-img" style="--hue: 220"></div>
+
+        <div class="portfolio-card portfolio-card--wide">
+          <div class="portfolio-img" style="--hue:220; --sat:65%">
+            <div class="portfolio-overlay">
+              <a href="https://mkaplin.com/project_review/lishkatoanim/" target="_blank" rel="noopener" class="portfolio-btn">צפה בפרויקט ←</a>
+            </div>
+          </div>
           <div class="portfolio-info">
-            <span class="portfolio-tag">Web App</span>
-            <h3>Project Alpha</h3>
-            <p>A full-stack SaaS platform with real-time collaboration features.</p>
-            <a href="#" class="portfolio-link">View Project &rarr;</a>
+            <div class="portfolio-header">
+              <span class="portfolio-tag">מוסדות מקצועיים</span>
+              <span class="portfolio-year">2024</span>
+            </div>
+            <h3>לשכת הטוענים הרבניים</h3>
+            <p>מיתוג מחדש ובניית נוכחות דיגיטלית חדשה לארגון מקצועי מוביל — אתר שמשדר סמכות, נגישות ואמינות.</p>
           </div>
         </div>
+
         <div class="portfolio-card">
-          <div class="portfolio-img" style="--hue: 280"></div>
+          <div class="portfolio-img" style="--hue:280; --sat:55%">
+            <div class="portfolio-overlay">
+              <a href="https://mkaplin.com/project_review/shimony/" target="_blank" rel="noopener" class="portfolio-btn">צפה בפרויקט ←</a>
+            </div>
+          </div>
           <div class="portfolio-info">
-            <span class="portfolio-tag">Mobile</span>
-            <h3>Project Beta</h3>
-            <p>Cross-platform mobile application serving thousands of daily users.</p>
-            <a href="#" class="portfolio-link">View Project &rarr;</a>
+            <div class="portfolio-header">
+              <span class="portfolio-tag">משפטים</span>
+              <span class="portfolio-year">2024</span>
+            </div>
+            <h3>משרד שמעוני</h3>
+            <p>אתר מודרני למשרד עורכי דין שמבסס מומחיות ומניע לקוחות פוטנציאליים ליצור קשר.</p>
           </div>
         </div>
+
         <div class="portfolio-card">
-          <div class="portfolio-img" style="--hue: 160"></div>
+          <div class="portfolio-img" style="--hue:160; --sat:60%">
+            <div class="portfolio-overlay">
+              <a href="https://mkaplin.com/project_review/wst/" target="_blank" rel="noopener" class="portfolio-btn">צפה בפרויקט ←</a>
+            </div>
+          </div>
           <div class="portfolio-info">
-            <span class="portfolio-tag">E-Commerce</span>
-            <h3>Project Gamma</h3>
-            <p>High-performance e-commerce solution with custom checkout flow.</p>
-            <a href="#" class="portfolio-link">View Project &rarr;</a>
+            <div class="portfolio-header">
+              <span class="portfolio-tag">נדל"ן בינלאומי</span>
+              <span class="portfolio-year">2023</span>
+            </div>
+            <h3>WST</h3>
+            <p>פלטפורמה להשקעות נדל"ן בדובאי — עיצוב פרימיום שמדבר לקהל משקיעים בינלאומי.</p>
           </div>
         </div>
+
+        <div class="portfolio-card portfolio-card--wide">
+          <div class="portfolio-img" style="--hue:35; --sat:70%">
+            <div class="portfolio-overlay">
+              <a href="https://mkaplin.com/project_review/alter/" target="_blank" rel="noopener" class="portfolio-btn">צפה בפרויקט ←</a>
+            </div>
+          </div>
+          <div class="portfolio-info">
+            <div class="portfolio-header">
+              <span class="portfolio-tag">מסחר אלקטרוני</span>
+              <span class="portfolio-year">2023</span>
+            </div>
+            <h3>אלתר ספרים</h3>
+            <p>חנות אונליין לציוד בית ספר עם תהליך רכישה מותאם אישית — חוויית קנייה שמרגישה טבעית ומהנה.</p>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -177,51 +250,57 @@
   <!-- CONTACT -->
   <section class="contact section" id="contact">
     <div class="container">
-      <div class="section-header">
-        <p class="section-label">Let's Talk</p>
-        <h2 class="section-title">Get In Touch</h2>
-      </div>
       <div class="contact-wrapper">
         <div class="contact-info">
+          <p class="section-label">בואו נדבר</p>
+          <h2 class="section-title">יש לכם פרויקט<br />שמחכה לקרות?</h2>
           <p class="contact-intro">
-            Have a project in mind or just want to say hello? I'd love to hear from you.
-            Send me a message and I'll get back to you as soon as possible.
+            אני תמיד שמח לשמוע על רעיונות חדשים. שלחו לי הודעה ואחזור אליכם בהקדם —
+            בדרך כלל תוך יום עסקים אחד.
           </p>
           <ul class="contact-details">
             <li>
-              <span class="contact-icon">&#9993;</span>
-              <a href="mailto:miki@mkaplin.com">miki@mkaplin.com</a>
+              <span class="contact-icon">✉</span>
+              <a href="mailto:michael@mkaplin.com">michael@mkaplin.com</a>
             </li>
             <li>
-              <span class="contact-icon">&#127757;</span>
+              <span class="contact-icon">🌐</span>
               <a href="https://mkaplin.com" target="_blank" rel="noopener">mkaplin.com</a>
             </li>
           </ul>
-          <div class="social-links">
-            <a href="https://github.com/mikikaplin-netizen" target="_blank" rel="noopener" class="social-link">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-              GitHub
-            </a>
-            <a href="https://linkedin.com/in/mikikaplin" target="_blank" rel="noopener" class="social-link">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-              LinkedIn
-            </a>
+          <div class="contact-image-wrap">
+            <img
+              src="https://placehold.co/280x280/1a1a24/6c63ff?text=מיכאל"
+              alt="מיכאל קאפלין"
+              class="contact-photo"
+              width="280"
+              height="280"
+            />
+            <div class="contact-quote">
+              "כל עסק ראוי לאתר<br />שמייצג אותו נכון."
+            </div>
           </div>
         </div>
+
         <form class="contact-form" id="contactForm">
           <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" placeholder="Your name" required />
+            <label for="name">שם מלא</label>
+            <input type="text" id="name" name="name" placeholder="השם שלך" required />
           </div>
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email">אימייל</label>
             <input type="email" id="email" name="email" placeholder="your@email.com" required />
           </div>
           <div class="form-group">
-            <label for="message">Message</label>
-            <textarea id="message" name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
+            <label for="phone">טלפון (אופציונלי)</label>
+            <input type="tel" id="phone" name="phone" placeholder="05X-XXXXXXX" />
           </div>
-          <button type="submit" class="btn btn-primary btn-full">Send Message</button>
+          <div class="form-group">
+            <label for="message">ספרו לי על הפרויקט</label>
+            <textarea id="message" name="message" rows="5" placeholder="מה אתם בונים? מה המטרה? כל פרט עוזר..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">שליחת הודעה</button>
+          <p class="form-note">אחזור אליכם תוך יום עסקים ✓</p>
         </form>
       </div>
     </div>
@@ -230,8 +309,11 @@
   <!-- FOOTER -->
   <footer class="footer">
     <div class="container">
-      <p>&copy; 2026 Miki Kaplin. All rights reserved.</p>
-      <a href="https://mkaplin.com" class="footer-link">mkaplin.com</a>
+      <div class="footer-inner">
+        <p class="footer-name">מיכאל קאפלין</p>
+        <p class="footer-copy">© 2026 כל הזכויות שמורות</p>
+        <a href="https://mkaplin.com" class="footer-link">mkaplin.com</a>
+      </div>
     </div>
   </footer>
 

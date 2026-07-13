@@ -14,9 +14,9 @@
       glowRadius: 200,
       waveAmplitude: 0,
       sparkle: false,
-      gradientFrom: 'rgba(108, 99, 255, 0.55)',
-      gradientTo:   'rgba(167, 139, 250, 0.35)',
-      glowColor:    '#0e0b1a',
+      gradientFrom: 'rgba(100, 193, 210, 0.5)',
+      gradientTo:   'rgba(28, 211, 28, 0.2)',
+      glowColor:    '#0d1020',
     }, opts);
 
     container.style.cssText = 'position:absolute;inset:0;overflow:hidden;';

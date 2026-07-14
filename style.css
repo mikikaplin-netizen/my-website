@@ -68,11 +68,11 @@ img { max-width: 100%; display: block; }
 }
 
 .section-title {
-  font-size: clamp(2rem, 4vw, 2.9rem);
+  font-size: clamp(2.2rem, 4.5vh, 4rem);
   font-weight: 900;
   line-height: 1.2;
   letter-spacing: -0.01em;
-  background: linear-gradient(135deg, #fff 0%, #b0b0d0 100%);
+  background: linear-gradient(135deg, #fff 0%, #a8bcc4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -275,14 +275,14 @@ img { max-width: 100%; display: block; }
 }
 
 .hero-title {
-  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-size: clamp(2.6rem, 4.5vh, 4.2rem);
   font-weight: 900;
   line-height: 1.15;
   letter-spacing: -0.02em;
   margin-bottom: 24px;
   opacity: 0;
   animation: fadeUp 0.7s ease forwards 0.4s;
-  color: #c8c8e8;
+  color: #b8ccd0;
 }
 
 .hero-highlight {
@@ -293,7 +293,7 @@ img { max-width: 100%; display: block; }
 }
 
 .hero-name {
-  background: linear-gradient(135deg, #fff 30%, #d0d0f0 100%);
+  background: linear-gradient(135deg, #fff 30%, #c8e4e8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

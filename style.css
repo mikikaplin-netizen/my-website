@@ -384,6 +384,43 @@ img { max-width: 100%; display: block; }
 }
 
 /* ===========================
+   STATEMENT
+=========================== */
+.statement {
+  background: var(--bg);
+  padding: 10vh 0;
+}
+
+.statement-text {
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: 400;
+  font-size: clamp(1.35rem, 2.6vw, 2.15rem);
+  line-height: 1.7;
+  text-align: center;
+  color: #f2efe9;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.statement-text strong {
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.statement-avatar {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  object-fit: cover;
+  vertical-align: middle;
+  margin: 0 6px;
+  position: relative;
+  top: -0.12em;
+  border: 2px solid var(--bg-3);
+}
+
+/* ===========================
    ABOUT
 =========================== */
 .about { background: var(--bg-2); }

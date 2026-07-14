@@ -6,16 +6,16 @@
 
   function initDotField(container, opts) {
     const o = Object.assign({
-      dotRadius: 1.5,
-      dotSpacing: 20,
+      dotRadius: 1.4,
+      dotSpacing: 22,
       cursorRadius: 480,
       bulgeOnly: true,
       bulgeStrength: 72,
       glowRadius: 200,
       waveAmplitude: 0,
       sparkle: false,
-      gradientFrom: 'rgba(100, 193, 210, 0.5)',
-      gradientTo:   'rgba(28, 211, 28, 0.2)',
+      gradientFrom: 'rgba(100, 193, 210, 0.28)',
+      gradientTo:   'rgba(28, 211, 28, 0.12)',
       glowColor:    '#0d1020',
     }, opts);
 
@@ -65,14 +65,15 @@
       canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       size.w = w; size.h = h;
-      size.offX = rect.left + window.scrollX;
-      size.offY = rect.top  + window.scrollY;
+      // fixed/viewport-relative container: use viewport coords, no scroll offset
+      size.offX = rect.left;
+      size.offY = rect.top;
       buildDots(w, h);
     }
 
     function onMove(e) {
-      mouse.x = e.pageX - size.offX;
-      mouse.y = e.pageY - size.offY;
+      mouse.x = e.clientX - size.offX;
+      mouse.y = e.clientY - size.offY;
     }
 
     const speedTick = setInterval(() => {
@@ -282,3 +283,61 @@ if (waLauncher && waPanel) {
     });
   }
 }
+
+// ===========================
+// STATEMENT — SCROLL WORD REVEAL
+// ===========================
+(function () {
+  const textEl = document.querySelector('.statement-text');
+  if (!textEl) return;
+
+  // Wrap plain-text words in .sw spans; mark <strong> as a single token.
+  const tokens = [];
+  const nodes = Array.from(textEl.childNodes);
+  nodes.forEach(node => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const parts = node.textContent.split(/(\s+)/);
+      const frag = document.createDocumentFragment();
+      parts.forEach(part => {
+        if (part.trim() === '') {
+          frag.appendChild(document.createTextNode(part));
+        } else {
+          const span = document.createElement('span');
+          span.className = 'sw';
+          span.textContent = part;
+          frag.appendChild(span);
+          tokens.push(span);
+        }
+      });
+      textEl.replaceChild(frag, node);
+    } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'STRONG') {
+      tokens.push(node);
+    }
+  });
+
+  let ticking = false;
+  function update() {
+    ticking = false;
+    const r = textEl.getBoundingClientRect();
+    const vh = window.innerHeight;
+    const startY = vh * 0.9;
+    const endY = vh * 0.35;
+    let p = (startY - r.top) / (startY - endY);
+    p = Math.max(0, Math.min(1, p));
+    const activeCount = Math.round(p * tokens.length);
+    tokens.forEach((t, i) => {
+      t.classList.toggle('on', i < activeCount);
+    });
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  update();
+})();

@@ -255,3 +255,30 @@ window.addEventListener('scroll', () => {
     a.style.color = a.getAttribute('href') === `#${current}` ? '#fff' : '';
   });
 }, { passive: true });
+
+// ===========================
+// WHATSAPP FLOATING WIDGET
+// ===========================
+const waLauncher = document.getElementById('waLauncher');
+const waPanel = document.getElementById('waPanel');
+const waClose = document.getElementById('waClose');
+
+if (waLauncher && waPanel) {
+  const openPanel = () => {
+    waPanel.hidden = false;
+    waLauncher.classList.add('opened');
+  };
+  const closePanel = () => { waPanel.hidden = true; };
+
+  waLauncher.addEventListener('click', () => {
+    if (waPanel.hidden) openPanel();
+    else closePanel();
+  });
+
+  if (waClose) {
+    waClose.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closePanel();
+    });
+  }
+}

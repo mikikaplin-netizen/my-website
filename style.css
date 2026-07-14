@@ -1,4 +1,36 @@
 /* ===========================
+   FONTS
+=========================== */
+@font-face {
+  font-family: 'Google Sans';
+  src: url('fonts/GoogleSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Google Sans';
+  src: url('fonts/GoogleSans-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Google Sans';
+  src: url('fonts/GoogleSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Google Sans';
+  src: url('fonts/GoogleSans-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ===========================
    ROOT & RESET
 =========================== */
 *, *::before, *::after {
@@ -20,7 +52,7 @@
   --radius: 12px;
   --radius-lg: 20px;
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --font: 'Heebo', sans-serif;
+  --font: 'Google Sans', 'Heebo', sans-serif;
   --shadow: 0 8px 48px rgba(0,0,0,0.5);
   --glow: 0 0 80px rgba(100,193,210,0.12);
 }
@@ -392,7 +424,7 @@ img { max-width: 100%; display: block; }
 }
 
 .statement-text {
-  font-family: 'Frank Ruhl Libre', serif;
+  font-family: var(--font);
   font-weight: 400;
   font-size: clamp(1.35rem, 2.6vw, 2.15rem);
   line-height: 1.7;

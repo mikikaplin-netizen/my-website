@@ -201,7 +201,7 @@ navLinks.querySelectorAll('a').forEach(link => {
 // REVEAL ON SCROLL
 // ===========================
 const revealEls = document.querySelectorAll(
-  '.service-card, .portfolio-card, .about-grid, .contact-wrapper, .section-header'
+  '.process-row, .portfolio-card, .about-grid, .contact-wrapper, .section-header'
 );
 
 revealEls.forEach(el => el.classList.add('reveal'));

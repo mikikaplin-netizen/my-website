@@ -872,9 +872,16 @@ img { max-width: 100%; display: block; }
   top: 40%;
   transform: translate(-50%, -50%);
   width: 100%;
-  max-width: 640px;
+  max-width: 760px;
   padding: 0 24px;
   z-index: 3;
+}
+
+/* Cap the font-size lower than the default .section-title clamp — on tall
+   viewports 4.5vh climbs toward its 4rem ceiling, which is too wide for
+   these two phrases to each stay on one line even at 760px. */
+.magnet-heading .section-title {
+  font-size: clamp(1.8rem, 3.6vh, 3rem);
 }
 
 .magnet-heading .section-header {

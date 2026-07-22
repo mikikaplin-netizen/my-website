@@ -299,8 +299,8 @@ if (waLauncher && waPanel) {
   const bubbles = Array.from(field.querySelectorAll('.magnet-bubble:not(.magnet-bubble--dominant)'));
   const bubbleState = bubbles.map(el => ({ el, homeX: 0, homeY: 0, dx: 0, dy: 0 }));
 
-  const REPEL_RADIUS = 260;
-  const REPEL_STRENGTH = 170;
+  const REPEL_RADIUS = 340;
+  const REPEL_STRENGTH = 260;
   const MIN_DIR_DIST = 10;
   const BUBBLE_EASE = 0.15;
   const DOM_EASE = 0.08;

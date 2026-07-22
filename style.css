@@ -536,7 +536,7 @@ img { max-width: 100%; display: block; }
 /* ===========================
    ABOUT
 =========================== */
-.about { background: rgba(20,22,46,0.72); }
+.about { background: rgba(20,22,46,0.38); }
 
 .about-grid {
   display: grid;
@@ -631,7 +631,7 @@ img { max-width: 100%; display: block; }
   align-items: center;
   gap: 56px;
   min-height: 70vh;
-  background: rgba(20,22,46,0.5);
+  background: rgba(20,22,46,0.38);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 48px;
@@ -926,7 +926,7 @@ img { max-width: 100%; display: block; }
 /* ===========================
    PORTFOLIO
 =========================== */
-.portfolio { background: rgba(20,22,46,0.72); }
+.portfolio { background: rgba(20,22,46,0.38); }
 
 .portfolio-grid {
   display: grid;

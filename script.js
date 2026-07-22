@@ -14,12 +14,16 @@
       glowRadius: 200,
       waveAmplitude: 0,
       sparkle: false,
-      gradientFrom: 'rgba(100, 193, 210, 0.28)',
-      gradientTo:   'rgba(28, 211, 28, 0.12)',
+      gradientFrom: 'rgba(100, 193, 210, 0.5)',
+      gradientTo:   'rgba(28, 211, 28, 0.24)',
       glowColor:    '#0d1020',
     }, opts);
 
-    container.style.cssText = 'position:absolute;inset:0;overflow:hidden;';
+    // container's own position:fixed (global full-page background) comes
+    // from CSS — don't override it with an inline position here, that
+    // would make the canvas scroll away with the page instead of
+    // staying pinned behind every section
+    container.style.overflow = 'hidden';
 
     const canvas = document.createElement('canvas');
     canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;';

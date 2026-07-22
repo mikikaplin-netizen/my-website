@@ -201,7 +201,7 @@ navLinks.querySelectorAll('a').forEach(link => {
 // REVEAL ON SCROLL
 // ===========================
 const revealEls = document.querySelectorAll(
-  '.process-row, .portfolio-card, .about-grid, .contact-wrapper, .section-header, .magnet-field'
+  '.process-row, .portfolio-card, .about-grid, .contact-wrapper, .section-header'
 );
 
 revealEls.forEach(el => el.classList.add('reveal'));
@@ -300,6 +300,10 @@ if (waLauncher && waPanel) {
   const MIN_DIR_DIST = 10;
   const BUBBLE_EASE = 0.15;
   const DOM_EASE = 0.08;
+  // idle rest position (no pointer yet / pointer left): below the centered
+  // heading rather than dead-center, so the dominant bubble doesn't sit on
+  // top of the heading text at rest
+  const IDLE_Y_RATIO = 0.70;
 
   let rect = { w: 0, h: 0, left: 0, top: 0 };
   let target = { x: 0, y: 0 };
@@ -318,11 +322,11 @@ if (waLauncher && waPanel) {
     });
     if (!measured) {
       domPos.x = target.x = rect.w / 2;
-      domPos.y = target.y = rect.h / 2;
+      domPos.y = target.y = rect.h * IDLE_Y_RATIO;
       measured = true;
     } else if (!pointerActive) {
       target.x = rect.w / 2;
-      target.y = rect.h / 2;
+      target.y = rect.h * IDLE_Y_RATIO;
     }
   }
 

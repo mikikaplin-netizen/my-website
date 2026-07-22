@@ -852,6 +852,50 @@ img { max-width: 100%; display: block; }
 }
 
 /* ===========================
+   MAGNET FIELD
+=========================== */
+.magnet-field {
+  position: relative;
+  min-height: 55vh;
+  overflow: hidden;
+}
+
+.magnet-bubble {
+  position: absolute;
+  left: var(--hx);
+  top: var(--hy);
+  transform: translate(-50%, -50%) translate(var(--dx, 0px), var(--dy, 0px));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 28px;
+  border-radius: 999px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  pointer-events: none;
+  will-change: transform;
+  z-index: 1;
+}
+
+.magnet-bubble--dominant {
+  left: 50%;
+  top: 50%;
+  padding: 24px 36px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-color: transparent;
+  color: #06131a;
+  box-shadow: var(--glow), 0 0 60px rgba(100,193,210,0.35);
+  z-index: 2;
+}
+
+/* ===========================
    PORTFOLIO
 =========================== */
 .portfolio { background: rgba(20,22,46,0.72); }
@@ -1376,6 +1420,18 @@ img { max-width: 100%; display: block; }
   .process-body { max-width: 100%; }
 
   .mockup-body { min-height: 0; padding: 20px; }
+
+  .magnet-field { min-height: 70vh; }
+
+  .magnet-bubble {
+    padding: 12px 18px;
+    font-size: 0.8rem;
+  }
+
+  .magnet-bubble--dominant {
+    padding: 16px 24px;
+    font-size: 0.9rem;
+  }
 
   .portfolio-grid { grid-template-columns: 1fr; }
 

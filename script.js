@@ -201,7 +201,7 @@ navLinks.querySelectorAll('a').forEach(link => {
 // REVEAL ON SCROLL
 // ===========================
 const revealEls = document.querySelectorAll(
-  '.process-row, .portfolio-card, .about-grid, .contact-wrapper, .section-header'
+  '.process-row, .portfolio-card, .about-grid, .contact-wrapper, .section-header, .magnet-field'
 );
 
 revealEls.forEach(el => el.classList.add('reveal'));
@@ -283,6 +283,114 @@ if (waLauncher && waPanel) {
     });
   }
 }
+
+// ===========================
+// MAGNET FIELD
+// ===========================
+(function () {
+  const field = document.getElementById('magnetField');
+  const dominant = document.getElementById('magnetDominant');
+  if (!field || !dominant) return;
+
+  const bubbles = Array.from(field.querySelectorAll('.magnet-bubble:not(.magnet-bubble--dominant)'));
+  const bubbleState = bubbles.map(el => ({ el, homeX: 0, homeY: 0, dx: 0, dy: 0 }));
+
+  const REPEL_RADIUS = 260;
+  const REPEL_STRENGTH = 170;
+  const MIN_DIR_DIST = 10;
+  const BUBBLE_EASE = 0.15;
+  const DOM_EASE = 0.08;
+
+  let rect = { w: 0, h: 0, left: 0, top: 0 };
+  let target = { x: 0, y: 0 };
+  let domPos = { x: 0, y: 0 };
+  let rawPointer = { x: 0, y: 0 };
+  let pointerActive = false;
+  let measured = false;
+  let resizeTimer;
+
+  function measure() {
+    const r = field.getBoundingClientRect();
+    rect = { w: r.width, h: r.height, left: r.left, top: r.top };
+    bubbleState.forEach(b => {
+      b.homeX = b.el.offsetLeft + b.el.offsetWidth / 2;
+      b.homeY = b.el.offsetTop + b.el.offsetHeight / 2;
+    });
+    if (!measured) {
+      domPos.x = target.x = rect.w / 2;
+      domPos.y = target.y = rect.h / 2;
+      measured = true;
+    } else if (!pointerActive) {
+      target.x = rect.w / 2;
+      target.y = rect.h / 2;
+    }
+  }
+
+  function updatePointer(clientX, clientY) {
+    rawPointer.x = clientX;
+    rawPointer.y = clientY;
+    pointerActive = true;
+  }
+
+  window.addEventListener('mousemove', (e) => updatePointer(e.clientX, e.clientY), { passive: true });
+  field.addEventListener('touchmove', (e) => {
+    const t = e.touches[0];
+    if (t) updatePointer(t.clientX, t.clientY);
+  }, { passive: true });
+
+  function tick() {
+    const r = field.getBoundingClientRect();
+    rect = { w: r.width, h: r.height, left: r.left, top: r.top };
+
+    if (pointerActive) {
+      let x = rawPointer.x - rect.left;
+      let y = rawPointer.y - rect.top;
+      x = Math.max(0, Math.min(rect.w, x));
+      y = Math.max(0, Math.min(rect.h, y));
+      target.x = x;
+      target.y = y;
+    }
+
+    domPos.x += (target.x - domPos.x) * DOM_EASE;
+    domPos.y += (target.y - domPos.y) * DOM_EASE;
+
+    dominant.style.setProperty('--dx', (domPos.x - rect.w / 2).toFixed(2) + 'px');
+    dominant.style.setProperty('--dy', (domPos.y - rect.h / 2).toFixed(2) + 'px');
+
+    bubbleState.forEach(b => {
+      let vx = b.homeX - domPos.x;
+      let vy = b.homeY - domPos.y;
+      let dist = Math.sqrt(vx * vx + vy * vy);
+      if (dist < MIN_DIR_DIST) {
+        // dominant sits ~on top of the bubble's home: fall back to a stable
+        // direction (away from the field center) instead of a jittery one
+        vx = b.homeX - rect.w / 2 || 1;
+        vy = b.homeY - rect.h / 2 || 1;
+        dist = Math.sqrt(vx * vx + vy * vy) || 1;
+      }
+      let tx = 0, ty = 0;
+      if (dist < REPEL_RADIUS) {
+        const t = 1 - dist / REPEL_RADIUS;
+        const push = t * t * REPEL_STRENGTH;
+        tx = (vx / dist) * push;
+        ty = (vy / dist) * push;
+      }
+      b.dx += (tx - b.dx) * BUBBLE_EASE;
+      b.dy += (ty - b.dy) * BUBBLE_EASE;
+      b.el.style.setProperty('--dx', b.dx.toFixed(2) + 'px');
+      b.el.style.setProperty('--dy', b.dy.toFixed(2) + 'px');
+    });
+
+    requestAnimationFrame(tick);
+  }
+
+  measure();
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(measure, 100);
+  });
+  requestAnimationFrame(tick);
+})();
 
 // ===========================
 // STATEMENT — SCROLL WORD REVEAL

@@ -29,11 +29,13 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
 - `fonts/` — self-hosted Google Sans `.ttf` files (`@font-face` declared in `style.css`)
 - `images/` — logo SVGs (`logo-full.svg`, `logo-icon.svg`) and the hero photo (`miki-hero.png`)
 - `serve.py` — the only "tooling" in the repo
+- `index.html` links `style.css?v=N` / `script.js?v=N` — bump `N` whenever either file changes,
+  otherwise browsers/GitHub Pages can pair a new `index.html` with a stale cached stylesheet
 
 ## Architecture / how the page is wired together
 
 **Sections are independent and stack in document order** inside `index.html`: navbar → hero →
-statement → wave → about → process → portfolio → contact → footer, plus a WhatsApp widget appended at
+statement → about → process → portfolio → wave → contact → footer, plus a WhatsApp widget appended at
 the end of `<body>`. There's no JS component system — each section's behavior is a self-contained
 block in `script.js` that queries its own DOM by id/class and no-ops if the element isn't present
 (defensive `if (el) ...` guards throughout), so sections can be added/removed without touching

@@ -46,6 +46,7 @@
   --border: rgba(255,255,255,0.08);
   --accent: #64C1D2;
   --accent-2: #1CD31C;
+  --blue: #1E40C8;          /* deep blue for text on light (white) bands */
   --accent-glow: rgba(100,193,210,0.18);
   --text: #ffffff;
   --text-muted: rgba(255,255,255,0.62);
@@ -542,6 +543,8 @@ img { max-width: 100%; display: block; }
 .wave {
   padding: 12vh 0;
   overflow: hidden;
+  /* light "break" band between portfolio and contact */
+  background: #fff;
 }
 
 .wave-track {
@@ -555,7 +558,7 @@ img { max-width: 100%; display: block; }
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.01em;
-  color: #fff;
+  color: var(--blue);
 }
 
 .wave-word { white-space: nowrap; }
@@ -575,13 +578,13 @@ img { max-width: 100%; display: block; }
   border-radius: 0.16em;
   overflow: hidden;
   background: var(--accent-2);
-  box-shadow: 0 0 40px rgba(28,211,28,0.25);
+  box-shadow: 0 10px 30px rgba(16,16,36,0.18);
   will-change: transform;
 }
 
 .wave-tile--cyan {
   background: var(--accent);
-  box-shadow: 0 0 40px rgba(100,193,210,0.3);
+  box-shadow: 0 10px 30px rgba(16,16,36,0.18);
 }
 
 .wave-tile svg {

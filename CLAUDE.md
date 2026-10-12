@@ -66,6 +66,13 @@ so they render above it. Section backgrounds use semi-transparent colors
 - The `.statement-text` paragraph does its own word-by-word scroll reveal: text nodes are split
   into `<span class="sw">` tokens at load time, then colored in progressively as the section
   scrolls through a fixed viewport-relative window (see the "STATEMENT — SCROLL WORD REVEAL" IIFE).
+- Text entrance effects ("TEXT ENTRANCE EFFECTS" in `script.js`, GSAP-style but no library):
+  `.hero-title`, `.section-title`, `.process-title` are split into `.tx-mask > .tx-word` spans
+  that rise/blur in when `.tx-in` is added; `.section-label` gets a Hebrew-letter scramble.
+  Split headings drop their `background-clip: text` (it breaks across transformed children) —
+  gradients go on `.tx-word` instead. Everything is skipped under `prefers-reduced-motion`.
+- Motion: magnetic `.btn`/`.nav-cta` (uses the standalone `translate` property so it doesn't
+  clash with hover `transform`), cursor spotlight on `.portfolio-card`, hero photo parallax.
 
 **Buttons (`.btn`, `.nav-cta`) use an animated conic-gradient border**, implemented as a
 `::before` pseudo-element masked to a ring (`mask-composite: exclude`) and driven by a

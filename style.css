@@ -939,8 +939,24 @@ img { max-width: 100%; display: block; }
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  position: relative;
   transition: var(--transition);
 }
+
+/* cursor-following spotlight (--px/--py set by script.js) */
+.portfolio-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(420px circle at var(--px, 50%) var(--py, 50%),
+    rgba(100,193,210,0.12), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.portfolio-card:hover::after { opacity: 1; }
 
 .portfolio-card:hover {
   border-color: rgba(100,193,210,0.25);
@@ -1409,6 +1425,82 @@ img { max-width: 100%; display: block; }
   opacity: 1;
   transform: translateY(0);
 }
+
+/* --- Text entrance: masked word rise (classes added by script.js) --- */
+.tx-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  /* room for Hebrew ascenders (ל) and descenders (ק ף ץ) inside the mask */
+  padding: 0.12em 0.04em 0.16em;
+  margin: -0.12em -0.04em -0.16em;
+}
+
+.tx-word {
+  display: inline-block;
+  transform: translateY(115%) rotate(5deg);
+  transform-origin: 100% 100%;
+  opacity: 0;
+  filter: blur(8px);
+  transition:
+    transform 1s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.8s ease,
+    filter 0.9s ease;
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+
+.tx-in .tx-word {
+  transform: none;
+  opacity: 1;
+  filter: blur(0);
+}
+
+/* gradient text can't be clipped across transformed children, so split
+   headings paint solid and the gradient moves onto each word */
+.section-title.tx-split {
+  background: none;
+  -webkit-text-fill-color: currentColor;
+  color: #fff;
+}
+
+.hero-title.tx-split {
+  opacity: 1;
+  animation: none;
+}
+
+.hero-title.tx-split .tx-word { transition-delay: calc(150ms + var(--i, 0) * 80ms); }
+
+.tx-split .hero-highlight,
+.tx-split .hero-name {
+  background: none;
+  -webkit-text-fill-color: currentColor;
+}
+
+.tx-split .hero-highlight .tx-word {
+  background: linear-gradient(110deg, var(--accent-2) 0%, var(--accent) 40%, #fff 50%, var(--accent) 60%, var(--accent-2) 100%);
+  background-size: 250% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.tx-in .hero-highlight .tx-word {
+  animation: txShimmer 2.4s ease-in-out 1.4s 1 both;
+}
+
+@keyframes txShimmer {
+  from { background-position: 100% 0; }
+  to   { background-position: 0 0; }
+}
+
+/* --- Section labels: scramble/decode --- */
+.tx-scramble {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tx-scramble.tx-in { opacity: 1; }
 
 /* ===========================
    RESPONSIVE

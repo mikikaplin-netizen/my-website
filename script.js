@@ -457,3 +457,173 @@ if (waLauncher && waPanel) {
   window.addEventListener('resize', onScroll, { passive: true });
   update();
 })();
+
+// ===========================
+// TEXT ENTRANCE EFFECTS
+// ===========================
+// Inspired by GSAP SplitText / ScrambleText demos, implemented in plain JS:
+// - headings: words rise out of a mask with a blur-in, staggered
+// - section labels: Hebrew "decode" scramble before settling on the real text
+// Elements only get split when JS runs and motion is allowed, so the
+// no-JS / reduced-motion page renders the plain text untouched.
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  function splitWords(el) {
+    const words = [];
+    (function walk(node) {
+      Array.from(node.childNodes).forEach(child => {
+        if (child.nodeType === Node.TEXT_NODE) {
+          const frag = document.createDocumentFragment();
+          child.textContent.split(/(\s+)/).forEach(part => {
+            if (!part) return;
+            if (/^\s+$/.test(part)) {
+              frag.appendChild(document.createTextNode(' '));
+              return;
+            }
+            const mask = document.createElement('span');
+            mask.className = 'tx-mask';
+            const word = document.createElement('span');
+            word.className = 'tx-word';
+            word.textContent = part;
+            mask.appendChild(word);
+            frag.appendChild(mask);
+            words.push(word);
+          });
+          node.replaceChild(frag, child);
+        } else if (child.nodeType === Node.ELEMENT_NODE && child.tagName !== 'BR') {
+          walk(child);
+        }
+      });
+    })(el);
+    words.forEach((w, i) => w.style.setProperty('--i', i));
+    el.classList.add('tx-split');
+    return words;
+  }
+
+  const SCRAMBLE_CHARS = 'אבגדהוזחטיכלמנסעפצקרשת';
+  function scramble(el, duration) {
+    const finalText = el.textContent;
+    const start = performance.now();
+    el.setAttribute('aria-label', finalText);
+    el.classList.add('tx-in');
+    function frame(now) {
+      const p = Math.min(1, (now - start) / duration);
+      const settled = Math.floor(p * finalText.length);
+      let out = '';
+      for (let i = 0; i < finalText.length; i++) {
+        const ch = finalText[i];
+        out += (i < settled || /\s/.test(ch))
+          ? ch
+          : SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+      }
+      el.textContent = out;
+      if (p < 1) requestAnimationFrame(frame);
+      else el.textContent = finalText;
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // Hero headline plays on load
+  const heroTitle = document.querySelector('.hero-title');
+  if (heroTitle) {
+    splitWords(heroTitle);
+    requestAnimationFrame(() => requestAnimationFrame(() => heroTitle.classList.add('tx-in')));
+  }
+
+  // Scroll-triggered headings + labels
+  const splitTargets = document.querySelectorAll('.section-title, .process-title');
+  splitTargets.forEach(splitWords);
+
+  const labels = document.querySelectorAll('.section-label');
+  labels.forEach(l => l.classList.add('tx-scramble'));
+
+  const txObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      if (el.classList.contains('tx-scramble')) scramble(el, 900);
+      else el.classList.add('tx-in');
+      txObserver.unobserve(el);
+    });
+  }, { threshold: 0.2, rootMargin: '0px 0px -8% 0px' });
+
+  splitTargets.forEach(el => txObserver.observe(el));
+  labels.forEach(el => txObserver.observe(el));
+})();
+
+// ===========================
+// MOTION — MAGNETIC BUTTONS
+// ===========================
+// CTAs lean toward the cursor while hovered. Uses the standalone `translate`
+// property so it never fights the existing :hover `transform` on .btn.
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+  const STRENGTH = 0.3;
+  const EASE = 0.18;
+  const items = Array.from(document.querySelectorAll('.btn, .nav-cta')).map(el => ({
+    el, x: 0, y: 0, tx: 0, ty: 0,
+  }));
+  if (!items.length) return;
+
+  items.forEach(item => {
+    item.el.addEventListener('mousemove', (e) => {
+      const r = item.el.getBoundingClientRect();
+      item.tx = (e.clientX - (r.left + r.width / 2)) * STRENGTH;
+      item.ty = (e.clientY - (r.top + r.height / 2)) * STRENGTH;
+    });
+    item.el.addEventListener('mouseleave', () => { item.tx = 0; item.ty = 0; });
+  });
+
+  function tick() {
+    items.forEach(item => {
+      item.x += (item.tx - item.x) * EASE;
+      item.y += (item.ty - item.y) * EASE;
+      if (Math.abs(item.x) < 0.05 && Math.abs(item.y) < 0.05 && !item.tx && !item.ty) {
+        if (item.el.style.translate) item.el.style.translate = '';
+        return;
+      }
+      item.el.style.translate = `${item.x.toFixed(2)}px ${item.y.toFixed(2)}px`;
+    });
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+
+// ===========================
+// MOTION — PORTFOLIO SPOTLIGHT
+// ===========================
+(function () {
+  const cards = document.querySelectorAll('.portfolio-card');
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--px', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--py', (e.clientY - r.top) + 'px');
+    });
+  });
+})();
+
+// ===========================
+// MOTION — HERO PARALLAX
+// ===========================
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const photo = document.querySelector('.hero-photo');
+  const heroText = document.querySelector('.hero-text');
+  if (!photo) return;
+
+  let ticking = false;
+  function update() {
+    ticking = false;
+    const y = window.scrollY;
+    if (y > window.innerHeight * 1.2) return;
+    photo.style.translate = `0 ${(y * 0.18).toFixed(1)}px`;
+    if (heroText) heroText.style.translate = `0 ${(y * -0.08).toFixed(1)}px`;
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }, { passive: true });
+})();

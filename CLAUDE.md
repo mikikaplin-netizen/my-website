@@ -33,7 +33,7 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
 ## Architecture / how the page is wired together
 
 **Sections are independent and stack in document order** inside `index.html`: navbar → hero →
-statement → about → process → portfolio → contact → footer, plus a WhatsApp widget appended at
+statement → wave → about → process → portfolio → contact → footer, plus a WhatsApp widget appended at
 the end of `<body>`. There's no JS component system — each section's behavior is a self-contained
 block in `script.js` that queries its own DOM by id/class and no-ops if the element isn't present
 (defensive `if (el) ...` guards throughout), so sections can be added/removed without touching
@@ -71,6 +71,11 @@ so they render above it. Section backgrounds use semi-transparent colors
   that rise/blur in when `.tx-in` is added; `.section-label` gets a Hebrew-letter scramble.
   Split headings drop their `background-clip: text` (it breaks across transformed children) —
   gradients go on `.tx-word` instead. Everything is skipped under `prefers-reduced-motion`.
+- Wave marquee (`.wave`, "WAVE MARQUEE — SCROLL-DRIVEN" in `script.js`): the section is pinned
+  (`position: sticky`) while one giant line travels across it, mirrored for Hebrew (sentence start
+  enters first, moving left → right); each letter/tile rides a sine wave fixed in screen space.
+  The section's height is set in JS from the track width. Without JS / under reduced motion it
+  renders as static centered text.
 - Motion: magnetic `.btn`/`.nav-cta` (uses the standalone `translate` property so it doesn't
   clash with hover `transform`), cursor spotlight on `.portfolio-card`, hero photo parallax.
 

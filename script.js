@@ -627,3 +627,81 @@ if (waLauncher && waPanel) {
     if (!ticking) { ticking = true; requestAnimationFrame(update); }
   }, { passive: true });
 })();
+
+// ===========================
+// WAVE MARQUEE — SCROLL-DRIVEN
+// ===========================
+// One giant line that travels across the screen while the section is
+// pinned; every letter/tile rides a sine wave fixed in screen space, so
+// the phrase looks like it's flowing over a curve. Mirrored for Hebrew:
+// the start of the sentence (its right edge) enters first, moving
+// left → right.
+(function () {
+  const section = document.querySelector('.wave');
+  const track = section && section.querySelector('.wave-track');
+  if (!track) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  track.querySelectorAll('.wave-word').forEach(word => {
+    const chars = Array.from(word.textContent.trim());
+    word.textContent = '';
+    chars.forEach(ch => {
+      const span = document.createElement('span');
+      span.className = 'wave-char';
+      span.textContent = ch;
+      word.appendChild(span);
+    });
+  });
+
+  section.classList.add('wave--on');
+
+  const items = Array.from(track.querySelectorAll('.wave-char, .wave-tile')).map(el => ({ el, cx: 0 }));
+  const WAVES_PER_SCREEN = 0.75;
+  // px of travel per px scrolled — slower on phones, where the line is
+  // short relative to scroll distance and would otherwise fly past
+  const travelSpeed = () => (window.innerWidth < 768 ? 0.45 : 0.9);
+  let vw = 0, vh = 0, trackW = 0, amp = 0, ticking = false;
+
+  function measure() {
+    vw = window.innerWidth;
+    vh = window.innerHeight;
+    trackW = track.scrollWidth;
+    amp = parseFloat(getComputedStyle(track).fontSize) * 0.32;
+    items.forEach(it => { it.cx = it.el.offsetLeft + it.el.offsetWidth / 2; });
+    // wave chars sit inside .wave-word, whose offsetParent is still the
+    // (absolutely positioned) track, so offsetLeft is track-relative
+    section.style.height = `${(trackW + vw) / travelSpeed()}px`;
+    update();
+  }
+
+  function update() {
+    ticking = false;
+    const r = section.getBoundingClientRect();
+    // progress runs from "section top at mid-screen" to "section bottom at mid-screen"
+    let p = (vh / 2 - r.top) / r.height;
+    p = Math.max(0, Math.min(1, p));
+    const x = -trackW + p * (trackW + vw);
+    track.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0)`;
+
+    const k = (Math.PI * 2 * WAVES_PER_SCREEN) / vw;
+    items.forEach(it => {
+      const sx = x + it.cx;
+      if (sx < -200 || sx > vw + 200) return;
+      const y = amp * Math.sin(sx * k);
+      const rot = Math.atan(amp * k * Math.cos(sx * k)) * 180 / Math.PI;
+      it.el.style.transform = `translateY(${y.toFixed(1)}px) rotate(${rot.toFixed(2)}deg)`;
+    });
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }, { passive: true });
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(measure, 120);
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  measure();
+})();

@@ -246,7 +246,7 @@ document.addEventListener('keydown', (e) => {
 // REVEAL ON SCROLL
 // ===========================
 const revealEls = document.querySelectorAll(
-  '.process-row, .work-row, .about-grid, .contact-wrapper, .section-header, .clients-grid, .faq-list'
+  '.process-row, .work-row, .about-grid, .contact-wrapper, .section-header, .clients-grid, .faq-chat'
 );
 
 revealEls.forEach(el => el.classList.add('reveal'));
@@ -1270,6 +1270,99 @@ document.addEventListener('touchstart', () => {}, { passive: true });
     if (entries.some(e => e.isIntersecting)) { io.disconnect(); run(); }
   }, { threshold: 0.5 });
   io.observe(band);
+})();
+
+// ===========================
+// COLOR ZONES — CHROME FOLLOWS THE ZONE
+// ===========================
+// The top bar's edge fade and the mobile tab bar flip to their light look
+// while a .tone-light section's grey (past its seam) is under them.
+(function () {
+  const zones = Array.from(document.querySelectorAll('.tone-light'));
+  const nav = document.getElementById('navbar');
+  const bar = document.getElementById('tabbar');
+  if (!zones.length) return;
+  let ticking = false;
+  const under = y => zones.some(z => {
+    const r = z.getBoundingClientRect();
+    const seam = window.innerHeight * 0.18 * 0.6;   // most of the way into the grey
+    const topSeam = z.previousElementSibling && z.previousElementSibling.classList.contains('tone-light') ? 0 : seam;
+    const next = z.nextElementSibling;
+    const botSeam = next && next.classList.contains('tone-light') ? 0 : seam;
+    return y > r.top + topSeam && y < r.bottom - botSeam;
+  });
+  const check = () => {
+    ticking = false;
+    if (nav) nav.classList.toggle('on-light', under(40));
+    if (bar) bar.classList.toggle('on-light', under(window.innerHeight - 50));
+  };
+  window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(check); } }, { passive: true });
+  window.addEventListener('resize', check);
+  check();
+})();
+
+// ===========================
+// FAQ — CHAT
+// ===========================
+// The markup holds every Q/A pair as bubbles (no-JS fallback). Here the
+// thread is cleared to a greeting and each question becomes a suggestion
+// chip: tapping it posts the visitor's bubble, shows typing dots, then
+// Michael's answer. The first exchange plays by itself the first time the
+// chat scrolls into view. Reduced motion: no typing delay or pop.
+(function () {
+  const chat = document.querySelector('.faq-chat');
+  const thread = chat && chat.querySelector('.faq-thread');
+  const chips = chat && chat.querySelector('.faq-chips');
+  if (!thread || !chips) return;
+  const qs = Array.from(thread.querySelectorAll('.faq-msg--q'));
+  const pairs = qs.map(q => ({ q: q.textContent.trim(), a: q.nextElementSibling ? q.nextElementSibling.textContent.trim() : '' }));
+  if (!pairs.length) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let busy = false;
+
+  const bubble = (cls, text) => {
+    const p = document.createElement('p');
+    p.className = 'faq-msg ' + cls + (reduce ? '' : ' is-new');
+    p.textContent = text;
+    thread.appendChild(p);
+    thread.scrollTop = thread.scrollHeight;
+    return p;
+  };
+
+  thread.textContent = '';
+  bubble('faq-msg--a', 'היי, אלה השאלות שהכי שואלים אותי. בחרו שאלה ואענה כאן.');
+
+  const ask = (i, btn) => {
+    if (busy || btn.disabled) return;
+    busy = true;
+    btn.disabled = true;
+    bubble('faq-msg--q', pairs[i].q);
+    if (reduce) { bubble('faq-msg--a', pairs[i].a); busy = false; return; }
+    const typing = document.createElement('div');
+    typing.className = 'faq-typing';
+    typing.setAttribute('aria-label', 'מיכאל מקליד');
+    typing.innerHTML = '<i></i><i></i><i></i>';
+    setTimeout(() => { thread.appendChild(typing); thread.scrollTop = thread.scrollHeight; }, 250);
+    setTimeout(() => { typing.remove(); bubble('faq-msg--a', pairs[i].a); busy = false; }, 1100);
+  };
+
+  const buttons = pairs.map((pair, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'faq-chip';
+    b.textContent = pair.q;
+    b.addEventListener('click', () => ask(i, b));
+    chips.appendChild(b);
+    return b;
+  });
+
+  // play the first exchange once, when the chat is first seen
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => {
+      if (entries.some(e => e.isIntersecting)) { io.disconnect(); setTimeout(() => ask(0, buttons[0]), 400); }
+    }, { threshold: 0.5 });
+    io.observe(chat);
+  }
 })();
 
 // ===========================

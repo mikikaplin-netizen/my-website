@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=34" />
+  <link rel="stylesheet" href="style.css?v=36" />
 </head>
 <body>
 
@@ -87,7 +87,7 @@
 
   <!-- CLIENTS — logo wall of businesses Michael worked with (logos from
        mkaplin.com); hairline grid whose lines light up under the cursor -->
-  <section class="clients" aria-label="עסקים שעבדו איתי">
+  <section class="tone-light clients" aria-label="עסקים שעבדו איתי">
     <div class="container">
     <ul class="clients-grid">
       <li style="--i:0"><img src="images/clients/wst.webp" alt="WST" width="135" height="85" loading="lazy" /></li>
@@ -112,7 +112,7 @@
   <!-- PORTFOLIO -->
   <section class="portfolio section" id="portfolio">
     <div class="container">
-      <div class="section-header">
+      <div class="section-header section-header--edit">
         <p class="section-label">עבודות נבחרות</p>
         <h2 class="section-title">תוצאות שמדברות<br />בעד עצמן</h2>
         <p class="section-sub">
@@ -128,7 +128,7 @@
           <li class="work-row is-active" data-work="0">
             <a class="work-link" href="https://mkaplin.com/project_review/lishkatoanim/" target="_blank" rel="noopener">
               <span class="work-main">
-                <span class="work-name">לשכת הטוענים הרבניים</span>
+                <span class="work-name" data-text="לשכת הטוענים הרבניים">לשכת הטוענים הרבניים</span>
                 <span class="work-desc">מיתוג מחדש ובניית נוכחות דיגיטלית חדשה לארגון מקצועי מוביל: אתר שמשדר סמכות, נגישות ואמינות.</span>
               </span>
               <span class="work-meta">מוסדות מקצועיים<br />2024</span>
@@ -138,7 +138,7 @@
           <li class="work-row" data-work="1">
             <a class="work-link" href="https://mkaplin.com/project_review/shimony/" target="_blank" rel="noopener">
               <span class="work-main">
-                <span class="work-name">משרד שמעוני</span>
+                <span class="work-name" data-text="משרד שמעוני">משרד שמעוני</span>
                 <span class="work-desc">אתר מודרני למשרד עורכי דין שמבסס מומחיות ומניע לקוחות פוטנציאליים ליצור קשר.</span>
               </span>
               <span class="work-meta">משפטים<br />2024</span>
@@ -148,7 +148,7 @@
           <li class="work-row" data-work="2">
             <a class="work-link" href="https://mkaplin.com/project_review/wst/" target="_blank" rel="noopener">
               <span class="work-main">
-                <span class="work-name">WST</span>
+                <span class="work-name" data-text="WST">WST</span>
                 <span class="work-desc">פלטפורמה להשקעות נדל"ן בדובאי, בעיצוב פרימיום שמדבר לקהל משקיעים בינלאומי.</span>
               </span>
               <span class="work-meta">נדל"ן בינלאומי<br />2023</span>
@@ -158,7 +158,7 @@
           <li class="work-row" data-work="3">
             <a class="work-link" href="https://mkaplin.com/project_review/alter/" target="_blank" rel="noopener">
               <span class="work-main">
-                <span class="work-name">אלתר ספרים</span>
+                <span class="work-name" data-text="אלתר ספרים">אלתר ספרים</span>
                 <span class="work-desc">חנות אונליין לציוד בית ספר עם תהליך רכישה מותאם אישית. חוויית קנייה שמרגישה טבעית ומהנה.</span>
               </span>
               <span class="work-meta">מסחר אלקטרוני<br />2023</span>
@@ -177,7 +177,7 @@
   </section>
 
   <!-- ABOUT -->
-  <section class="about section" id="about">
+  <section class="tone-light about section" id="about">
     <div class="container">
       <div class="about-grid">
         <div class="about-image-col">
@@ -189,14 +189,15 @@
               width="400"
               height="500"
             />
-            <div class="about-image-tag">
-              <span>+30 פרויקטים</span>
-            </div>
           </div>
         </div>
         <div class="about-text-col">
           <p class="section-label">מי אני</p>
           <h2 class="section-title">מאחורי כל אתר<br />עומד סיפור</h2>
+          <p class="about-intro">
+            קוראים לי מיכאל קאפלין,<br />
+            ואני מעצב ובונה אתרים עם אופי.
+          </p>
           <p class="about-lead">
             אני מאמין שאתר טוב הוא הרבה יותר מאוסף עמודים יפים. הוא הכלי החד ביותר שלך לבנות אמון, להעביר ערך ולהפוך מבקרים ללקוחות.
           </p>
@@ -228,7 +229,7 @@
   <!-- PROCESS -->
   <section class="process section" id="services">
     <div class="container">
-      <div class="section-header">
+      <div class="section-header section-header--edit">
         <p class="section-label">איך זה עובד</p>
         <h2 class="section-title">התהליך שלי.<br />ארבעה שלבים לתוצאה.</h2>
         <p class="section-sub">
@@ -513,7 +514,7 @@
   <!-- TESTIMONIALS — title on the right, quotes in vertically scrolling
        columns on the left (script.js deals the cards into 1–3 columns by
        width and loops each one; without JS they sit in a plain grid) -->
-  <section class="testimonials section" id="testimonials">
+  <section class="tone-light testimonials section" id="testimonials">
     <div class="container tm-layout">
       <div class="section-header tm-head">
         <p class="section-label">המלצות</p>
@@ -587,40 +588,40 @@
     </div>
   </section>
 
-  <!-- FAQ — real questions from mkaplin.com; native exclusive <details>
-       accordion (name="faq": one open at a time), title on the right -->
-  <section class="faq section" id="faq">
+  <!-- FAQ — "ask me" chat: the real Q&As from mkaplin.com as a conversation.
+       Without JS the thread below shows every question/answer pair; script.js
+       ("FAQ — CHAT") turns the questions into suggestion chips that play the
+       exchange out (visitor bubble → typing dots → Michael's answer). -->
+  <section class="tone-light faq section" id="faq">
     <div class="container faq-layout">
       <div class="section-header faq-head">
         <p class="section-label">שאלות נפוצות</p>
         <h2 class="section-title">מה שכולם<br /><span class="text-accent">שואלים</span></h2>
         <p class="faq-sub">תשובות אמיתיות לשאלות שמלוות כמעט כל פרויקט. רוצים לשאול משהו אחר? <a href="https://wa.me/972542030381" target="_blank" rel="noopener">כתבו לי בוואטסאפ</a></p>
       </div>
-      <div class="faq-list">
-        <details class="faq-item" name="faq" open>
-          <summary><span>למה אתר תדמית זה לא מותרות אלא השקעה חכמה לעסק?</span><i class="faq-icon" aria-hidden="true"></i></summary>
-          <p>אתר תדמית הוא הנכס הדיגיטלי המרכזי של כל עסק. הוא לא רק מציג מידע, אלא יוצר אמון, מבליט את הייחוד שלך ומעביר את המסר של העסק בצורה שאי אפשר להתעלם ממנה.</p>
-        </details>
-        <details class="faq-item" name="faq">
-          <summary><span>איך עיצוב האתר משפיע על האמון של הלקוח הפוטנציאלי?</span><i class="faq-icon" aria-hidden="true"></i></summary>
-          <p>העיצוב הוא השפה הראשונה שהגולש פוגש. עוד לפני שהוא קורא מילה אחת, הוא מרגיש אם העסק מקצועי, אמין ורציני. עיצוב מדויק, אחיד ונקי גורם לו להישאר, להעמיק וליצור קשר. עיצוב מבולגן או ישן, לעומת זאת, גורם לאובדן אמון מיידי.</p>
-        </details>
-        <details class="faq-item" name="faq">
-          <summary><span>מה ההבדל בין אתר מעוצב אישית לבין תבנית מוכנה?</span><i class="faq-icon" aria-hidden="true"></i></summary>
-          <p>בתבנית מוכנה, האתר שלך נראה כמו עוד מאות אתרים באותה נישה. באתר מעוצב אישית, כל פרט נבנה עבורך: צבעים, טיפוגרפיה, קומפוזיציה ותוכן שמספרים את הסיפור שלך. זה מה שמבדל אותך, יוצר חיבור רגשי ומציב את העסק שלך כמותג חזק.</p>
-        </details>
-        <details class="faq-item" name="faq">
-          <summary><span>אפשרי למדוד את ההצלחה של אתרי תדמית?</span><i class="faq-icon" aria-hidden="true"></i></summary>
-          <p>הצלחה נמדדת לא רק בכמות הכניסות, אלא באיכות הפניות. מדדים כמו זמן שהיה באתר, מספר עמודים שנצפו, אחוזי נטישה והמרות לטפסים או שיחות, כולם מראים עד כמה האתר באמת עובד בשבילך. כשיש חיבור בין עיצוב, תוכן וחוויית משתמש, המספרים מדברים בעד עצמם.</p>
-        </details>
-        <details class="faq-item" name="faq">
-          <summary><span>מה באמת גורם לאתר "למכור", העיצוב, התוכן או החוויה?</span><i class="faq-icon" aria-hidden="true"></i></summary>
-          <p>שלושתם יחד. עיצוב מושך את העין, תוכן מדויק מניע לפעולה, וחוויית משתמש חלקה מחברת ביניהם. אתר מצליח הוא כזה שגורם לגולש להבין מיד מה אתה מציע, למה זה רלוונטי לו, ואיך לפנות אליך, בלי רגע של בלבול.</p>
-        </details>
-        <details class="faq-item" name="faq">
-          <summary><span>למה חשוב שלאתר תהיה שפה אחידה עם המותג שלך?</span><i class="faq-icon" aria-hidden="true"></i></summary>
-          <p>המותג שלך צריך לדבר באותה שפה בכל נקודת מגע כמו: לוגו, צבעים, טקסטים ותמונות. כשהאתר משדר את אותו סגנון וערכים כמו שאר החומרים שלך, נוצרת חוויה אחידה וזכירה. זה מחזק את הזהות המותגית ומעמיק את האמון של הלקוח.</p>
-        </details>
+      <div class="faq-chat">
+        <div class="faq-chat-head">
+          <img src="images/miki-hero.png" alt="" class="faq-chat-avatar" width="40" height="40" loading="lazy" />
+          <div>
+            <b>מיכאל קאפלין</b>
+            <span>עונה על השאלות הנפוצות</span>
+          </div>
+        </div>
+        <div class="faq-thread" aria-live="polite">
+          <p class="faq-msg faq-msg--q">למה אתר תדמית זה לא מותרות אלא השקעה חכמה לעסק?</p>
+          <p class="faq-msg faq-msg--a">אתר תדמית הוא הנכס הדיגיטלי המרכזי של כל עסק. הוא לא רק מציג מידע, אלא יוצר אמון, מבליט את הייחוד שלך ומעביר את המסר של העסק בצורה שאי אפשר להתעלם ממנה.</p>
+          <p class="faq-msg faq-msg--q">איך עיצוב האתר משפיע על האמון של הלקוח הפוטנציאלי?</p>
+          <p class="faq-msg faq-msg--a">העיצוב הוא השפה הראשונה שהגולש פוגש. עוד לפני שהוא קורא מילה אחת, הוא מרגיש אם העסק מקצועי, אמין ורציני. עיצוב מדויק, אחיד ונקי גורם לו להישאר, להעמיק וליצור קשר. עיצוב מבולגן או ישן, לעומת זאת, גורם לאובדן אמון מיידי.</p>
+          <p class="faq-msg faq-msg--q">מה ההבדל בין אתר מעוצב אישית לבין תבנית מוכנה?</p>
+          <p class="faq-msg faq-msg--a">בתבנית מוכנה, האתר שלך נראה כמו עוד מאות אתרים באותה נישה. באתר מעוצב אישית, כל פרט נבנה עבורך: צבעים, טיפוגרפיה, קומפוזיציה ותוכן שמספרים את הסיפור שלך. זה מה שמבדל אותך, יוצר חיבור רגשי ומציב את העסק שלך כמותג חזק.</p>
+          <p class="faq-msg faq-msg--q">אפשרי למדוד את ההצלחה של אתרי תדמית?</p>
+          <p class="faq-msg faq-msg--a">הצלחה נמדדת לא רק בכמות הכניסות, אלא באיכות הפניות. מדדים כמו זמן שהיה באתר, מספר עמודים שנצפו, אחוזי נטישה והמרות לטפסים או שיחות, כולם מראים עד כמה האתר באמת עובד בשבילך. כשיש חיבור בין עיצוב, תוכן וחוויית משתמש, המספרים מדברים בעד עצמם.</p>
+          <p class="faq-msg faq-msg--q">מה באמת גורם לאתר "למכור", העיצוב, התוכן או החוויה?</p>
+          <p class="faq-msg faq-msg--a">שלושתם יחד. עיצוב מושך את העין, תוכן מדויק מניע לפעולה, וחוויית משתמש חלקה מחברת ביניהם. אתר מצליח הוא כזה שגורם לגולש להבין מיד מה אתה מציע, למה זה רלוונטי לו, ואיך לפנות אליך, בלי רגע של בלבול.</p>
+          <p class="faq-msg faq-msg--q">למה חשוב שלאתר תהיה שפה אחידה עם המותג שלך?</p>
+          <p class="faq-msg faq-msg--a">המותג שלך צריך לדבר באותה שפה בכל נקודת מגע כמו: לוגו, צבעים, טקסטים ותמונות. כשהאתר משדר את אותו סגנון וערכים כמו שאר החומרים שלך, נוצרת חוויה אחידה וזכירה. זה מחזק את הזהות המותגית ומעמיק את האמון של הלקוח.</p>
+        </div>
+        <div class="faq-chips" aria-label="שאלות לבחירה"></div>
       </div>
     </div>
   </section>
@@ -752,6 +753,6 @@
     </button>
   </div>
 
-  <script src="script.js?v=34"></script>
+  <script src="script.js?v=36"></script>
 </body>
 </html>

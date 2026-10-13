@@ -43,6 +43,20 @@ block in `script.js` that queries its own DOM by id/class and no-ops if the elem
 (defensive `if (el) ...` guards throughout), so sections can be added/removed without touching
 other blocks.
 
+**Color zones** ("COLOR ZONES" in `style.css`): sections with `.tone-light` (clients, about,
+testimonials, faq) sit on a cool concrete grey `--paper: #DCDEE2` (Michael rejected cream) instead of
+the dark dot field. Their background melts in/out over `--seam` (18vh gradient, added as extra
+padding so text never sits on it); consecutive light sections share one continuous grey (`+` /
+`:has(+)`). On grey, text uses `--ink` / `--ink-muted` / `--ink-accent` (#0B5F6C) /
+`--ink-accent-2` (#096A1A): brand cyan/green are only 1.8:1 on light, so never use them as text
+there. "COLOR ZONES — CHROME FOLLOWS THE ZONE" toggles `.on-light` on the navbar (solid glass, grey
+edge fade) and the mobile tab bar (ink labels) while grey is under them.
+
+**Section openings**: every `.section-label` gets an editorial index "(01)…" from a CSS counter in page
+order. Projects and process use `.section-header--edit` (oversized right-aligned title, subtitle on
+the left at its baseline); testimonials/FAQ have side titles, magnet stays centered. Don't
+reintroduce one centered label/title/sub template for every section.
+
 **Design tokens live in `:root` in `style.css`** (`--bg`, `--bg-2`, `--bg-3`, `--accent`,
 `--accent-2`, `--text`, `--text-muted`, `--radius`, `--font`, `--shadow`, `--glow`, etc.). Brand
 colors are `--accent: #64C1D2` (cyan) and `--accent-2: #1CD31C` (green) on a dark `#101024`
@@ -89,8 +103,9 @@ so they render above it. Section backgrounds use semi-transparent colors
   `--edge-blur-h`, 8vh), stacked masked layers with doubling blur.
 - Motion: magnetic `.btn`/`.nav-cta` (uses the standalone `translate` property so it doesn't
   clash with hover `transform`), hero photo parallax.
-- Portfolio (`.work`, "PORTFOLIO — HOVER-REVEAL LIST"): full-bleed rows (name in --accent, white when active;
-  field/year), no numbers or icons. Hovering a row activates it (accent underline + description); on desktop a
+- Portfolio (`.work`, "PORTFOLIO — HOVER-REVEAL LIST"): full-bleed rows split by a fixed hairline in brand blue at 50%;
+  name in brand blue at 50% (`data-text` copy in white wipes in from the right when active, nothing in the
+  row moves), description always shown, field/year; no numbers or icons. Hovering a row activates it; on desktop a
   `.work-preview` floats on the left, eased toward the cursor's height with a velocity tilt,
   wiping between projects. Touch screens activate the mid-viewport row and show each row's
   `.work-thumb` inline. Visuals are gradient placeholders until Michael's screen recordings
@@ -173,8 +188,13 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
 - About (`.about`) is full screen (`min-height: 100svh`): photo + story, then `.about-stats`, a
   full-width band of oversized thin numerals (+5 / +30 / 100%) split by hairlines; "ABOUT — COUNT-UP
   NUMBERS" counts them up once half in view (final values live in the markup).
-- FAQ (`#faq`, between testimonials and contact): the 6 real Q&As from mkaplin.com as a native
-  exclusive `<details name="faq">` accordion; title + WhatsApp line on the right (sticky on desktop).
+- FAQ (`#faq`, between testimonials and contact): an "ask me" chat window (solid dark device in any
+  zone) with the 6 real Q&As from mkaplin.com. Markup holds all Q/A bubbles (no-JS fallback);
+  "FAQ — CHAT" turns questions into suggestion chips that play out visitor bubble (right, cyan) →
+  typing dots → Michael's answer (left); the first exchange auto-plays when first seen.
+- About opens with "קוראים לי מיכאל קאפלין, ואני מעצב ובונה אתרים עם אופי." (`.about-intro`); no badge
+  on the photo (the +30 lives in the numbers band).
+- Testimonial cards have their own solid layer (navy + soft top light, no per-card backdrop blur).
 - Contact form is deliberately minimal: no card/frame, underlined transparent fields in a
   2-column grid (`.form-group--wide` spans both).
 

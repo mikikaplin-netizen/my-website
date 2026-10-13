@@ -1,46 +1,27 @@
 /* ===========================
    FONTS
 =========================== */
-/* Self-hosted Polin (Hebrew). Expected files: fonts/Polin-{Light,Regular,
-   Medium,Bold,Black}.woff2 — until they're added, the stack falls back to
-   the system Hebrew sans. */
+/* Self-hosted Polin (Hebrew): Light / Regular / Bold. Weight ranges map
+   every weight the site uses onto the three files that exist, so 500 uses
+   Regular and 800/900 use Bold instead of browser-synthesized faux bold. */
 @font-face {
   font-family: 'Polin';
-  src: local('Polin Light'), local('Polin-Light'),
-       url('fonts/Polin-Light.woff2') format('woff2');
-  font-weight: 300;
+  src: url('fonts/Polin-Light.ttf') format('truetype');
+  font-weight: 100 349;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'Polin';
-  src: local('Polin Regular'), local('Polin-Regular'),
-       url('fonts/Polin-Regular.woff2') format('woff2');
-  font-weight: 400;
+  src: url('fonts/Polin-Regular.ttf') format('truetype');
+  font-weight: 350 599;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'Polin';
-  src: local('Polin Medium'), local('Polin-Medium'),
-       url('fonts/Polin-Medium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Polin';
-  src: local('Polin Bold'), local('Polin-Bold'),
-       url('fonts/Polin-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Polin';
-  src: local('Polin Black'), local('Polin-Black'),
-       url('fonts/Polin-Black.woff2') format('woff2');
-  font-weight: 900;
+  src: url('fonts/Polin-Bold.ttf') format('truetype');
+  font-weight: 600 1000;
   font-style: normal;
   font-display: swap;
 }

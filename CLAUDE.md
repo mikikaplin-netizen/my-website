@@ -26,7 +26,8 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
   ABOUT, PROCESS, PORTFOLIO, CONTACT, FOOTER, WHATSAPP FLOATING WIDGET, ANIMATIONS, RESPONSIVE)
 - `script.js` — vanilla JS, organized in the same `// ==== SECTION ====` comment style, one IIFE
   or top-level block per feature (see below)
-- `fonts/` — self-hosted Polin (Hebrew) `.woff2` files, `@font-face` declared in `style.css`
+- `fonts/` — self-hosted Polin (Hebrew) `.ttf` files (Light/Regular/Bold, uploaded by Michael),
+  `@font-face` with weight ranges in `style.css`
   (Google Sans was removed on purpose — don't reintroduce it)
 - `images/` — logo SVGs (`logo-full.svg`, `logo-icon.svg`) and the hero photo (`miki-hero.png`)
 - `serve.py` — the only "tooling" in the repo

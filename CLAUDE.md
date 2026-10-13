@@ -23,7 +23,7 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
 - `index.html` — the entire page, all sections inline (no templating/includes)
 - `style.css` — all styles, organized in clearly labeled `/* ==== SECTION ==== */` blocks that
   mirror the HTML sections 1:1 (FONTS, ROOT & RESET, UTILITIES, BUTTONS, NAVBAR, HERO, STATEMENT,
-  ABOUT, PROCESS, CLIENTS, PORTFOLIO, TESTIMONIALS, CONTACT, FOOTER, WHATSAPP FLOATING WIDGET, ANIMATIONS, RESPONSIVE)
+  CLIENTS, PORTFOLIO, ABOUT, PROCESS, TESTIMONIALS, FAQ, CONTACT, FOOTER, WHATSAPP FLOATING WIDGET, ANIMATIONS, RESPONSIVE)
 - `script.js` — vanilla JS, organized in the same `// ==== SECTION ====` comment style, one IIFE
   or top-level block per feature (see below)
 - `fonts/` — self-hosted Polin (Hebrew) `.ttf` files (Light/Regular/Bold, uploaded by Michael),
@@ -37,7 +37,7 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
 ## Architecture / how the page is wired together
 
 **Sections are independent and stack in document order** inside `index.html`: navbar → hero →
-statement → portfolio → about → process → clients → magnet → wave → testimonials → contact → footer, plus a WhatsApp widget appended at
+statement → clients → portfolio → about → process → magnet → wave → testimonials → faq → contact → footer, plus a WhatsApp widget appended at
 the end of `<body>`. There's no JS component system — each section's behavior is a self-contained
 block in `script.js` that queries its own DOM by id/class and no-ops if the element isn't present
 (defensive `if (el) ...` guards throughout), so sections can be added/removed without touching
@@ -74,7 +74,10 @@ so they render above it. Section backgrounds use semi-transparent colors
   `.hero-title`, `.section-title`, `.process-title` are split into `.tx-mask > .tx-word` spans
   that rise/blur in when `.tx-in` is added; `.section-label` gets a Hebrew-letter scramble.
   Everything is skipped under `prefers-reduced-motion`.
-- Design rule: **no gradient text anywhere** — every text color is a single solid brand color.
+- Design rule: **no gradient text anywhere**. Every text color is a single solid brand color.
+- Copy rule: **no em/en dashes (— –) in visible text** (Michael's request); use a comma, period or
+  colon instead. Line breaks: headings use `text-wrap: balance`, paragraphs `text-wrap: pretty`, so
+  no single word is left alone on a line.
 - Wave marquee (`.wave`, "WAVE MARQUEE — SCROLL-DRIVEN" in `script.js`): the section is pinned
   (`position: sticky`) while one giant line travels across it, mirrored for Hebrew (sentence start
   enters first, moving left → right); each letter/tile rides a sine wave fixed in screen space.
@@ -137,7 +140,9 @@ moved into a sticky `.process-stage` and overlapped (`.is-stacked`) — no extra
 (Michael didn't want one). Scrolling (0.55 viewport heights per step) raises each `.pwin-frame` from
 below over the previous window (which sinks back and fades — the glass would show through), while
 the `.process-text`s cross-fade in the same spot (equal heights via `--deck-text-h`). Four thin
-lines under the stage fill with progress (accent = current step) and jump to a step on click; the
+lines sit under the text (in `.process-steps-holder`, a copy of the row grid), numbered right → left
+(1 rightmost, 4 leftmost), fill with progress (accent = current step) and jump to a step on click.
+When there is room (desktop) the section title moves into the stage, right above the steps; the
 front window replays its motion. Only on when a row fits the stage (compact text on phones);
 otherwise, and under reduced motion / no JS, the plain list remains. The wave source is
 `images/רקע גלים ללא טישטוש.png` (uploaded by Michael, 10723×5259).
@@ -161,10 +166,15 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
   cards into 1–3 columns by width and repeats each column until it overfills the window (so the loop
   never shows empty space). Hover pauses a column; reduced motion / no JS = plain grid. Avatars are the
   clients' logos/photo from mkaplin.com (`images/testimonials/`); מיכאל זכאי has none and keeps initials.
-- Clients (`.clients`, right after the process section, no heading on purpose): logo wall of the 15
+- Clients (`.clients`, 3rd section, right before the portfolio, no heading on purpose): logo wall of the 15
   grey client logos from mkaplin.com (`images/clients/`, sized by area so wide/tall marks weigh the
   same) in a 5×3 hairline grid (3 columns on mobile) whose lines glow under the cursor
   ("CLIENTS — LOGO WALL SPOTLIGHT"); cells fade up staggered via `--i` when revealed.
+- About (`.about`) is full screen (`min-height: 100svh`): photo + story, then `.about-stats`, a
+  full-width band of oversized thin numerals (+5 / +30 / 100%) split by hairlines; "ABOUT — COUNT-UP
+  NUMBERS" counts them up once half in view (final values live in the markup).
+- FAQ (`#faq`, between testimonials and contact): the 6 real Q&As from mkaplin.com as a native
+  exclusive `<details name="faq">` accordion; title + WhatsApp line on the right (sticky on desktop).
 - Contact form is deliberately minimal: no card/frame, underlined transparent fields in a
   2-column grid (`.form-group--wide` spans both).
 

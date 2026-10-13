@@ -122,6 +122,11 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
 
 .section { padding: 5vh 0; }
 
+/* never leave a single word alone on the last line: balanced headings,
+   "pretty" paragraphs (falls back to normal wrapping where unsupported) */
+h1, h2, h3, .section-title, .process-title, .hero-title, .work-name { text-wrap: balance; }
+p, blockquote, li, summary, .work-desc, .faq-sub { text-wrap: pretty; }
+
 .section-header {
   text-align: center;
   margin-bottom: 72px;
@@ -750,7 +755,16 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
 /* ===========================
    ABOUT
 =========================== */
-.about { background: rgba(20,22,46,0.38); }
+.about {
+  background: rgba(20,22,46,0.38);
+  /* full screen: photo + story, then the numbers band along the bottom */
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 96px 0 56px;
+}
 
 .about-grid {
   display: grid;
@@ -761,7 +775,7 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
 
 .about-image-frame {
   position: relative;
-  width: 320px;
+  width: clamp(300px, 28vw, 420px);
   flex-shrink: 0;
 }
 
@@ -810,25 +824,51 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
   margin-bottom: 40px;
 }
 
+/* numbers as a design element: a full-width band of oversized thin
+   numerals (Polin Light, like the process titles) split by hairlines;
+   label on top, the +/% sign smaller in the second brand color. */
 .about-stats {
-  display: flex;
-  gap: 40px;
-  padding-top: 32px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: clamp(48px, 8vh, 88px) 0 0;
   border-top: 1px solid var(--border);
 }
 
-.stat { display: flex; flex-direction: column; gap: 4px; }
-
-.stat-num {
-  font-size: 2.2rem;
-  font-weight: 900;
-  color: var(--accent-2);
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 28px 32px 0;
+  border-inline-start: 1px solid var(--border);
 }
 
+.stat:first-child { border-inline-start: 0; padding-inline-start: 0; }
+
 .stat-label {
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   color: var(--text-muted);
   font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.stat-num {
+  margin: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;   /* dir=ltr: hug the right edge like the label */
+  gap: 0.04em;
+  font-size: clamp(4rem, 9vw, 8.5rem);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.03em;     /* large display numerals: tight tracking */
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;  /* no jitter while counting */
+}
+
+.stat-sign {
+  font-size: 0.45em;
+  line-height: 1.3;
+  color: var(--accent-2);
 }
 
 /* ===========================
@@ -900,10 +940,15 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
   top: 0;
   height: 100vh;
   height: 100svh;
-  display: grid;
-  place-items: center;
-  padding: 84px 0 calc(8vh + 48px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 84px 0 calc(8vh + 16px);
 }
+
+/* desktop: the section title rides in the pinned stage, right above the
+   steps (no screen-high gap between title and visual) */
+.process-stage > .section-header { margin-bottom: clamp(24px, 4vh, 48px); }
 
 .process-stage-layers {
   display: grid;
@@ -922,6 +967,7 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
 .is-stacked .process-text {
   min-height: var(--deck-text-h, auto);
   justify-content: center;
+  padding-bottom: 46px;    /* room for the step lines under the text */
 }
 
 .is-stacked .process-text,
@@ -930,21 +976,38 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
   transition: none !important;
 }
 
-/* step lines: one per step, filling as the scroll passes it */
-.process-steps {
-  position: absolute;
-  bottom: calc(8vh + 14px);  /* clear of the bottom edge blur */
-  left: 50%;
-  translate: -50% 0;
+/* step lines: one per step, under the text, numbered right → left
+   (1 at the right edge, 4 leftmost); each fills from its right end.
+   .process-steps-holder copies the row grid so the lines sit in the text
+   column, at the bottom of the text block. */
+.process-steps-holder {
+  grid-area: 1 / 1;
+  direction: ltr;            /* same as .process-row: text column on the left */
+  display: grid;
+  grid-template-columns: minmax(0, 484fr) minmax(0, 560fr);
+  gap: 60px;
+  align-items: center;
+  pointer-events: none;
   z-index: 10;
+}
+
+.process-steps-col {
+  height: var(--deck-text-h, auto);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end; /* right edge, where the RTL text starts */
+}
+
+.process-steps {
   display: flex;
   gap: 10px;
-  direction: ltr;
+  direction: rtl;
+  pointer-events: auto;
 }
 
 .process-steps button {
   position: relative;
-  width: clamp(40px, 6vw, 72px);
+  width: clamp(40px, 5vw, 64px);
   height: 18px;              /* hit area; the line itself is 2px */
   padding: 0;
   border: 0;
@@ -968,7 +1031,7 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
 .process-steps button i {
   background: rgba(255,255,255,0.55);
   transform: scaleX(var(--fill, 0));
-  transform-origin: 0 50%;
+  transform-origin: 100% 50%;
   transition: background 0.3s ease;
 }
 
@@ -978,6 +1041,8 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
 @media (max-width: 900px) {
   .process-stage { padding-top: 76px; }
   .is-stacked .process-row { gap: 18px; }
+  .process-steps-holder { grid-template-columns: 1fr; align-items: start; }
+  .process-steps-col { justify-content: center; }
   .is-stacked .process-num { font-size: 1.2rem; }
   .is-stacked .process-title { font-size: 1.7rem; margin-bottom: 8px; }
   .is-stacked .process-body { font-size: 1rem; line-height: 1.5; }
@@ -1815,6 +1880,133 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
 }
 
 .work-thumb { display: none; }
+
+/* ===========================
+   FAQ
+=========================== */
+/* Title on the right (sticky on desktop), questions on the left as a
+   native exclusive <details> accordion: hairline rows, the question turns
+   accent when open, the + turns into ×. The answer opens with a height
+   transition where ::details-content + interpolate-size are supported
+   (elsewhere it simply opens). */
+.faq-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.8fr) 2fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.faq-head {
+  position: sticky;
+  top: 120px;
+  margin: 0;
+  text-align: right;
+}
+
+.faq-sub {
+  margin-top: 18px;
+  max-width: 34ch;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.faq-sub a {
+  white-space: nowrap;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+
+.faq-list { border-top: 1px solid var(--border); }
+
+.faq-item {
+  border-bottom: 1px solid var(--border);
+  interpolate-size: allow-keywords;
+}
+
+.faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 26px 0;
+  cursor: pointer;
+  list-style: none;
+  font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--text);
+  transition: color 0.25s ease;
+  -webkit-user-select: none;
+          user-select: none;
+}
+
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item[open] summary { color: var(--accent); }
+
+.faq-item summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .faq-item summary:hover { color: var(--accent); }
+}
+
+/* + that turns into × */
+.faq-icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  transition: transform 0.35s var(--ease-out);
+}
+
+.faq-icon::before,
+.faq-icon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  border-radius: 2px;
+  background: currentColor;
+  translate: 0 -50%;
+}
+
+.faq-icon::after { rotate: 90deg; }
+.faq-item[open] .faq-icon { transform: rotate(45deg); }
+
+.faq-item p {
+  max-width: 62ch;
+  padding: 0 0 28px;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.faq-item::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition: block-size 0.35s var(--ease-out), content-visibility 0.35s allow-discrete;
+}
+
+.faq-item[open]::details-content { block-size: auto; }
+
+@media (max-width: 900px) {
+  .faq-layout { grid-template-columns: 1fr; gap: 28px; }
+  .faq-head { position: static; text-align: center; }
+  .faq-sub { margin-inline: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-item::details-content { transition: none; }
+  .faq-icon { transition: none; }
+}
 
 /* ===========================
    CONTACT
@@ -2855,7 +3047,9 @@ img.tm-avatar {
 }
 
 @media (max-width: 480px) {
-  .about-stats { flex-wrap: wrap; gap: 24px; }
+  .stat { padding: 20px 12px 0; }
+  .stat-label { font-size: 0.78rem; }
+  .stat-num { font-size: clamp(2.4rem, 11vw, 3.2rem); }
 }
 
 /* ===========================

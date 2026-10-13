@@ -246,7 +246,7 @@ document.addEventListener('keydown', (e) => {
 // REVEAL ON SCROLL
 // ===========================
 const revealEls = document.querySelectorAll(
-  '.process-row, .work-row, .about-grid, .contact-wrapper, .section-header, .clients-grid'
+  '.process-row, .work-row, .about-grid, .contact-wrapper, .section-header, .clients-grid, .faq-list'
 );
 
 revealEls.forEach(el => el.classList.add('reveal'));
@@ -437,8 +437,14 @@ window.addEventListener('scroll', () => {
   };
 
   const sectionInView = () => {
-    let cur = -1;
-    targets.forEach((t, i) => { if (t && window.scrollY >= t.offsetTop - window.innerHeight * 0.4) cur = i; });
+    // the reached section that starts lowest on the page (tab order is not
+    // page order: projects come before About)
+    let cur = -1, best = -Infinity;
+    targets.forEach((t, i) => {
+      if (!t) return;
+      const top = t.getBoundingClientRect().top + window.scrollY;
+      if (window.scrollY >= top - window.innerHeight * 0.4 && top > best) { best = top; cur = i; }
+    });
     // contact is short and last: count it once the page bottom is reached
     if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) cur = items.length - 1;
     return cur;
@@ -1232,6 +1238,41 @@ document.addEventListener('touchstart', () => {}, { passive: true });
 })();
 
 // ===========================
+// ABOUT — COUNT-UP NUMBERS
+// ===========================
+// Each .stat-val counts from 0 to its data-count once the band is half in
+// view: 1.6s, strong ease-out (fast start, soft landing), staggered 120ms.
+// The markup already holds the final values (no JS / reduced motion).
+(function () {
+  const band = document.querySelector('.about-stats');
+  if (!band || !('IntersectionObserver' in window)) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const vals = Array.from(band.querySelectorAll('.stat-val[data-count]'));
+  const DUR = 1600;
+  const easeOut = t => 1 - Math.pow(1 - t, 4);
+  vals.forEach(v => { v.textContent = '0'; });
+
+  const run = () => {
+    const t0 = performance.now();
+    const tick = now => {
+      let done = true;
+      vals.forEach((v, i) => {
+        const t = Math.min(1, Math.max(0, (now - t0 - i * 120) / DUR));
+        if (t < 1) done = false;
+        v.textContent = String(Math.round(easeOut(t) * Number(v.dataset.count)));
+      });
+      if (!done) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+
+  const io = new IntersectionObserver(entries => {
+    if (entries.some(e => e.isIntersecting)) { io.disconnect(); run(); }
+  }, { threshold: 0.5 });
+  io.observe(band);
+})();
+
+// ===========================
 // PROCESS — GLASS WINDOWS
 // ===========================
 // .pwin is authored at the Figma window's native 560px width; zoom it to
@@ -1304,7 +1345,18 @@ document.addEventListener('touchstart', () => {}, { passive: true });
     nav.appendChild(b);
     return b;
   });
-  stage.append(layers, nav);
+  // the lines live in a copy of the row grid so they sit in the text column
+  const holder = document.createElement('div');
+  holder.className = 'process-steps-holder';
+  const col = document.createElement('div');
+  col.className = 'process-steps-col';
+  col.appendChild(nav);
+  holder.appendChild(col);
+  stage.append(layers);
+
+  // the section title can ride in the stage (when there's room for it)
+  const header = deck.parentElement && deck.parentElement.querySelector(':scope > .section-header');
+  const headerOut = () => { if (header && header.parentElement === stage) deck.before(header); };
 
   let on = false, front = -1, ticking = false;
   const ease = t => t * t * (3 - 2 * t);
@@ -1312,6 +1364,7 @@ document.addEventListener('touchstart', () => {}, { passive: true });
 
   const enable = () => {
     rows.forEach((r, i) => { r.style.zIndex = i + 1; layers.appendChild(r); });
+    layers.appendChild(holder);
     deck.appendChild(stage);
     deck.classList.add('is-stacked');
     on = true;
@@ -1319,6 +1372,7 @@ document.addEventListener('touchstart', () => {}, { passive: true });
   const disable = () => {
     rows.forEach(r => { r.style.zIndex = ''; r.classList.remove('is-front'); deck.appendChild(r); });
     [...texts, ...wins].forEach(el => { if (el) el.style.cssText = ''; });
+    headerOut();
     stage.remove();
     deck.classList.remove('is-stacked');
     deck.style.height = '';
@@ -1333,9 +1387,17 @@ document.addEventListener('touchstart', () => {}, { passive: true });
     deck.style.removeProperty('--deck-text-h');
     const th = Math.max(...texts.map(t => t.offsetHeight));
     deck.style.setProperty('--deck-text-h', th + 'px');
-    const tallest = Math.max(...rows.map(r => r.offsetHeight));
     const cs = getComputedStyle(stage);
-    return tallest <= stage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    const room = stage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    const tallest = Math.max(...rows.map(r => r.offsetHeight));
+    if (header) {
+      // first try with the title inside the stage, right above the steps
+      stage.prepend(header);
+      const hh = header.offsetHeight + parseFloat(getComputedStyle(header).marginBottom);
+      if (tallest + hh <= room) return true;
+      headerOut();
+    }
+    return tallest <= room;
   };
 
   const update = () => {

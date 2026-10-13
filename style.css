@@ -539,7 +539,7 @@ img { max-width: 100%; display: block; }
 .wave {
   padding: 12vh 0;
   overflow: hidden;
-  /* light "break" band between portfolio and contact */
+  /* light "break" band before contact */
   background: #fff;
 }
 
@@ -1353,9 +1353,10 @@ img { max-width: 100%; display: block; }
 .portfolio { background: rgba(20,22,46,0.38); }
 
 .portfolio-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
+  /* one project per row; the visual alternates sides row by row */
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
 .portfolio-card {
@@ -1388,12 +1389,17 @@ img { max-width: 100%; display: block; }
   box-shadow: var(--shadow), var(--glow);
 }
 
-.portfolio-card--wide {
-  grid-column: span 1;
+.portfolio-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  align-items: stretch;
 }
 
+.portfolio-card:nth-child(even) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr); }
+.portfolio-card:nth-child(even) .portfolio-img { order: 2; }
+
 .portfolio-img {
-  height: 200px;
+  aspect-ratio: 16 / 10;
   background: linear-gradient(135deg,
     hsl(var(--hue), var(--sat), 12%) 0%,
     hsl(var(--hue), var(--sat), 22%) 100%);
@@ -1437,7 +1443,12 @@ img { max-width: 100%; display: block; }
 
 .portfolio-btn:hover { background: #4db5c8; }
 
-.portfolio-info { padding: 24px; }
+.portfolio-info {
+  padding: clamp(28px, 3.5vw, 48px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
 .portfolio-header {
   display: flex;
@@ -1460,14 +1471,15 @@ img { max-width: 100%; display: block; }
 }
 
 .portfolio-info h3 {
-  font-size: 1.15rem;
-  font-weight: 800;
-  margin-bottom: 8px;
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 12px;
   color: var(--text);
 }
 
 .portfolio-info p {
-  font-size: 0.9rem;
+  font-size: 1.05rem;
   color: var(--text-muted);
   line-height: 1.7;
 }
@@ -2001,7 +2013,9 @@ img { max-width: 100%; display: block; }
     font-size: 0.9rem;
   }
 
-  .portfolio-grid { grid-template-columns: 1fr; }
+  .portfolio-card,
+  .portfolio-card:nth-child(even) { grid-template-columns: 1fr; }
+  .portfolio-card:nth-child(even) .portfolio-img { order: 0; }
 
   .contact-wrapper {
     grid-template-columns: 1fr;

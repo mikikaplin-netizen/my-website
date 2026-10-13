@@ -37,7 +37,7 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
 ## Architecture / how the page is wired together
 
 **Sections are independent and stack in document order** inside `index.html`: navbar → hero →
-statement → about → process → portfolio → wave → contact → footer, plus a WhatsApp widget appended at
+statement → portfolio → about → process → wave → contact → footer, plus a WhatsApp widget appended at
 the end of `<body>`. There's no JS component system — each section's behavior is a self-contained
 block in `script.js` that queries its own DOM by id/class and no-ops if the element isn't present
 (defensive `if (el) ...` guards throughout), so sections can be added/removed without touching

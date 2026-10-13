@@ -1352,21 +1352,16 @@ img { max-width: 100%; display: block; }
 =========================== */
 .portfolio { background: rgba(20,22,46,0.38); }
 
-/* Hover-reveal project list (desktop): rows on the right, a sticky
-   preview on the left that swaps to whichever row is hovered/focused. */
-.work {
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  gap: clamp(32px, 4vw, 64px);
-  align-items: start;
-}
+/* Hover-reveal project list: full-bleed rows (edge to edge of the
+   viewport); on desktop a preview floats on the left, following the
+   cursor vertically and swapping to the hovered row's project. */
+.work { position: relative; }
 
 .work-list {
   list-style: none;
-  margin: 0;
   padding: 0;
+  margin: 0 calc(50% - 50vw);
   border-top: 1px solid var(--border);
-  counter-reset: none;
 }
 
 .work-row { border-bottom: 1px solid var(--border); position: relative; }
@@ -1382,22 +1377,27 @@ img { max-width: 100%; display: block; }
   background: var(--accent);
   transform: scaleX(0);
   transform-origin: right;
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .work-row.is-active::after { transform: scaleX(1); }
 
 .work-link {
   display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: clamp(14px, 1.6vw, 24px);
-  padding: clamp(22px, 2.6vw, 34px) 4px;
+  gap: clamp(16px, 2vw, 32px);
+  /* text stays in the right ~55%, leaving the left side for the
+     floating preview */
+  padding: clamp(26px, 3vw, 40px) 5vw clamp(26px, 3vw, 40px) 45vw;
   color: var(--text);
-  transition: padding 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: padding 0.5s cubic-bezier(0.22, 1, 0.36, 1), background 0.4s ease;
 }
 
-.work-row.is-active .work-link { padding-right: 18px; }
+.work-row.is-active .work-link {
+  padding-right: calc(5vw + 18px);
+  background: rgba(255,255,255,0.02);
+}
 
 .work-num {
   font-size: 0.9rem;
@@ -1406,34 +1406,10 @@ img { max-width: 100%; display: block; }
   letter-spacing: 0.06em;
 }
 
-/* client logo slot — monogram until the real logo file is added */
-.work-logo {
-  display: grid;
-  place-items: center;
-  width: clamp(48px, 4.4vw, 60px);
-  aspect-ratio: 1;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--border);
-  font-weight: 700;
-  font-size: 1.05rem;
-  color: var(--text);
-  overflow: hidden;
-  transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease;
-}
-
-.work-logo img { width: 70%; height: 70%; object-fit: contain; }
-
-.work-row.is-active .work-logo {
-  background: var(--accent-2);
-  border-color: transparent;
-  color: var(--bg);
-}
-
 .work-main { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 
 .work-name {
-  font-size: clamp(1.6rem, 2.6vw, 2.5rem);
+  font-size: clamp(1.8rem, 3vw, 3rem);
   font-weight: 300;
   line-height: 1.1;
   color: var(--text);
@@ -1462,43 +1438,34 @@ img { max-width: 100%; display: block; }
   white-space: nowrap;
 }
 
-.work-arrow {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-  font-size: 1.1rem;
-  transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, transform 0.4s ease;
-}
+.work-link:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
 
-.work-row.is-active .work-arrow {
-  background: var(--accent);
-  border-color: transparent;
-  color: var(--bg);
-  transform: rotate(45deg);
-}
-
-.work-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 8px; }
-
-/* sticky preview: items stacked, the active one revealed with a clip wipe */
+/* floating preview — top/rotation driven by script.js (--y, --tilt) */
 .work-preview {
-  position: sticky;
-  top: 110px;
+  position: absolute;
+  top: 0;
+  left: calc(50% - 50vw + 5vw);
+  width: min(36vw, 560px);
   aspect-ratio: 16 / 10;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  scale: 0.85;
+  transform: translate3d(0, var(--y, 0px), 0) rotate(var(--tilt, 0deg));
+  transition: opacity 0.4s ease, scale 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+.work.is-hovering .work-preview { opacity: 1; scale: 1; }
 
 .work-preview-item {
   position: absolute;
   inset: 0;
   clip-path: inset(100% 0 0 0);
   transform: scale(1.08);
-  transition: clip-path 0.75s cubic-bezier(0.77, 0, 0.18, 1), transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: clip-path 0.7s cubic-bezier(0.77, 0, 0.18, 1), transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .work-preview-item.is-active {
@@ -2057,19 +2024,19 @@ img { max-width: 100%; display: block; }
   }
 
   /* mobile: plain stacked rows, each with its own inline visual */
-  .work { grid-template-columns: 1fr; }
   .work-preview { display: none; }
   .work-thumb {
     display: block;
     aspect-ratio: 16 / 10;
     border-radius: var(--radius);
     overflow: hidden;
-    margin: 28px 0 0;
   }
   .work-row { display: flex; flex-direction: column; }
   .work-thumb { order: -1; }
-  .work-link { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .work-link,
+  .work-row.is-active .work-link { grid-template-columns: minmax(0, 1fr); padding: 20px 5vw 28px; }
   .work-num, .work-meta { display: none; }
+  .work-thumb { margin: 28px 5vw 0; }
   .work-desc { max-height: none; opacity: 1; }
 
   .contact-wrapper {

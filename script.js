@@ -597,12 +597,15 @@ if (waLauncher && waPanel) {
 // ===========================
 // PORTFOLIO — HOVER-REVEAL LIST
 // ===========================
-// Hovering (or keyboard-focusing) a project row makes it active: the row
-// expands, and the sticky preview wipes to that project's visual.
+// Hovering (or keyboard-focusing) a project row makes it active (accent
+// underline + description). On desktop a preview floats on the left,
+// eased toward the cursor's height and tilted slightly by its velocity.
 (function () {
+  const work = document.querySelector('.work');
   const rows = document.querySelectorAll('.work-row');
   const items = document.querySelectorAll('.work-preview-item');
-  if (!rows.length) return;
+  const preview = document.querySelector('.work-preview');
+  if (!work || !rows.length) return;
 
   function activate(i) {
     rows.forEach(r => r.classList.toggle('is-active', r.dataset.work === i));
@@ -621,7 +624,52 @@ if (waLauncher && waPanel) {
       entries.forEach(e => { if (e.isIntersecting) activate(e.target.dataset.work); });
     }, { rootMargin: '-45% 0px -45% 0px' });
     rows.forEach(r => io.observe(r));
+    return;
   }
+
+  if (!preview) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let targetY = 0, y = 0, tilt = 0, running = false;
+
+  function place(clientY) {
+    const r = work.getBoundingClientRect();
+    const h = preview.offsetHeight;
+    targetY = Math.max(0, Math.min(r.height - h, clientY - r.top - h / 2));
+  }
+
+  function tick() {
+    const dy = targetY - y;
+    y += dy * (reduce ? 1 : 0.12);
+    tilt += ((reduce ? 0 : Math.max(-8, Math.min(8, dy * 0.06))) - tilt) * 0.15;
+    preview.style.setProperty('--y', y.toFixed(1) + 'px');
+    preview.style.setProperty('--tilt', tilt.toFixed(2) + 'deg');
+    if (Math.abs(dy) > 0.5 || Math.abs(tilt) > 0.05) requestAnimationFrame(tick);
+    else running = false;
+  }
+
+  function kick() { if (!running) { running = true; requestAnimationFrame(tick); } }
+
+  const list = work.querySelector('.work-list');
+  list.addEventListener('mouseenter', (e) => {
+    place(e.clientY);
+    if (!work.classList.contains('is-hovering')) {
+      y = targetY; // appear where the cursor is, then follow
+      preview.style.setProperty('--y', y + 'px');
+    }
+    work.classList.add('is-hovering');
+  });
+  list.addEventListener('mousemove', (e) => { place(e.clientY); kick(); });
+  list.addEventListener('mouseleave', () => work.classList.remove('is-hovering'));
+
+  // keyboard: show the preview beside the focused row
+  rows.forEach(row => row.addEventListener('focusin', () => {
+    const rr = row.getBoundingClientRect();
+    place(rr.top + rr.height / 2); kick();
+    work.classList.add('is-hovering');
+  }));
+  list.addEventListener('focusout', (e) => {
+    if (!list.contains(e.relatedTarget)) work.classList.remove('is-hovering');
+  });
 })();
 
 // ===========================

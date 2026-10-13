@@ -95,10 +95,16 @@ transparent border) so the hover background matches "בואו נדבר" exactly.
 `opacity: 0` at rest and fades/animates in only on `:hover`. Reuse this pattern (don't add a new
 button style) for any new CTA.
 
-**"Process" mockups (`.process-mockup` + `mockup-*` classes)** are deliberately abstract,
-brand-colored CSS/SVG recreations of app UI (video call, design tool, form builder, live-site
-dashboard) rather than pixel-accurate clones of the real third-party UIs shown in the source
-Figma file — that was an explicit scope decision, not a shortcut to "fix" later.
+**"Process" windows now follow the Figma file exactly** (Figma file `aixEV20iIr1EDKMMXtqgIb`,
+section node `1305:3803`, one 1325×720 frame per step). The shared shell is `.pwin` — a
+560×328.58 glass window authored in the design's own px (backdrop blur 33.648px, 10% white
+side/main panels with a 0.343px inset highlight, `images/webp/waves.webp` behind at blur 13.719px)
+and `zoom`ed to its column by the "PROCESS — GLASS WINDOWS" block in `script.js`, which also
+replays the Figma motion (`.is-playing`) when a window scrolls into view. Step 02's interior
+(`.fg-*`, the Figma editor + Michael's cursor dragging the brand green) is fully live HTML/CSS.
+Steps 01/03/04 still use the older abstract `.process-mockup` + `mockup-*` placeholders until
+their Figma raster assets (screenshots/photos) can be downloaded. The wave source is
+`images/רקע גלים ללא טישטוש.png` (uploaded by Michael, 10723×5259).
 
 ## Content notes
 

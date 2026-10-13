@@ -723,3 +723,39 @@ if (waLauncher && waPanel) {
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
   measure();
 })();
+
+// ===========================
+// PROCESS — GLASS WINDOWS
+// ===========================
+// .pwin is authored at the Figma window's native 560px width; zoom it to
+// fill its column, and replay its Figma motion each time it scrolls in.
+(function () {
+  const frames = document.querySelectorAll('.pwin-frame');
+  if (!frames.length) return;
+
+  const fit = () => frames.forEach(f => {
+    const win = f.querySelector('.pwin');
+    if (win) win.style.zoom = (f.clientWidth / 560).toFixed(4);
+  });
+  if ('ResizeObserver' in window) {
+    const ro = new ResizeObserver(fit);
+    frames.forEach(f => ro.observe(f));
+  } else {
+    window.addEventListener('resize', fit);
+  }
+  fit();
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const win = entry.target.querySelector('.pwin');
+      if (!win) return;
+      if (entry.isIntersecting) {
+        win.classList.remove('is-playing');
+        void win.offsetWidth; // restart the CSS animation
+        win.classList.add('is-playing');
+      }
+    });
+  }, { threshold: 0.6 });
+  frames.forEach(f => io.observe(f));
+})();

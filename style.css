@@ -734,14 +734,12 @@ img { max-width: 100%; display: block; }
 
 .process-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* Figma: 484px text column, ~60px gutter, 560px window */
+  grid-template-columns: minmax(0, 484fr) minmax(0, 560fr);
   align-items: center;
-  gap: 56px;
-  min-height: 70vh;
-  background: rgba(20,22,46,0.38);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 48px;
+  gap: 60px;
+  min-height: min(720px, 80vh);
+  padding: 48px 0;
 }
 
 .process-text {
@@ -757,27 +755,390 @@ img { max-width: 100%; display: block; }
   font-size: 1.375rem;
   letter-spacing: 0.04em;
   color: #6a6d6f;
-  margin-bottom: 8px;
+  margin-bottom: 0;
 }
 
 .process-title {
   font-family: var(--font);
   font-weight: 700;
   font-size: clamp(1.5rem, 2.4vw, 1.875rem);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
   color: var(--accent);
-  line-height: 1.3;
-  margin-bottom: 16px;
+  line-height: 1.25;
+  margin-bottom: 4px;
 }
 
 .process-body {
   font-family: var(--font);
   font-weight: 400;
   font-size: 1.25rem;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
   color: #ffffff;
-  line-height: 1.75;
+  line-height: 1.3;
   max-width: 484px;
+}
+
+/* ---------------------------------------------------------------
+   Glass app window (Figma "Frame 62", 560 × 328.58).
+   Every value inside .pwin is the design's own px; script.js sets
+   `zoom` on .pwin so it fills .pwin-frame at any column width.
+---------------------------------------------------------------- */
+.pwin-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 560 / 328.58;
+}
+
+.pwin {
+  --glass-edge: inset -0.343px 0.343px 0.343px 0 rgba(255,255,255,0.35);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 560px;
+  height: 328.58px;
+  border-radius: 13.734px;
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(33.648px);
+  backdrop-filter: blur(33.648px);
+  filter: drop-shadow(0 8.24px 17.167px rgba(0,0,0,0.25));
+  text-align: left;
+}
+
+.pwin-waves {
+  position: absolute;
+  left: -31px;
+  top: 11.65px;
+  width: 622.765px;
+  height: 305.395px;
+  max-width: none;
+  object-fit: cover;
+  filter: blur(13.719px);
+  pointer-events: none;
+}
+
+.pwin-main,
+.pwin-side {
+  position: absolute;
+  top: 0;
+  height: 328.58px;
+  background: rgba(255,255,255,0.1);
+  box-shadow: var(--glass-edge);
+}
+
+.pwin-main { left: 139.74px; width: 428.5px; }
+.pwin-side { left: 0; width: 139.74px; }
+
+.pwin-title {
+  position: absolute;
+  left: 15.79px;
+  top: 22.66px;
+  margin: 0;
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 12.361px;
+  letter-spacing: 0.3708px;
+  line-height: normal;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.pwin-lights {
+  position: absolute;
+  left: 9.27px;
+  top: 6.87px;
+  display: flex;
+  gap: 5.494px;
+}
+
+.pwin-lights i {
+  width: 5.152px;
+  height: 5.152px;
+  border-radius: 50%;
+  box-shadow: var(--glass-edge);
+}
+
+.pwin-lights i:nth-child(1) { background: #e15750; }
+.pwin-lights i:nth-child(2) { background: #edb335; }
+.pwin-lights i:nth-child(3) { background: #64bf3f; }
+
+.pwin-menu {
+  position: absolute;
+  right: 8.24px;
+  top: 8.24px;
+  width: 20.601px;
+  height: 20.601px;
+  display: grid;
+  place-items: center;
+}
+
+.pwin-menu svg { width: 15.107px; height: 15.107px; }
+
+/* --- 02: Figma editor recreation (".fg"), Figma node 1266:31123 --- */
+.fg {
+  position: absolute;
+  left: 16px;
+  top: 47.65px;
+  width: 556px;
+  height: 364.705px;
+  border-radius: 10.779px;
+  overflow: hidden;
+  background: #e5e5e5;
+  font-family: 'Inter', var(--font);
+  color: #333;
+  font-size: 4.277px;
+  letter-spacing: 0.0214px;
+  line-height: 15.552px;
+  box-shadow: var(--glass-edge);
+}
+
+.fg p, .fg ul { margin: 0; padding: 0; list-style: none; }
+.fg svg { display: block; }
+
+.fg-logo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 93.406px;
+  height: 18.663px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  padding-left: 4.67px;
+  gap: 1.9px;
+}
+
+.fg-logo-mark { width: 4.6px; height: 7px; }
+.fg-chev { width: 3.11px; height: 2.722px; }
+
+.fg-topbar {
+  position: absolute;
+  left: 462.83px;
+  top: 0;
+  width: 93.406px;
+  height: 22.04px;
+  background: #fff;
+  border-bottom: 0.389px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4.198px;
+  padding: 0 5.772px;
+  z-index: 2;
+}
+
+.fg-avatar {
+  width: 11.773px;
+  height: 11.773px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 12%;
+  margin-right: auto;
+  background: #fff;
+}
+
+.fg-play { width: 18.663px; height: 18.663px; }
+
+.fg-share {
+  background: #18a0fb;
+  color: #fff;
+  border-radius: 6px;
+  padding: 0.389px 4.277px;
+  font-size: 4.28px;
+  line-height: 11.664px;
+}
+
+.fg-left,
+.fg-right {
+  position: absolute;
+  top: 18.66px;
+  width: 93.315px;
+  height: 346.042px;
+  background: #fff;
+}
+
+.fg-left { left: 0; }
+.fg-right { right: 0; top: 22.04px; height: 342.66px; }
+
+.fg-tabs {
+  display: flex;
+  border-bottom: 0.389px solid #e5e5e5;
+}
+
+.fg-tabs > * { padding: 0 3.11px; font-weight: 500; }
+.fg-tabs > :first-child { padding-left: 6.221px; color: #333; }
+.fg-tabs > span { color: rgba(179,179,179,0.8); }
+
+.fg-pages li,
+.fg-layers,
+.fg-layer {
+  padding-left: 6.221px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.fg-pages { border-bottom: 0.389px solid #e5e5e5; }
+.fg-pages li { direction: rtl; text-align: left; unicode-bidi: plaintext; }
+.fg-layers { line-height: 11px; height: 11px; }
+
+.fg-layer {
+  display: flex;
+  align-items: center;
+  gap: 3.888px;
+  width: 93px;
+  border-bottom: 0.2px solid #d9d9d9;
+}
+
+.fg-layer svg { width: 5.679px; height: 5.679px; }
+
+.fg-prop-title {
+  padding-left: 6.221px;
+  line-height: 12.442px;
+  font-weight: 500;
+}
+
+.fg-prop-row {
+  display: flex;
+  align-items: center;
+  gap: 3.888px;
+  padding: 0 3.11px 0 6.221px;
+  line-height: 12.442px;
+  border-bottom: 0.389px solid #e5e5e5;
+}
+
+.fg-prop-row--muted { justify-content: space-between; color: rgba(179,179,179,0.8); font-weight: 500; line-height: 15.552px; }
+.fg-swatch { width: 5.91px; height: 5.91px; border-radius: 1px; background: #1cd31c; outline: 0.37px solid rgba(0,0,0,0.1); }
+.fg-pct { font-size: 4.06px; color: rgba(0,0,0,0.8); }
+.fg-eye, .fg-plus { width: 12.442px; height: 12.442px; margin-left: auto; }
+
+.fg-canvas {
+  position: absolute;
+  left: 133px;
+  top: 83px;
+  width: 200.59px;
+  height: 109px;
+  background: #fff;
+}
+
+.fg-card {
+  position: absolute;
+  left: 350px;
+  width: 89px;
+  padding: 6px;
+  background: #fff;
+}
+
+.fg-palette { top: 53px; display: flex; flex-direction: column; gap: 5px; }
+.fg-row { display: flex; gap: 2.344px; }
+.fg-row i, .fg-drag-swatch {
+  width: 6.914px;
+  height: 6.914px;
+  border-radius: 1.172px;
+  background: var(--c);
+  flex-shrink: 0;
+}
+
+.fg-type {
+  top: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #1c4731;
+  font-family: var(--font);
+  text-align: right;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+.fg-type-group { display: flex; flex-direction: column; gap: 2px; }
+.fg-type-xl { font-size: 6.47px; }
+.fg-type-md { font-size: 2.427px; }
+.fg-type-sm { font-size: 1.62px; }
+.fg-type-xs { font-size: 1.456px; }
+.fg-type .w2 { font-weight: 200; }
+.fg-type .w4 { font-weight: 400; }
+.fg-type .w9 { font-weight: 900; }
+
+.fg-toolbar {
+  position: absolute;
+  left: 244px;
+  top: 253px;
+  display: flex;
+  border-radius: 4.417px;
+  overflow: hidden;
+  box-shadow: 0 0.6px 2px rgba(0,0,0,0.12);
+}
+
+.fg-tool {
+  display: flex;
+  align-items: center;
+  height: 15.143px;
+  background: #fff;
+  padding-left: 1.6px;
+}
+
+.fg-tool svg { width: 6.31px; height: 6.31px; }
+.fg-tool i { width: 5.679px; height: 15.143px; background: center / 2.5px 2.2px no-repeat
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Cpath d='M.4.8 2 2.3 3.6.8' fill='none' stroke='%23333' stroke-width='.5'/%3E%3C/svg%3E"); }
+.fg-tool--plain { width: 12.619px; justify-content: center; padding: 0; }
+.fg-tool--active svg { background: #0d99ff; border-radius: 1.2px; width: 7px; height: 7px; padding: .6px; box-sizing: border-box; }
+
+/* animated cursor + dragged swatch (Figma motion, 2.81s, plays when the
+   window scrolls into view — .is-playing toggled by script.js) */
+.fg-cursor {
+  position: absolute;
+  left: 304.28px;
+  top: 214px;
+  translate: 28.187px 19.392px;
+}
+
+.fg-cursor svg { width: 6px; height: 6px; }
+
+.fg-cursor span {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  height: 5px;
+  padding: 0 1.4px;
+  border-radius: 1px;
+  background: #0d99ff;
+  color: #fff;
+  font-size: 3px;
+  line-height: 5px;
+  white-space: nowrap;
+}
+
+.fg-drag-swatch {
+  position: absolute;
+  left: 356.28px;
+  top: 47px;
+  background: #1cd31c;
+  opacity: 0;
+  translate: -0.164px 11.722px;
+}
+
+.pwin.is-playing .fg-cursor { animation: fgCursor 2.813s linear both; }
+.pwin.is-playing .fg-drag-swatch {
+  animation: fgSwatchFade 2.813s linear both, fgSwatchMove 2.813s linear both;
+}
+
+@keyframes fgCursor {
+  0%      { translate: 28.187px 19.392px; }
+  10.55%  { translate: 39.425px -78.233px; animation-timing-function: ease-in-out; }
+  52.733% { translate: 53.265px -156.766px; }
+  91.388% { translate: -60px -111px; animation-timing-function: ease-in-out; }
+  100%    { translate: -32px -45px; }
+}
+
+@keyframes fgSwatchFade {
+  0%      { opacity: 0; }
+  52.144% { opacity: 0; animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1); }
+  68.033% { opacity: 1; }
+  100%    { opacity: 1; }
+}
+
+@keyframes fgSwatchMove {
+  0%, 52.733% { translate: -0.164px 11.722px; }
+  91.388%, 100% { translate: -114.876px 56.143px; }
 }
 
 /* Abstract "app window" mockup */
@@ -1654,13 +2015,13 @@ img { max-width: 100%; display: block; }
   .process-row {
     grid-template-columns: 1fr;
     min-height: 0;
-    padding: 28px;
+    padding: 28px 0;
     gap: 28px;
   }
 
   .process-text { align-items: center; text-align: center; }
 
-  .process-body { max-width: 100%; }
+  .process-body { max-width: 100%; font-size: 1.05rem; }
 
   .mockup-body { min-height: 0; padding: 20px; }
 

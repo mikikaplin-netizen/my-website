@@ -207,7 +207,7 @@ navLinks.querySelectorAll('a').forEach(link => {
 // REVEAL ON SCROLL
 // ===========================
 const revealEls = document.querySelectorAll(
-  '.process-row, .portfolio-card, .about-grid, .contact-wrapper, .section-header'
+  '.process-row, .work-row, .about-grid, .contact-wrapper, .section-header'
 );
 
 revealEls.forEach(el => el.classList.add('reveal'));
@@ -595,17 +595,33 @@ if (waLauncher && waPanel) {
 })();
 
 // ===========================
-// MOTION — PORTFOLIO SPOTLIGHT
+// PORTFOLIO — HOVER-REVEAL LIST
 // ===========================
+// Hovering (or keyboard-focusing) a project row makes it active: the row
+// expands, and the sticky preview wipes to that project's visual.
 (function () {
-  const cards = document.querySelectorAll('.portfolio-card');
-  cards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const r = card.getBoundingClientRect();
-      card.style.setProperty('--px', (e.clientX - r.left) + 'px');
-      card.style.setProperty('--py', (e.clientY - r.top) + 'px');
-    });
+  const rows = document.querySelectorAll('.work-row');
+  const items = document.querySelectorAll('.work-preview-item');
+  if (!rows.length) return;
+
+  function activate(i) {
+    rows.forEach(r => r.classList.toggle('is-active', r.dataset.work === i));
+    items.forEach(it => it.classList.toggle('is-active', it.dataset.work === i));
+  }
+
+  rows.forEach(row => {
+    row.addEventListener('mouseenter', () => activate(row.dataset.work));
+    row.addEventListener('focusin', () => activate(row.dataset.work));
   });
+
+  // touch screens have no hover: the row crossing the middle of the
+  // viewport becomes active instead
+  if (!window.matchMedia('(hover: hover)').matches) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) activate(e.target.dataset.work); });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    rows.forEach(r => io.observe(r));
+  }
 })();
 
 // ===========================

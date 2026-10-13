@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=12" />
+  <link rel="stylesheet" href="style.css?v=13" />
 </head>
 <body>
 
@@ -93,72 +93,71 @@
           כל פרויקט הוא שותפות — הנה כמה מהדברים שבנינו יחד.
         </p>
       </div>
-      <div class="portfolio-grid">
-
-        <div class="portfolio-card">
-          <div class="portfolio-img" style="--hue:220; --sat:65%">
-            <div class="portfolio-overlay">
-              <a href="https://mkaplin.com/project_review/lishkatoanim/" target="_blank" rel="noopener" class="portfolio-btn">צפה בפרויקט ←</a>
-            </div>
-          </div>
-          <div class="portfolio-info">
-            <div class="portfolio-header">
-              <span class="portfolio-tag">מוסדות מקצועיים</span>
-              <span class="portfolio-year">2024</span>
-            </div>
-            <h3>לשכת הטוענים הרבניים</h3>
-            <p>מיתוג מחדש ובניית נוכחות דיגיטלית חדשה לארגון מקצועי מוביל — אתר שמשדר סמכות, נגישות ואמינות.</p>
-          </div>
+      <!-- Hover-reveal project list: rows on one side, a sticky preview on the
+           other that swaps to the hovered project (mobile: inline thumbs).
+           .work-logo shows a monogram until the real client logos are added;
+           .work-shot is a placeholder until the screen recordings arrive. -->
+      <div class="work">
+        <ol class="work-list">
+          <li class="work-row is-active" data-work="0">
+            <a class="work-link" href="https://mkaplin.com/project_review/lishkatoanim/" target="_blank" rel="noopener">
+              <span class="work-num">01</span>
+              <span class="work-logo" aria-hidden="true">לט</span>
+              <span class="work-main">
+                <span class="work-name">לשכת הטוענים הרבניים</span>
+                <span class="work-desc">מיתוג מחדש ובניית נוכחות דיגיטלית חדשה לארגון מקצועי מוביל — אתר שמשדר סמכות, נגישות ואמינות.</span>
+              </span>
+              <span class="work-meta">מוסדות מקצועיים<br />2024</span>
+              <span class="work-arrow" aria-hidden="true">←</span>
+            </a>
+            <div class="work-thumb" aria-hidden="true"><div class="work-shot" style="--hue:220; --sat:65%"><span class="work-shot-mark">לט</span></div></div>
+          </li>
+          <li class="work-row" data-work="1">
+            <a class="work-link" href="https://mkaplin.com/project_review/shimony/" target="_blank" rel="noopener">
+              <span class="work-num">02</span>
+              <span class="work-logo" aria-hidden="true">ש</span>
+              <span class="work-main">
+                <span class="work-name">משרד שמעוני</span>
+                <span class="work-desc">אתר מודרני למשרד עורכי דין שמבסס מומחיות ומניע לקוחות פוטנציאליים ליצור קשר.</span>
+              </span>
+              <span class="work-meta">משפטים<br />2024</span>
+              <span class="work-arrow" aria-hidden="true">←</span>
+            </a>
+            <div class="work-thumb" aria-hidden="true"><div class="work-shot" style="--hue:280; --sat:55%"><span class="work-shot-mark">ש</span></div></div>
+          </li>
+          <li class="work-row" data-work="2">
+            <a class="work-link" href="https://mkaplin.com/project_review/wst/" target="_blank" rel="noopener">
+              <span class="work-num">03</span>
+              <span class="work-logo" aria-hidden="true">WST</span>
+              <span class="work-main">
+                <span class="work-name">WST</span>
+                <span class="work-desc">פלטפורמה להשקעות נדל"ן בדובאי — עיצוב פרימיום שמדבר לקהל משקיעים בינלאומי.</span>
+              </span>
+              <span class="work-meta">נדל"ן בינלאומי<br />2023</span>
+              <span class="work-arrow" aria-hidden="true">←</span>
+            </a>
+            <div class="work-thumb" aria-hidden="true"><div class="work-shot" style="--hue:160; --sat:60%"><span class="work-shot-mark">WST</span></div></div>
+          </li>
+          <li class="work-row" data-work="3">
+            <a class="work-link" href="https://mkaplin.com/project_review/alter/" target="_blank" rel="noopener">
+              <span class="work-num">04</span>
+              <span class="work-logo" aria-hidden="true">א</span>
+              <span class="work-main">
+                <span class="work-name">אלתר ספרים</span>
+                <span class="work-desc">חנות אונליין לציוד בית ספר עם תהליך רכישה מותאם אישית — חוויית קנייה שמרגישה טבעית ומהנה.</span>
+              </span>
+              <span class="work-meta">מסחר אלקטרוני<br />2023</span>
+              <span class="work-arrow" aria-hidden="true">←</span>
+            </a>
+            <div class="work-thumb" aria-hidden="true"><div class="work-shot" style="--hue:35; --sat:70%"><span class="work-shot-mark">א</span></div></div>
+          </li>
+        </ol>
+        <div class="work-preview" aria-hidden="true">
+          <div class="work-preview-item is-active" data-work="0"><div class="work-shot" style="--hue:220; --sat:65%"><span class="work-shot-mark">לט</span></div></div>
+          <div class="work-preview-item" data-work="1"><div class="work-shot" style="--hue:280; --sat:55%"><span class="work-shot-mark">ש</span></div></div>
+          <div class="work-preview-item" data-work="2"><div class="work-shot" style="--hue:160; --sat:60%"><span class="work-shot-mark">WST</span></div></div>
+          <div class="work-preview-item" data-work="3"><div class="work-shot" style="--hue:35; --sat:70%"><span class="work-shot-mark">א</span></div></div>
         </div>
-
-        <div class="portfolio-card">
-          <div class="portfolio-img" style="--hue:280; --sat:55%">
-            <div class="portfolio-overlay">
-              <a href="https://mkaplin.com/project_review/shimony/" target="_blank" rel="noopener" class="portfolio-btn">צפה בפרויקט ←</a>
-            </div>
-          </div>
-          <div class="portfolio-info">
-            <div class="portfolio-header">
-              <span class="portfolio-tag">משפטים</span>
-              <span class="portfolio-year">2024</span>
-            </div>
-            <h3>משרד שמעוני</h3>
-            <p>אתר מודרני למשרד עורכי דין שמבסס מומחיות ומניע לקוחות פוטנציאליים ליצור קשר.</p>
-          </div>
-        </div>
-
-        <div class="portfolio-card">
-          <div class="portfolio-img" style="--hue:160; --sat:60%">
-            <div class="portfolio-overlay">
-              <a href="https://mkaplin.com/project_review/wst/" target="_blank" rel="noopener" class="portfolio-btn">צפה בפרויקט ←</a>
-            </div>
-          </div>
-          <div class="portfolio-info">
-            <div class="portfolio-header">
-              <span class="portfolio-tag">נדל"ן בינלאומי</span>
-              <span class="portfolio-year">2023</span>
-            </div>
-            <h3>WST</h3>
-            <p>פלטפורמה להשקעות נדל"ן בדובאי — עיצוב פרימיום שמדבר לקהל משקיעים בינלאומי.</p>
-          </div>
-        </div>
-
-        <div class="portfolio-card">
-          <div class="portfolio-img" style="--hue:35; --sat:70%">
-            <div class="portfolio-overlay">
-              <a href="https://mkaplin.com/project_review/alter/" target="_blank" rel="noopener" class="portfolio-btn">צפה בפרויקט ←</a>
-            </div>
-          </div>
-          <div class="portfolio-info">
-            <div class="portfolio-header">
-              <span class="portfolio-tag">מסחר אלקטרוני</span>
-              <span class="portfolio-year">2023</span>
-            </div>
-            <h3>אלתר ספרים</h3>
-            <p>חנות אונליין לציוד בית ספר עם תהליך רכישה מותאם אישית — חוויית קנייה שמרגישה טבעית ומהנה.</p>
-          </div>
-        </div>
-
       </div>
     </div>
   </section>
@@ -595,6 +594,6 @@
     </button>
   </div>
 
-  <script src="script.js?v=7"></script>
+  <script src="script.js?v=13"></script>
 </body>
 </html>

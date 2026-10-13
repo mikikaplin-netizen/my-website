@@ -85,7 +85,12 @@ so they render above it. Section backgrounds use semi-transparent colors
 - `.edge-blur` — fixed progressive backdrop blur along the bottom of the viewport (height via
   `--edge-blur-h`), stacked masked layers with doubling blur.
 - Motion: magnetic `.btn`/`.nav-cta` (uses the standalone `translate` property so it doesn't
-  clash with hover `transform`), cursor spotlight on `.portfolio-card`, hero photo parallax.
+  clash with hover `transform`), hero photo parallax.
+- Portfolio (`.work`, "PORTFOLIO — HOVER-REVEAL LIST"): one row per project (number, logo slot,
+  name, field/year, arrow); hovering/focusing a row activates it and a sticky `.work-preview` wipes
+  to that project's visual. Mobile shows each row's `.work-thumb` inline instead. Logos are
+  monograms and visuals are gradient placeholders until Michael's logo files and screen
+  recordings arrive (`images/portfolio/`).
 
 **Navbar items** all share the CTA's pill box (`border-radius: 999px`, same padding, 1px
 transparent border) so the hover background matches "בואו נדבר" exactly.

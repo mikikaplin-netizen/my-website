@@ -134,10 +134,7 @@ img { max-width: 100%; display: block; }
   font-weight: 900;
   line-height: 1.2;
   letter-spacing: -0.01em;
-  background: linear-gradient(135deg, #fff 0%, #fff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #fff;
   margin-bottom: 20px;
 }
 
@@ -281,8 +278,11 @@ img { max-width: 100%; display: block; }
 }
 
 .nav-links a {
-  padding: 9px 18px;
-  border-radius: 8px;
+  /* every nav item shares the CTA's pill shape and box, so the hover
+     background lines up with "בואו נדבר" */
+  padding: 9px 22px;
+  border: 1px solid transparent;
+  border-radius: 999px;
   font-size: 0.92rem;
   font-weight: 500;
   color: var(--text-muted);
@@ -435,17 +435,9 @@ img { max-width: 100%; display: block; }
   color: #ffffff;
 }
 
-.hero-highlight {
-  color: var(--accent-2);
-  -webkit-text-fill-color: var(--accent-2);
-}
+.hero-highlight { color: var(--accent-2); }
 
-.hero-name {
-  background: linear-gradient(135deg, #fff 30%, #fff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+.hero-name { color: #fff; }
 
 .hero-desc {
   font-size: 1.1rem;
@@ -722,10 +714,7 @@ img { max-width: 100%; display: block; }
 .stat-num {
   font-size: 2.2rem;
   font-weight: 900;
-  background: linear-gradient(135deg, #fff, var(--accent-2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--accent-2);
 }
 
 .stat-label {
@@ -1621,31 +1610,12 @@ img { max-width: 100%; display: block; }
   filter: blur(0);
 }
 
-/* gradient text can't be clipped across transformed children, so split
-   headings paint solid and the gradient moves onto each word */
-.section-title.tx-split {
-  background: none;
-  -webkit-text-fill-color: currentColor;
-  color: #fff;
-}
-
 .hero-title.tx-split {
   opacity: 1;
   animation: none;
 }
 
 .hero-title.tx-split .tx-word { transition-delay: calc(150ms + var(--i, 0) * 80ms); }
-
-.tx-split .hero-highlight,
-.tx-split .hero-name {
-  background: none;
-  -webkit-text-fill-color: currentColor;
-}
-
-.tx-split .hero-highlight .tx-word {
-  color: var(--accent-2);
-  -webkit-text-fill-color: var(--accent-2);
-}
 
 /* --- Section labels: scramble/decode --- */
 .tx-scramble {

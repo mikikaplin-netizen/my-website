@@ -72,8 +72,8 @@ so they render above it. Section backgrounds use semi-transparent colors
 - Text entrance effects ("TEXT ENTRANCE EFFECTS" in `script.js`, GSAP-style but no library):
   `.hero-title`, `.section-title`, `.process-title` are split into `.tx-mask > .tx-word` spans
   that rise/blur in when `.tx-in` is added; `.section-label` gets a Hebrew-letter scramble.
-  Split headings drop their `background-clip: text` (it breaks across transformed children) —
-  gradients go on `.tx-word` instead. Everything is skipped under `prefers-reduced-motion`.
+  Everything is skipped under `prefers-reduced-motion`.
+- Design rule: **no gradient text anywhere** — every text color is a single solid brand color.
 - Wave marquee (`.wave`, "WAVE MARQUEE — SCROLL-DRIVEN" in `script.js`): the section is pinned
   (`position: sticky`) while one giant line travels across it, mirrored for Hebrew (sentence start
   enters first, moving left → right); each letter/tile rides a sine wave fixed in screen space.
@@ -85,6 +85,9 @@ so they render above it. Section backgrounds use semi-transparent colors
   `--edge-blur-h`), stacked masked layers with doubling blur.
 - Motion: magnetic `.btn`/`.nav-cta` (uses the standalone `translate` property so it doesn't
   clash with hover `transform`), cursor spotlight on `.portfolio-card`, hero photo parallax.
+
+**Navbar items** all share the CTA's pill box (`border-radius: 999px`, same padding, 1px
+transparent border) so the hover background matches "בואו נדבר" exactly.
 
 **Buttons (`.btn`, `.nav-cta`) use an animated conic-gradient border**, implemented as a
 `::before` pseudo-element masked to a ring (`mask-composite: exclude`) and driven by a

@@ -668,8 +668,10 @@ document.addEventListener('touchstart', () => {}, { passive: true });
 // PORTFOLIO — HOVER-REVEAL LIST
 // ===========================
 // Hovering (or keyboard-focusing) a project row makes it active (accent
-// underline + description). On desktop a preview floats on the left,
-// eased toward the cursor's height and tilted slightly by its velocity.
+// underline + description). On desktop a preview floats on the left and
+// follows the cursor's height on a spring (Apple damping/response model):
+// it carries momentum, overshoots a touch when the cursor stops, and its tilt
+// comes from its own velocity, so it leans into the direction it travels.
 (function () {
   const work = document.querySelector('.work');
   const rows = document.querySelectorAll('.work-row');
@@ -699,7 +701,11 @@ document.addEventListener('touchstart', () => {}, { passive: true });
 
   if (!preview) return;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let targetY = 0, y = 0, tilt = 0, running = false;
+  const RESPONSE = 0.5;   // seconds
+  const DAMPING = 0.72;   // under-damped: the cursor's motion is the momentum
+  const K = Math.pow(2 * Math.PI / RESPONSE, 2);
+  const C = 4 * Math.PI * DAMPING / RESPONSE;
+  let targetY = 0, y = 0, vy = 0, running = false, last = 0;
 
   function place(clientY) {
     const r = work.getBoundingClientRect();
@@ -707,23 +713,39 @@ document.addEventListener('touchstart', () => {}, { passive: true });
     targetY = Math.max(0, Math.min(r.height - h, clientY - r.top - h / 2));
   }
 
-  function tick() {
-    const dy = targetY - y;
-    y += dy * (reduce ? 1 : 0.12);
-    tilt += ((reduce ? 0 : Math.max(-8, Math.min(8, dy * 0.06))) - tilt) * 0.15;
+  function tick(now) {
+    const dt = Math.min((now - last) / 1000, 1 / 30);
+    last = now;
+    if (reduce) {
+      y = targetY; vy = 0;
+    } else {
+      vy += (K * (targetY - y) - C * vy) * dt;
+      y += vy * dt;
+    }
+    const tilt = Math.max(-9, Math.min(9, vy * 0.008));
     preview.style.setProperty('--y', y.toFixed(1) + 'px');
     preview.style.setProperty('--tilt', tilt.toFixed(2) + 'deg');
-    if (Math.abs(dy) > 0.5 || Math.abs(tilt) > 0.05) requestAnimationFrame(tick);
-    else running = false;
+    if (Math.abs(targetY - y) > 0.3 || Math.abs(vy) > 2) requestAnimationFrame(tick);
+    else {
+      y = targetY; vy = 0;
+      preview.style.setProperty('--y', y.toFixed(1) + 'px');
+      preview.style.setProperty('--tilt', '0deg');
+      running = false;
+    }
   }
 
-  function kick() { if (!running) { running = true; requestAnimationFrame(tick); } }
+  function kick() {
+    if (running) return;
+    running = true;
+    last = performance.now();
+    requestAnimationFrame(tick);
+  }
 
   const list = work.querySelector('.work-list');
   list.addEventListener('mouseenter', (e) => {
     place(e.clientY);
     if (!work.classList.contains('is-hovering')) {
-      y = targetY; // appear where the cursor is, then follow
+      y = targetY; vy = 0; // appear where the cursor is, then follow
       preview.style.setProperty('--y', y + 'px');
     }
     work.classList.add('is-hovering');

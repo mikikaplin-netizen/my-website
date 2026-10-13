@@ -1564,11 +1564,13 @@ img { max-width: 100%; display: block; }
   z-index: 3;
   opacity: 0;
   scale: 0.85;
+  filter: blur(10px);
   transform: translate3d(0, var(--y, 0px), 0) rotate(var(--tilt, 0deg));
-  transition: opacity 0.4s ease, scale 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  /* materializes: blur, scale and opacity arrive together */
+  transition: opacity 0.4s ease, scale 0.6s var(--ease-fluid), filter 0.5s var(--ease-fluid);
 }
 
-.work.is-hovering .work-preview { opacity: 1; scale: 1; }
+.work.is-hovering .work-preview { opacity: 1; scale: 1; filter: none; }
 
 .work-preview-item {
   position: absolute;
@@ -2240,6 +2242,7 @@ img { max-width: 100%; display: block; }
   .nav-container::before { transform: none; }
   .nav-links li,
   .nav-links.open li { transform: none; transition: opacity 0.2s ease; }
+  .work-preview { scale: 1; filter: none; transition: opacity 0.2s ease; }
   .btn:active,
   .nav-cta:active,
   .wa-launcher:active { transform: none; }

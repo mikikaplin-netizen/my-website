@@ -102,8 +102,10 @@ side/main panels with a 0.343px inset highlight, `images/webp/waves.webp` behind
 and `zoom`ed to its column by the "PROCESS — GLASS WINDOWS" block in `script.js`, which also
 replays the Figma motion (`.is-playing`) when a window scrolls into view. Step 02's interior
 (`.fg-*`, the Figma editor + Michael's cursor dragging the brand green) is fully live HTML/CSS.
-Steps 01/03/04 still use the older abstract `.process-mockup` + `mockup-*` placeholders until
-their Figma raster assets (screenshots/photos) can be downloaded. The wave source is
+Steps 01/03/04 (`.pw-meet-*`, `.pw-build-*`, `.pw-site-*`) use the same live glass shell with
+their app panels as Figma exports in `images/process/` (WebP crops of each node's own box, SVG for
+the call bar / doc lines / AI icons), placed at design-px coordinates; radii and shadows are
+re-applied in CSS. Step 01 replays its Figma 2s loop (the brief's three text blocks fading in). The wave source is
 `images/רקע גלים ללא טישטוש.png` (uploaded by Michael, 10723×5259).
 
 ## Content notes

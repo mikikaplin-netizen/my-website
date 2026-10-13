@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=8" />
+  <link rel="stylesheet" href="style.css?v=9" />
 </head>
 <body>
 
@@ -153,15 +153,35 @@
               להביא לידים, לבסס תדמית, לחסוך לך זמן או לחמם לקוחות לפני שהם פונים אליך.
             </p>
           </div>
-          <div class="process-mockup mockup-discovery">
-            <div class="mockup-bar">
-              <span></span><span></span><span></span>
-            </div>
-            <div class="mockup-body">
-              <div class="mockup-call-main"></div>
-              <div class="mockup-call-thumb"></div>
-              <div class="mockup-call-controls">
-                <span></span><span></span><span></span>
+          <!-- 01 — Figma "Google Meet" window (Figma node 1266:30492).
+               Same 560×328.58 glass shell as 02; the app panels are Figma
+               exports placed at their design-px coordinates. -->
+          <div class="pwin-frame">
+            <div class="pwin pwin--meet" dir="ltr">
+              <img class="pwin-waves" src="images/webp/waves.webp" alt="" />
+              <div class="pwin-main"></div>
+              <div class="pwin-side"></div>
+              <p class="pwin-title">Google Meet</p>
+              <span class="pwin-lights"><i></i><i></i><i></i></span>
+              <span class="pwin-menu" aria-hidden="true">
+                <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="rgba(255,255,255,0.22)"/><path d="M4.5 5.6h7M5.8 8h4.4M7 10.4h2" stroke="#fff" stroke-width="0.9" stroke-linecap="round"/></svg>
+              </span>
+              <div class="pw-layers" aria-hidden="true">
+                <img class="pw-meet-tile pw-meet-tile--1" src="images/process/p01-tile1.webp" alt="" />
+                <div class="pw-meet-doc">
+                  <img src="images/process/p01-doc.webp" alt="" />
+                  <!-- the brief "writes itself": Figma loop 1266:30788/30797/30808 -->
+                  <div class="pw-meet-lines">
+                    <img class="pw-meet-line pw-meet-line--1" src="images/process/p01-line1.svg" alt="" />
+                    <img class="pw-meet-line pw-meet-line--2" src="images/process/p01-line2.svg" alt="" />
+                    <img class="pw-meet-line pw-meet-line--3" src="images/process/p01-line3.svg" alt="" />
+                  </div>
+                </div>
+                <p class="pw-meet-name pw-meet-name--1" dir="rtl">מיכאל קאפלין</p>
+                <p class="pw-meet-name pw-meet-name--2" dir="rtl">ישראל ישראלי</p>
+                <img class="pw-meet-figjam" src="images/process/p01-figjam.webp" alt="" />
+                <img class="pw-meet-callbar" src="images/process/p01-callbar.svg" alt="" />
+                <img class="pw-meet-tile pw-meet-tile--2" src="images/process/p01-tile2.webp" alt="" />
               </div>
             </div>
           </div>
@@ -285,18 +305,27 @@
               אלא גם מתפקד כמו שצריך בין סוגי מכשירים ופלטפורמות.
             </p>
           </div>
-          <div class="process-mockup mockup-build">
-            <div class="mockup-bar">
-              <span></span><span></span><span></span>
-            </div>
-            <div class="mockup-body">
-              <div class="mockup-form">
-                <div class="mockup-line"></div>
-                <div class="mockup-line short"></div>
-                <div class="mockup-btn"></div>
-              </div>
-              <div class="mockup-cards">
-                <span></span><span></span><span></span>
+          <!-- 03 — Figma "Website Building" window (Figma node 1266:31265).
+               Same 560×328.58 glass shell as 02; the app panels are Figma
+               exports placed at their design-px coordinates. -->
+          <div class="pwin-frame">
+            <div class="pwin pwin--build" dir="ltr">
+              <img class="pwin-waves" src="images/webp/waves.webp" alt="" />
+              <div class="pwin-main"></div>
+              <div class="pwin-side"></div>
+              <p class="pwin-title">Website Building</p>
+              <span class="pwin-lights"><i></i><i></i><i></i></span>
+              <span class="pwin-menu" aria-hidden="true">
+                <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="rgba(255,255,255,0.22)"/><path d="M4.5 5.6h7M5.8 8h4.4M7 10.4h2" stroke="#fff" stroke-width="0.9" stroke-linecap="round"/></svg>
+              </span>
+              <div class="pw-layers" aria-hidden="true">
+                <img class="pw-build-site" src="images/process/p03-site.webp" alt="" />
+                <img class="pw-build-app" src="images/process/p03-app.webp" alt="" />
+                <img class="pw-build-ic pw-build-ic--figma" src="images/process/ic-figma.svg" alt="" />
+                <img class="pw-build-ic pw-build-ic--chatgpt" src="images/process/ic-chatgpt.svg" alt="" />
+                <img class="pw-build-ic pw-build-ic--claude" src="images/process/ic-claude.svg" alt="" />
+                <img class="pw-build-ic pw-build-ic--framer" src="images/process/ic-framer.svg" alt="" />
+                <img class="pw-build-ic pw-build-ic--gemini" src="images/process/ic-gemini.webp" alt="" />
               </div>
             </div>
           </div>
@@ -312,18 +341,22 @@
               תכנים ולהזין פרטים באופן עצמאי, כך שהשליטה נשארת בידיים שלך.
             </p>
           </div>
-          <div class="process-mockup mockup-launch">
-            <div class="mockup-bar">
-              <span></span><span></span><span></span>
-            </div>
-            <div class="mockup-body">
-              <div class="mockup-hero-block"></div>
-              <div class="mockup-stats">
-                <div class="mockup-chart"></div>
-                <div class="mockup-numbers">
-                  <b>1,761</b>
-                  <div class="mockup-sparkline"></div>
-                </div>
+          <!-- 04 — Figma "WebSite" window (Figma node 1266:32965).
+               Same 560×328.58 glass shell as 02; the app panels are Figma
+               exports placed at their design-px coordinates. -->
+          <div class="pwin-frame">
+            <div class="pwin pwin--site" dir="ltr">
+              <img class="pwin-waves" src="images/webp/waves.webp" alt="" />
+              <div class="pwin-main"></div>
+              <div class="pwin-side"></div>
+              <p class="pwin-title">WebSite</p>
+              <span class="pwin-lights"><i></i><i></i><i></i></span>
+              <span class="pwin-menu" aria-hidden="true">
+                <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="rgba(255,255,255,0.22)"/><path d="M4.5 5.6h7M5.8 8h4.4M7 10.4h2" stroke="#fff" stroke-width="0.9" stroke-linecap="round"/></svg>
+              </span>
+              <div class="pw-layers" aria-hidden="true">
+                <img class="pw-site-wp" src="images/process/p04-wp.webp" alt="" />
+                <img class="pw-site-stats" src="images/process/p04-stats.webp" alt="" />
               </div>
             </div>
           </div>

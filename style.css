@@ -657,8 +657,12 @@ img { max-width: 100%; display: block; }
 
 .about-photo {
   width: 100%;
+  aspect-ratio: 4 / 5;
+  height: auto;
   border-radius: var(--radius-lg);
   object-fit: cover;
+  object-position: 50% 0%;
+  background: var(--bg-3);
   box-shadow: var(--shadow), var(--glow);
 }
 
@@ -1309,16 +1313,20 @@ img { max-width: 100%; display: block; }
   top: 38%;
   transform: translate(-50%, -50%);
   width: 100%;
-  max-width: 900px;
+  max-width: 1100px;
   padding: 0 24px;
-  z-index: 3;
+  z-index: 2;
+  pointer-events: none;
 }
 
-/* Cap the font-size lower than the default .section-title clamp — on tall
-   viewports 4.5vh climbs toward its 4rem ceiling, which is too wide for
-   these phrases to stay readable even at 900px. */
 .magnet-heading .section-title {
-  font-size: clamp(1.6rem, 3.1vh, 2.6rem);
+  font-size: clamp(2.2rem, 4.4vw, 4.4rem);
+  line-height: 1.12;
+}
+
+.magnet-hint {
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
+  color: var(--text-muted);
 }
 
 .magnet-heading .section-header {
@@ -1336,8 +1344,8 @@ img { max-width: 100%; display: block; }
   padding: 18px 28px;
   border-radius: 999px;
   font-family: var(--font);
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 500;
   white-space: nowrap;
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--border);
@@ -1345,19 +1353,50 @@ img { max-width: 100%; display: block; }
   pointer-events: none;
   will-change: transform;
   z-index: 1;
+  /* --push (0–1, from script.js): competitors shrink and fade as the
+     dominant claims its space */
+  opacity: calc(1 - var(--push, 0) * 0.6);
+  scale: calc(1 - var(--push, 0) * 0.2);
 }
 
 .magnet-bubble--dominant {
   left: 50%;
   top: 50%;
-  padding: 24px 36px;
-  font-size: 1.05rem;
-  font-weight: 800;
+  flex-direction: column;
+  gap: 2px;
+  padding: 22px 40px;
   background: var(--accent-2);
   border-color: transparent;
   color: var(--bg);
+  opacity: 1;
+  scale: 1;
   box-shadow: 0 0 40px rgba(28,211,28,0.45), 0 0 90px rgba(28,211,28,0.25);
-  z-index: 2;
+  /* above the heading */
+  z-index: 3;
+}
+
+.magnet-dominant-title { font-size: 1.5rem; font-weight: 700; line-height: 1.1; }
+.magnet-dominant-sub { font-size: 0.9rem; font-weight: 500; opacity: 0.8; }
+
+/* the dominant's "personal space" — size from script.js (--halo) */
+.magnet-bubble--dominant::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--halo, 480px);
+  height: var(--halo, 480px);
+  translate: -50% -50%;
+  border-radius: 50%;
+  border: 1px dashed rgba(28,211,28,0.35);
+  background: radial-gradient(circle, rgba(28,211,28,0.12), transparent 65%);
+  z-index: -1;
+  animation: magnetHalo 4s ease-in-out infinite;
+}
+
+@keyframes magnetHalo {
+  0%, 100% { scale: 1; opacity: 0.9; }
+  50% { scale: 1.06; opacity: 0.6; }
 }
 
 /* ===========================
@@ -1555,8 +1594,12 @@ img { max-width: 100%; display: block; }
 .contact-photo {
   width: 100%;
   max-width: 260px;
+  aspect-ratio: 1;
+  height: auto;
   border-radius: var(--radius-lg);
   object-fit: cover;
+  object-position: 50% 8%;
+  background: var(--bg-3);
   box-shadow: var(--shadow), var(--glow);
 }
 
@@ -1576,61 +1619,69 @@ img { max-width: 100%; display: block; }
   box-shadow: var(--shadow);
 }
 
-/* FORM */
+/* FORM — minimal: no card, just underlined fields on the page */
 .contact-form {
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 40px;
-  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 40px;
+  padding-top: 8px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 6px;
+  margin-bottom: 34px;
 }
+
+.form-group--wide,
+.contact-form .btn,
+.contact-form .form-note { grid-column: 1 / -1; }
 
 .form-group label {
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 400;
+  letter-spacing: 0.02em;
   color: var(--text-muted);
+  transition: color 0.3s ease;
 }
+
+.form-group:focus-within label { color: var(--accent); }
 
 .form-group input,
 .form-group textarea {
-  background: var(--bg-3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 13px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.18);
+  border-radius: 0;
+  padding: 10px 0 12px;
   font-family: var(--font);
-  font-size: 0.95rem;
+  font-size: 1.2rem;
+  font-weight: 300;
   color: var(--text);
-  transition: var(--transition);
-  resize: vertical;
+  transition: border-color 0.3s ease;
+  resize: none;
   direction: rtl;
 }
 
 .form-group input::placeholder,
 .form-group textarea::placeholder {
   color: var(--text-muted);
-  opacity: 0.5;
+  opacity: 0.45;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(100,193,210,0.15);
-  background: var(--bg-2);
+  border-bottom-color: var(--accent);
 }
 
+.contact-form .btn { justify-self: start; margin-top: 6px; width: auto; }
+
 .form-note {
-  text-align: center;
   font-size: 0.82rem;
   color: var(--text-muted);
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 /* ===========================
@@ -2019,21 +2070,20 @@ img { max-width: 100%; display: block; }
   .magnet-heading { max-width: 96%; }
 
   .magnet-heading .section-title {
-    font-size: 1.5rem;
-    line-height: 1.35;
+    font-size: 1.9rem;
+    line-height: 1.2;
   }
 
-  .magnet-heading .section-sub { font-size: 0.9rem; }
+  .magnet-hint { font-size: 0.95rem; }
 
   .magnet-bubble {
-    padding: 12px 18px;
-    font-size: 0.8rem;
+    padding: 10px 16px;
+    font-size: 0.85rem;
   }
 
-  .magnet-bubble--dominant {
-    padding: 16px 24px;
-    font-size: 0.9rem;
-  }
+  .magnet-bubble--dominant { padding: 14px 24px; }
+  .magnet-dominant-title { font-size: 1.15rem; }
+  .magnet-dominant-sub { font-size: 0.75rem; }
 
   /* mobile: plain stacked rows, each with its own inline visual */
   .work-preview { display: none; }
@@ -2079,7 +2129,7 @@ img { max-width: 100%; display: block; }
   .nav-links a { font-size: 1.3rem; padding: 18px 40px; }
   .nav-toggle { display: flex; z-index: 100; }
 
-  .contact-form { padding: 28px; }
+  .contact-form { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {

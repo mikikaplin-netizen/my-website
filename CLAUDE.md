@@ -122,8 +122,13 @@ re-applied in CSS. Step 01 replays its Figma 2s loop (the brief's three text blo
   WhatsApp widget's CTA link in `index.html`).
 - The contact form (`#contactForm`) has no backend — submit handler just fakes a success state
   client-side and resets the form.
-- `images/miki-hero.png`, the About photo, and the Contact photo are the only "real" images;
-  a couple of decorative images elsewhere still use `placehold.co` placeholder URLs.
+- `images/miki-hero.png` is reused for the hero, About and Contact photos (cropped with
+  `object-position`); no `placehold.co` images remain.
+- Magnet section ("MAGNET FIELD"): the green "העסק שלך" bubble (z-index above the heading) follows
+  the pointer within 16–84% / 20–85% of the field, returns to rest on mouseleave, and pushes the
+  "מתחרה" bubbles out of its dashed halo; pushed bubbles shrink/fade via `--push`.
+- Contact form is deliberately minimal: no card/frame, underlined transparent fields in a
+  2-column grid (`.form-group--wide` spans both).
 
 ## Git workflow used in this repo
 

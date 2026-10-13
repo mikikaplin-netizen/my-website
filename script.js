@@ -293,6 +293,10 @@ if (waLauncher && waPanel) {
 // ===========================
 // MAGNET FIELD
 // ===========================
+// "העסק שלך" follows the pointer (kept away from the edges so it never
+// parks in a corner) and gently pushes the competitor bubbles out of its
+// space; pushed bubbles shrink and fade. When the pointer leaves the
+// field it eases back to its resting spot under the heading.
 (function () {
   const field = document.getElementById('magnetField');
   const dominant = document.getElementById('magnetDominant');
@@ -301,69 +305,65 @@ if (waLauncher && waPanel) {
   const bubbles = Array.from(field.querySelectorAll('.magnet-bubble:not(.magnet-bubble--dominant)'));
   const bubbleState = bubbles.map(el => ({ el, homeX: 0, homeY: 0, dx: 0, dy: 0 }));
 
-  const REPEL_RADIUS = 340;
-  const REPEL_STRENGTH = 260;
   const MIN_DIR_DIST = 10;
-  const BUBBLE_EASE = 0.15;
+  const BUBBLE_EASE = 0.12;
   const DOM_EASE = 0.08;
-  // idle rest position (no pointer yet / pointer left): below the centered
-  // heading rather than dead-center, so the dominant bubble doesn't sit on
-  // top of the heading text at rest
-  const IDLE_Y_RATIO = 0.70;
+  const EDGE_X = 0.16;     // dominant stays within 16%–84% of the width
+  const EDGE_Y = 0.2;      // …and 20%–85% of the height
+  const IDLE_Y_RATIO = 0.72;
 
   let rect = { w: 0, h: 0, left: 0, top: 0 };
-  let target = { x: 0, y: 0 };
-  let domPos = { x: 0, y: 0 };
-  let rawPointer = { x: 0, y: 0 };
+  let repelRadius = 340, repelStrength = 260;
+  const target = { x: 0, y: 0 };
+  const domPos = { x: 0, y: 0 };
+  const rawPointer = { x: 0, y: 0 };
   let pointerActive = false;
   let measured = false;
   let resizeTimer;
 
+  function idle() { target.x = rect.w / 2; target.y = rect.h * IDLE_Y_RATIO; }
+
   function measure() {
     const r = field.getBoundingClientRect();
     rect = { w: r.width, h: r.height, left: r.left, top: r.top };
+    // the dominant's "personal space" scales with the field
+    repelRadius = Math.max(170, Math.min(360, Math.min(rect.w, rect.h) * 0.36));
+    repelStrength = repelRadius * 0.85;
+    dominant.style.setProperty('--halo', (repelRadius * 1.5).toFixed(0) + 'px');
     bubbleState.forEach(b => {
       b.homeX = b.el.offsetLeft + b.el.offsetWidth / 2;
       b.homeY = b.el.offsetTop + b.el.offsetHeight / 2;
     });
     if (!measured) {
-      domPos.x = target.x = rect.w / 2;
-      domPos.y = target.y = rect.h * IDLE_Y_RATIO;
+      idle();
+      domPos.x = target.x; domPos.y = target.y;
       measured = true;
-    } else if (!pointerActive) {
-      target.x = rect.w / 2;
-      target.y = rect.h * IDLE_Y_RATIO;
     }
   }
 
-  function updatePointer(clientX, clientY) {
-    rawPointer.x = clientX;
-    rawPointer.y = clientY;
-    pointerActive = true;
-  }
-
-  window.addEventListener('mousemove', (e) => updatePointer(e.clientX, e.clientY), { passive: true });
+  field.addEventListener('mousemove', (e) => {
+    rawPointer.x = e.clientX; rawPointer.y = e.clientY; pointerActive = true;
+  }, { passive: true });
+  field.addEventListener('mouseleave', () => { pointerActive = false; });
   field.addEventListener('touchmove', (e) => {
     const t = e.touches[0];
-    if (t) updatePointer(t.clientX, t.clientY);
+    if (t) { rawPointer.x = t.clientX; rawPointer.y = t.clientY; pointerActive = true; }
   }, { passive: true });
+  field.addEventListener('touchend', () => { pointerActive = false; });
 
   function tick() {
     const r = field.getBoundingClientRect();
-    rect = { w: r.width, h: r.height, left: r.left, top: r.top };
+    rect.left = r.left; rect.top = r.top;
 
     if (pointerActive) {
-      let x = rawPointer.x - rect.left;
-      let y = rawPointer.y - rect.top;
-      x = Math.max(0, Math.min(rect.w, x));
-      y = Math.max(0, Math.min(rect.h, y));
-      target.x = x;
-      target.y = y;
+      target.x = Math.max(rect.w * EDGE_X, Math.min(rect.w * (1 - EDGE_X), rawPointer.x - rect.left));
+      target.y = Math.max(rect.h * EDGE_Y, Math.min(rect.h * 0.85, rawPointer.y - rect.top));
+    } else {
+      idle();
     }
 
     domPos.x += (target.x - domPos.x) * DOM_EASE;
     domPos.y += (target.y - domPos.y) * DOM_EASE;
-
     dominant.style.setProperty('--dx', (domPos.x - rect.w / 2).toFixed(2) + 'px');
     dominant.style.setProperty('--dy', (domPos.y - rect.h / 2).toFixed(2) + 'px');
 
@@ -372,23 +372,22 @@ if (waLauncher && waPanel) {
       let vy = b.homeY - domPos.y;
       let dist = Math.sqrt(vx * vx + vy * vy);
       if (dist < MIN_DIR_DIST) {
-        // dominant sits ~on top of the bubble's home: fall back to a stable
-        // direction (away from the field center) instead of a jittery one
         vx = b.homeX - rect.w / 2 || 1;
         vy = b.homeY - rect.h / 2 || 1;
         dist = Math.sqrt(vx * vx + vy * vy) || 1;
       }
-      let tx = 0, ty = 0;
-      if (dist < REPEL_RADIUS) {
-        const t = 1 - dist / REPEL_RADIUS;
-        const push = t * t * REPEL_STRENGTH;
-        tx = (vx / dist) * push;
-        ty = (vy / dist) * push;
+      let tx = 0, ty = 0, push = 0;
+      if (dist < repelRadius) {
+        const t = 1 - dist / repelRadius;
+        push = t;
+        tx = (vx / dist) * t * t * repelStrength;
+        ty = (vy / dist) * t * t * repelStrength;
       }
       b.dx += (tx - b.dx) * BUBBLE_EASE;
       b.dy += (ty - b.dy) * BUBBLE_EASE;
       b.el.style.setProperty('--dx', b.dx.toFixed(2) + 'px');
       b.el.style.setProperty('--dy', b.dy.toFixed(2) + 'px');
+      b.el.style.setProperty('--push', push.toFixed(3));
     });
 
     requestAnimationFrame(tick);

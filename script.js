@@ -1120,7 +1120,7 @@ document.addEventListener('touchstart', () => {}, { passive: true });
   const io = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       const win = entry.target.querySelector('.pwin');
-      if (!win) return;
+      if (!win || entry.target.closest('.is-stacked')) return; // deck replays its own front card
       if (entry.isIntersecting) {
         win.classList.remove('is-playing');
         void win.offsetWidth; // restart the CSS animation
@@ -1129,6 +1129,116 @@ document.addEventListener('touchstart', () => {}, { passive: true });
     });
   }, { threshold: 0.6 });
   frames.forEach(f => io.observe(f));
+})();
+
+// ===========================
+// PROCESS — STACKED DECK
+// ===========================
+// Pile the step rows into one sticky stage. Scroll progress p runs 0 → N-1
+// over (N-1) × STEP; card i is "front" when p ≈ i. Cards before p fly up and
+// tilt away, cards after it wait underneath (offset down, scaled, dimmed).
+// Only on screens tall enough for a card; otherwise the plain list stays.
+(function () {
+  const deck = document.querySelector('.process-rows');
+  if (!deck) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const rows = Array.from(deck.querySelectorAll(':scope > .process-row'));
+  const N = rows.length;
+  if (N < 2) return;
+
+  const STEP = 0.55;                       // viewport heights of scroll per step
+  const stage = document.createElement('div');
+  stage.className = 'process-stage';
+  const layers = document.createElement('div');
+  layers.className = 'process-stage-layers';
+  const nav = document.createElement('div');
+  nav.className = 'process-steps';
+  const dots = rows.map((_, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = String(i + 1).padStart(2, '0');
+    b.setAttribute('aria-label', 'שלב ' + (i + 1));
+    b.addEventListener('click', () => {
+      const top = deck.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: top + i * STEP * window.innerHeight + 2, behavior: 'smooth' });
+    });
+    nav.appendChild(b);
+    return b;
+  });
+  stage.append(layers, nav);
+
+  let on = false, front = -1, ticking = false;
+  const ease = t => t * t * (3 - 2 * t);
+
+  const enable = () => {
+    rows.forEach((r, i) => { r.style.zIndex = N - i; layers.appendChild(r); });
+    deck.appendChild(stage);
+    deck.classList.add('is-stacked');
+    on = true;
+  };
+  const disable = () => {
+    rows.forEach(r => { r.style.cssText = ''; r.classList.remove('is-behind'); deck.appendChild(r); });
+    stage.remove();
+    deck.classList.remove('is-stacked');
+    deck.style.height = '';
+    on = false; front = -1;
+  };
+
+  const fits = () => {
+    // measure a card in deck layout against the room the stage gives it
+    if (!on) enable();
+    const tallest = Math.max(...rows.map(r => r.offsetHeight));
+    const cs = getComputedStyle(stage);
+    const room = stage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - 3 * 22;
+    return tallest <= room;
+  };
+
+  const update = () => {
+    ticking = false;
+    if (!on) return;
+    const vh = window.innerHeight;
+    const p = Math.min(N - 1, Math.max(0, -deck.getBoundingClientRect().top / (STEP * vh)));
+    rows.forEach((r, i) => {
+      const d = i - p;
+      let tf, behind = false;
+      if (d <= -1) {
+        tf = `translateY(${-vh}px)`;
+        r.style.visibility = 'hidden';
+      } else if (d < 0) {
+        const t = ease(-d);
+        tf = `translateY(${-t * vh * 0.95}px) rotate(${-t * 5}deg)`;
+        r.style.visibility = '';
+      } else {
+        const k = Math.min(d, 3);
+        tf = `translateY(${k * 22}px) scale(${1 - k * 0.05})`;
+        r.style.visibility = d > 3.5 ? 'hidden' : '';
+        behind = d > 0.5;
+      }
+      r.style.transform = tf;
+      r.classList.toggle('is-behind', behind);
+    });
+    const f = Math.min(N - 1, Math.round(p));
+    if (f !== front) {
+      front = f;
+      dots.forEach((b, i) => b.classList.toggle('is-active', i === f));
+      const win = rows[f].querySelector('.pwin');
+      if (win) { win.classList.remove('is-playing'); void win.offsetWidth; win.classList.add('is-playing'); }
+    }
+  };
+
+  const layout = () => {
+    if (fits()) {
+      deck.style.height = `calc(100vh + ${(N - 1) * STEP * 100}vh)`;
+      update();
+    } else if (on) {
+      disable();
+    }
+  };
+
+  layout();
+  window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  let t;
+  window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(layout, 150); });
 })();
 
 // ===========================

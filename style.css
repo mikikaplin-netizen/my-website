@@ -835,6 +835,86 @@ img { max-width: 100%; display: block; }
   max-width: 560px;
 }
 
+/* Stacked deck (script.js "PROCESS — STACKED DECK" adds .is-stacked):
+   the steps become glass cards piled in one sticky stage. Scrolling flies
+   the front card up and away and the next one steps forward, so the four
+   steps take ~1.6 screens instead of ~3.4. Upcoming cards peek out below
+   the front one. Without JS / reduced motion / short screens: the plain
+   list above. */
+.process-rows.is-stacked { display: block; }
+
+.process-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 84px 0 calc(8vh + 56px);
+}
+
+.is-stacked .process-row {
+  grid-area: 1 / 1;
+  align-self: center;
+  width: 100%;
+  min-height: 0;
+  padding: clamp(28px, 4vw, 56px);
+  border-radius: var(--radius-lg);
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  box-shadow: inset -0.5px 0.5px 0.5px rgba(255,255,255,0.18), 0 30px 60px -20px rgba(0,0,0,0.6);
+  transform-origin: 50% 100%;
+  will-change: transform;
+  transition: none !important;
+}
+
+.is-stacked .process-row > * { transition: opacity 0.3s ease; }
+.is-stacked .process-row.is-behind > * { opacity: 0; }
+
+.process-stage-layers {
+  display: grid;
+  width: 100%;
+}
+
+/* phones: tighter card so text + window fit one screen */
+@media (max-width: 900px) {
+  .process-stage { padding-top: 76px; }
+  .is-stacked .process-row { gap: 16px; padding: 22px 18px 20px; }
+  .is-stacked .process-num { font-size: 1.2rem; }
+  .is-stacked .process-title { font-size: 1.7rem; margin-bottom: 8px; }
+  .is-stacked .process-body { font-size: 1rem; line-height: 1.5; }
+}
+
+/* step dots: 01–04, the active one filled; click jumps to that step */
+.process-steps {
+  position: absolute;
+  bottom: calc(8vh + 8px);  /* clear of the bottom edge blur */
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  gap: 8px;
+  direction: ltr;
+}
+
+.process-steps button {
+  font: inherit;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.process-steps button.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+
 /* ---------------------------------------------------------------
    Glass app window (Figma "Frame 62", 560 × 328.58).
    Every value inside .pwin is the design's own px; script.js sets

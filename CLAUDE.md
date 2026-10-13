@@ -112,7 +112,13 @@ replays the Figma motion (`.is-playing`) when a window scrolls into view. Step 0
 Steps 01/03/04 (`.pw-meet-*`, `.pw-build-*`, `.pw-site-*`) use the same live glass shell with
 their app panels as Figma exports in `images/process/` (WebP crops of each node's own box, SVG for
 the call bar / doc lines / AI icons), placed at design-px coordinates; radii and shadows are
-re-applied in CSS. Step 01 replays its Figma 2s loop (the brief's three text blocks fading in). The wave source is
+re-applied in CSS. Step 01 replays its Figma 2s loop (the brief's three text blocks fading in).
+**Process stacked deck** ("PROCESS — STACKED DECK" in `script.js`): the four `.process-row`s are
+moved into a sticky `.process-stage` and piled as solid glass cards (`.is-stacked`); scroll
+(0.55 viewport heights per step) flies the front card up/away and brings the next forward, with
+upcoming cards peeking below, 01–04 step pills that jump to a step, and the front card's `.pwin`
+replaying its motion. It only turns on when the tallest card fits the stage (compact card styles
+on phones); otherwise, and under reduced motion / no JS, the plain stacked list remains. The wave source is
 `images/רקע גלים ללא טישטוש.png` (uploaded by Michael, 10723×5259).
 
 ## Content notes

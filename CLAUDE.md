@@ -23,7 +23,7 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
 - `index.html` — the entire page, all sections inline (no templating/includes)
 - `style.css` — all styles, organized in clearly labeled `/* ==== SECTION ==== */` blocks that
   mirror the HTML sections 1:1 (FONTS, ROOT & RESET, UTILITIES, BUTTONS, NAVBAR, HERO, STATEMENT,
-  ABOUT, PROCESS, PORTFOLIO, CONTACT, FOOTER, WHATSAPP FLOATING WIDGET, ANIMATIONS, RESPONSIVE)
+  ABOUT, PROCESS, CLIENTS, PORTFOLIO, TESTIMONIALS, CONTACT, FOOTER, WHATSAPP FLOATING WIDGET, ANIMATIONS, RESPONSIVE)
 - `script.js` — vanilla JS, organized in the same `// ==== SECTION ====` comment style, one IIFE
   or top-level block per feature (see below)
 - `fonts/` — self-hosted Polin (Hebrew) `.ttf` files (Light/Regular/Bold, uploaded by Michael),
@@ -37,7 +37,7 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
 ## Architecture / how the page is wired together
 
 **Sections are independent and stack in document order** inside `index.html`: navbar → hero →
-statement → portfolio → about → process → magnet → wave → testimonials → contact → footer, plus a WhatsApp widget appended at
+statement → portfolio → about → process → clients → magnet → wave → testimonials → contact → footer, plus a WhatsApp widget appended at
 the end of `<body>`. There's no JS component system — each section's behavior is a self-contained
 block in `script.js` that queries its own DOM by id/class and no-ops if the element isn't present
 (defensive `if (el) ...` guards throughout), so sections can be added/removed without touching
@@ -83,7 +83,7 @@ so they render above it. Section backgrounds use semi-transparent colors
   start of the pin and shrinks away at the end (`--wave-r`). Without JS / under reduced motion it
   renders as static centered text on a plain white band.
 - `.edge-blur` — fixed progressive backdrop blur along the bottom of the viewport (height via
-  `--edge-blur-h`), stacked masked layers with doubling blur.
+  `--edge-blur-h`, 8vh), stacked masked layers with doubling blur.
 - Motion: magnetic `.btn`/`.nav-cta` (uses the standalone `translate` property so it doesn't
   clash with hover `transform`), hero photo parallax.
 - Portfolio (`.work`, "PORTFOLIO — HOVER-REVEAL LIST"): full-bleed rows (name in --accent, white when active;
@@ -128,9 +128,16 @@ re-applied in CSS. Step 01 replays its Figma 2s loop (the brief's three text blo
   the pointer within 16–84% / 20–85% of the field, returns to rest on mouseleave, and pushes the
   other-business bubbles (storefront icons — no "competitor" wording, keep it positive) away;
   pushed bubbles shrink/fade via `--push`.
-- Testimonials (`.testimonials`, right before the contact section — footer is always last): 9 real client quotes from mkaplin.com in two
-  glass-card marquee rows scrolling in opposite directions ("TESTIMONIALS — MARQUEE LOOP" clones
-  each track for a seamless loop; hover pauses; reduced motion = swipeable rows).
+- Testimonials (`.testimonials`, right before the contact section — footer is always last): 9 real client
+  quotes from mkaplin.com. Title sits on the right, cards on the left in vertical columns that loop
+  upward at slightly different speeds (21st.dev style); "TESTIMONIALS — VERTICAL COLUMNS" deals the
+  cards into 1–3 columns by width and repeats each column until it overfills the window (so the loop
+  never shows empty space). Hover pauses a column; reduced motion / no JS = plain grid. Avatars are the
+  clients' logos/photo from mkaplin.com (`images/testimonials/`); מיכאל זכאי has none and keeps initials.
+- Clients (`.clients`, right after the process section, no heading on purpose): logo wall of the 15
+  grey client logos from mkaplin.com (`images/clients/`, sized by area so wide/tall marks weigh the
+  same) in a 5×3 hairline grid (3 columns on mobile) whose lines glow under the cursor
+  ("CLIENTS — LOGO WALL SPOTLIGHT"); cells fade up staggered via `--i` when revealed.
 - Contact form is deliberately minimal: no card/frame, underlined transparent fields in a
   2-column grid (`.form-group--wide` spans both).
 

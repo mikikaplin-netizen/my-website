@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=24" />
+  <link rel="stylesheet" href="style.css?v=25" />
 </head>
 <body>
 
@@ -433,6 +433,30 @@
     </div>
   </section>
 
+  <!-- CLIENTS — logo wall of businesses Michael worked with (logos from
+       mkaplin.com); hairline grid whose lines light up under the cursor -->
+  <section class="clients" aria-label="עסקים שעבדו איתי">
+    <div class="container">
+    <ul class="clients-grid">
+      <li style="--i:0"><img src="images/clients/wst.webp" alt="WST" width="135" height="85" loading="lazy" /></li>
+      <li style="--i:1"><img src="images/clients/alter.webp" alt="אלתר ספרים" width="182" height="63" loading="lazy" /></li>
+      <li style="--i:2"><img src="images/clients/dimri-investments.webp" alt="דימרי השקעות" width="66" height="88" loading="lazy" /></li>
+      <li style="--i:3"><img src="images/clients/chinuch-labina.webp" alt="חינוך לבינה" width="146" height="78" loading="lazy" /></li>
+      <li style="--i:4"><img src="images/clients/yoter-nadlan.webp" alt="יותר נדל&quot;ן משכל" width="191" height="60" loading="lazy" /></li>
+      <li style="--i:5"><img src="images/clients/lidor-barel.webp" alt="לידור בראל" width="230" height="44" loading="lazy" /></li>
+      <li style="--i:6"><img src="images/clients/lechatchila.webp" alt="לכתחילה" width="161" height="71" loading="lazy" /></li>
+      <li style="--i:7"><img src="images/clients/lishkat-hatoanim.webp" alt="לשכת הטוענים הרבניים" width="177" height="65" loading="lazy" /></li>
+      <li style="--i:8"><img src="images/clients/birnbaum-dimentman.webp" alt="בירנבאום דימנטמן, משרד עורכי דין" width="211" height="54" loading="lazy" /></li>
+      <li style="--i:9"><img src="images/clients/israel-ziskind.webp" alt="עו&quot;ד ישראל זיסקינד" width="230" height="28" loading="lazy" /></li>
+      <li style="--i:10"><img src="images/clients/wolfeld-group.webp" alt="קבוצת וולפלד" width="226" height="51" loading="lazy" /></li>
+      <li style="--i:11"><img src="images/clients/karta.webp" alt="קרתא" width="184" height="62" loading="lazy" /></li>
+      <li style="--i:12"><img src="images/clients/shimony.webp" alt="Shimony House of Finance" width="188" height="61" loading="lazy" /></li>
+      <li style="--i:13"><img src="images/clients/tevua.webp" alt="תבואה השקעות נדל&quot;ן" width="146" height="78" loading="lazy" /></li>
+      <li style="--i:14"><img src="images/clients/tamar-baniel.webp" alt="תמר בניאל" width="96" height="88" loading="lazy" /></li>
+    </ul>
+    </div>
+  </section>
+
   <!-- MAGNET FIELD -->
   <section class="magnet section" id="magnet">
     <div class="magnet-field" id="magnetField">
@@ -482,106 +506,79 @@
     </div>
   </section>
 
-  <!-- TESTIMONIALS — two counter-scrolling marquee rows of glass cards
-       (script.js duplicates each track for a seamless loop) -->
+  <!-- TESTIMONIALS — title on the right, quotes in vertically scrolling
+       columns on the left (script.js deals the cards into 1–3 columns by
+       width and loops each one; without JS they sit in a plain grid) -->
   <section class="testimonials section" id="testimonials">
-    <div class="container">
-      <div class="section-header">
+    <div class="container tm-layout">
+      <div class="section-header tm-head">
         <p class="section-label">המלצות</p>
         <h2 class="section-title">מה אומרים<br /><span class="text-accent">הלקוחות שלי</span></h2>
       </div>
-    </div>
-    <div class="tm-marquee">
-      <div class="tm-row">
-        <div class="tm-track">
-            <figure class="tm-card">
-              <blockquote>עברתי על העיצוב אתמול עם האיש סושייל שלי, מאוד אהבתי את התוצאה! האתר מעוצב בצורה יפה, וברורה. מאוד נהנתי, הבאת לי תוצאה שאני מאוד התחברתי אליה.</blockquote>
-              <figcaption>
-                <img class="tm-avatar" src="images/testimonials/alter.webp" alt="" width="44" height="44" loading="lazy" />
-                <span><b>איציק אלתר</b><small>אלתר ספרים</small></span>
-              </figcaption>
-            </figure>
-            <figure class="tm-card">
-              <blockquote>יצירתי מקצועי ויסודי. מקשיב ומבין את הצרכים של הלקוח, יודע לעמוד בזמנים ועושה עבודה מעולה! ממליץ בחום.</blockquote>
-              <figcaption>
-                <img class="tm-avatar" src="images/testimonials/itai-oren.webp" alt="" width="44" height="44" loading="lazy" />
-                <span><b>איתי אורן</b><small>ניהול וקידום עסקים</small></span>
-              </figcaption>
-            </figure>
-            <figure class="tm-card">
-              <blockquote>מיכאל הוא אומן גרפי מוכשר, מבין ענין בכל תחום היצירה של עיצוב והתוצרים גרפיים שמגיעים לבעלי העסקים – הלקוחות שלו, עם תוצאות בשטח.</blockquote>
-              <figcaption>
-                <img class="tm-avatar" src="images/testimonials/karta.webp" alt="" width="44" height="44" loading="lazy" />
-                <span><b>שלומי פנחסוביץ</b><small>מנהל שיווק, קרתא נדל"ן</small></span>
-              </figcaption>
-            </figure>
-            <figure class="tm-card">
-              <blockquote>מיכאל אלוף ממש! מעצב בטוב טעם, נקי, ישר, מבין עניין, מעצב ברמה גבוהה, נעים, אדיב, ומביא תוצאות מהירות ומדוייקות. תענוג לעבוד איתו. תודה רבה לך מיכאל.</blockquote>
-              <figcaption>
-                <img class="tm-avatar" src="images/testimonials/naftali-chen.webp" alt="" width="44" height="44" loading="lazy" />
-                <span><b>נפתלי חן</b><small>היסטוריון ומורה דרך</small></span>
-              </figcaption>
-            </figure>
-            <figure class="tm-card">
-              <blockquote>מיכאל קפלין מצטיין בדיוק מקסימלי להבנת הלקוח וליצירת תדמית מושלמת! נכנסתי עכשיו לאתר שהוא בנה עבורי לעסק, והכל נראה כל כך מושלם! מהמם!</blockquote>
-              <figcaption>
-                <img class="tm-avatar" src="images/testimonials/tamar-baniel.webp" alt="" width="44" height="44" loading="lazy" />
-                <span><b>תמר בניאל</b><small>אדריכלית ומעצבת פנים</small></span>
-              </figcaption>
-            </figure>
-        </div>
-      </div>
-      <div class="tm-row tm-row--reverse">
-        <div class="tm-track">
-            <figure class="tm-card">
-              <blockquote>העבודה עם מיכאל הייתה פנטסטית, המקצועיות והשירות היו מדהימים! החל משלב האיפיון של האתר והעיצוב, מיותר להכביר במילים וכל גולש/ת יוכל לראות בשנייה את האיכות חסרת הפשרות. נקודה נוספת שמאוד ראויה לציון היא השירות האדיב והזמין שמיכאל נתן לנו לאורך כל הדרך! ממש לא מובן מאליו. הצוות שלנו מעריך את הערך המוסף העצום של האתר החדש על כלל הפונקציות המדהימות שיש בו, ומיכאל היה שליח מסור שהקפיץ אותנו עסקית.</blockquote>
-              <figcaption>
-                <img class="tm-avatar" src="images/testimonials/yossi-yakab.webp" alt="" width="44" height="44" loading="lazy" />
-                <span><b>יוסי יאקאב</b><small>חבר הנהלת לשכת הטוענים הרבניים</small></span>
-              </figcaption>
-            </figure>
-            <figure class="tm-card">
-              <blockquote>האתר שמיכאל יצר לי, מאוד מקצועי, משפיע על המבקרים בו ויוצר רושם של עסק רציני ומוביל. ואני ממליץ.</blockquote>
-              <figcaption>
-                <img class="tm-avatar" src="images/testimonials/israel-ziskind.webp" alt="" width="44" height="44" loading="lazy" />
-                <span><b>ישראל זיסקינד</b><small>עורך דין</small></span>
-              </figcaption>
-            </figure>
-            <figure class="tm-card">
-              <blockquote>רוצה להמליץ על מיכאל שעיצב לי אתר נדל"ן ברמה גבוהה במיוחד, האתר לא רק נראה נהדר, אלא גם עובד בצורה חלקה ומותאם בדיוק לצרכים שלי. מיכאל הפגין מקצועיות, יצירתיות ויחס אישי לאורך כל הדרך. אם אתם מחפשים מישהו שיודע להפוך רעיון לאתר שעובד באמת – מיכאל הוא האיש שלכם!</blockquote>
-              <figcaption>
-                <span class="tm-avatar" aria-hidden="true">מז</span>
-                <span><b>מיכאל זכאי</b><small>יזם</small></span>
-              </figcaption>
-            </figure>
-            <figure class="tm-card">
-              <blockquote>מיכאל הוא אומן גרפי מוכשר, יוצר ואיש של צבעים, צורות ותוצרים גרפיים שמביאים לבעלי העסקים - הלקוחות שלו, תוצאות בשטח. מיכאל הוא מסור מאד ועומד בלוח הזמנים באופן מופתי.</blockquote>
-              <figcaption>
-                <img class="tm-avatar" src="images/testimonials/karta.webp" alt="" width="44" height="44" loading="lazy" />
-                <span><b>עדי סלפתי</b><small>מנהלת פרוייקטים, קרתא</small></span>
-              </figcaption>
-            </figure>
-        </div>
-      </div>
-      <p class="tm-clients-label">עסקים שעבדו איתי</p>
-      <div class="tm-row tm-row--logos">
-        <ul class="tm-track tm-logos">
-          <li><img src="images/clients/wst.webp" alt="WST" width="101" height="64" loading="lazy" /></li>
-          <li><img src="images/clients/alter.webp" alt="אלתר ספרים" width="144" height="50" loading="lazy" /></li>
-          <li><img src="images/clients/dimri-investments.webp" alt="דימרי השקעות" width="48" height="64" loading="lazy" /></li>
-          <li><img src="images/clients/chinuch-labina.webp" alt="חינוך לבינה" width="116" height="62" loading="lazy" /></li>
-          <li><img src="images/clients/yoter-nadlan.webp" alt="יותר נדל&quot;ן משכל" width="151" height="47" loading="lazy" /></li>
-          <li><img src="images/clients/lidor-barel.webp" alt="לידור בראל" width="192" height="37" loading="lazy" /></li>
-          <li><img src="images/clients/lechatchila.webp" alt="לכתחילה" width="127" height="56" loading="lazy" /></li>
-          <li><img src="images/clients/lishkat-hatoanim.webp" alt="לשכת הטוענים הרבניים" width="140" height="51" loading="lazy" /></li>
-          <li><img src="images/clients/birnbaum-dimentman.webp" alt="בירנבאום דימנטמן, משרד עורכי דין" width="167" height="43" loading="lazy" /></li>
-          <li><img src="images/clients/israel-ziskind.webp" alt="עו&quot;ד ישראל זיסקינד" width="240" height="29" loading="lazy" /></li>
-          <li><img src="images/clients/wolfeld-group.webp" alt="קבוצת וולפלד" width="179" height="40" loading="lazy" /></li>
-          <li><img src="images/clients/karta.webp" alt="קרתא" width="146" height="49" loading="lazy" /></li>
-          <li><img src="images/clients/shimony.webp" alt="Shimony House of Finance" width="149" height="48" loading="lazy" /></li>
-          <li><img src="images/clients/tevua.webp" alt="תבואה השקעות נדל&quot;ן" width="116" height="62" loading="lazy" /></li>
-          <li><img src="images/clients/tamar-baniel.webp" alt="תמר בניאל" width="70" height="64" loading="lazy" /></li>
-        </ul>
+      <div class="tm-columns">
+          <figure class="tm-card">
+            <blockquote>עברתי על העיצוב אתמול עם האיש סושייל שלי, מאוד אהבתי את התוצאה! האתר מעוצב בצורה יפה, וברורה. מאוד נהנתי, הבאת לי תוצאה שאני מאוד התחברתי אליה.</blockquote>
+            <figcaption>
+              <img class="tm-avatar" src="images/testimonials/alter.webp" alt="" width="44" height="44" loading="lazy" />
+              <span><b>איציק אלתר</b><small>אלתר ספרים</small></span>
+            </figcaption>
+          </figure>
+          <figure class="tm-card">
+            <blockquote>יצירתי מקצועי ויסודי. מקשיב ומבין את הצרכים של הלקוח, יודע לעמוד בזמנים ועושה עבודה מעולה! ממליץ בחום.</blockquote>
+            <figcaption>
+              <img class="tm-avatar" src="images/testimonials/itai-oren.webp" alt="" width="44" height="44" loading="lazy" />
+              <span><b>איתי אורן</b><small>ניהול וקידום עסקים</small></span>
+            </figcaption>
+          </figure>
+          <figure class="tm-card">
+            <blockquote>מיכאל הוא אומן גרפי מוכשר, מבין ענין בכל תחום היצירה של עיצוב והתוצרים גרפיים שמגיעים לבעלי העסקים – הלקוחות שלו, עם תוצאות בשטח.</blockquote>
+            <figcaption>
+              <img class="tm-avatar" src="images/testimonials/karta.webp" alt="" width="44" height="44" loading="lazy" />
+              <span><b>שלומי פנחסוביץ</b><small>מנהל שיווק, קרתא נדל"ן</small></span>
+            </figcaption>
+          </figure>
+          <figure class="tm-card">
+            <blockquote>מיכאל אלוף ממש! מעצב בטוב טעם, נקי, ישר, מבין עניין, מעצב ברמה גבוהה, נעים, אדיב, ומביא תוצאות מהירות ומדוייקות. תענוג לעבוד איתו. תודה רבה לך מיכאל.</blockquote>
+            <figcaption>
+              <img class="tm-avatar" src="images/testimonials/naftali-chen.webp" alt="" width="44" height="44" loading="lazy" />
+              <span><b>נפתלי חן</b><small>היסטוריון ומורה דרך</small></span>
+            </figcaption>
+          </figure>
+          <figure class="tm-card">
+            <blockquote>מיכאל קפלין מצטיין בדיוק מקסימלי להבנת הלקוח וליצירת תדמית מושלמת! נכנסתי עכשיו לאתר שהוא בנה עבורי לעסק, והכל נראה כל כך מושלם! מהמם!</blockquote>
+            <figcaption>
+              <img class="tm-avatar" src="images/testimonials/tamar-baniel.webp" alt="" width="44" height="44" loading="lazy" />
+              <span><b>תמר בניאל</b><small>אדריכלית ומעצבת פנים</small></span>
+            </figcaption>
+          </figure>
+          <figure class="tm-card">
+            <blockquote>העבודה עם מיכאל הייתה פנטסטית, המקצועיות והשירות היו מדהימים! החל משלב האיפיון של האתר והעיצוב, מיותר להכביר במילים וכל גולש/ת יוכל לראות בשנייה את האיכות חסרת הפשרות. נקודה נוספת שמאוד ראויה לציון היא השירות האדיב והזמין שמיכאל נתן לנו לאורך כל הדרך! ממש לא מובן מאליו. הצוות שלנו מעריך את הערך המוסף העצום של האתר החדש על כלל הפונקציות המדהימות שיש בו, ומיכאל היה שליח מסור שהקפיץ אותנו עסקית.</blockquote>
+            <figcaption>
+              <img class="tm-avatar" src="images/testimonials/yossi-yakab.webp" alt="" width="44" height="44" loading="lazy" />
+              <span><b>יוסי יאקאב</b><small>חבר הנהלת לשכת הטוענים הרבניים</small></span>
+            </figcaption>
+          </figure>
+          <figure class="tm-card">
+            <blockquote>האתר שמיכאל יצר לי, מאוד מקצועי, משפיע על המבקרים בו ויוצר רושם של עסק רציני ומוביל. ואני ממליץ.</blockquote>
+            <figcaption>
+              <img class="tm-avatar" src="images/testimonials/israel-ziskind.webp" alt="" width="44" height="44" loading="lazy" />
+              <span><b>ישראל זיסקינד</b><small>עורך דין</small></span>
+            </figcaption>
+          </figure>
+          <figure class="tm-card">
+            <blockquote>רוצה להמליץ על מיכאל שעיצב לי אתר נדל"ן ברמה גבוהה במיוחד, האתר לא רק נראה נהדר, אלא גם עובד בצורה חלקה ומותאם בדיוק לצרכים שלי. מיכאל הפגין מקצועיות, יצירתיות ויחס אישי לאורך כל הדרך. אם אתם מחפשים מישהו שיודע להפוך רעיון לאתר שעובד באמת – מיכאל הוא האיש שלכם!</blockquote>
+            <figcaption>
+              <span class="tm-avatar" aria-hidden="true">מז</span>
+              <span><b>מיכאל זכאי</b><small>יזם</small></span>
+            </figcaption>
+          </figure>
+          <figure class="tm-card">
+            <blockquote>מיכאל הוא אומן גרפי מוכשר, יוצר ואיש של צבעים, צורות ותוצרים גרפיים שמביאים לבעלי העסקים - הלקוחות שלו, תוצאות בשטח. מיכאל הוא מסור מאד ועומד בלוח הזמנים באופן מופתי.</blockquote>
+            <figcaption>
+              <img class="tm-avatar" src="images/testimonials/karta.webp" alt="" width="44" height="44" loading="lazy" />
+              <span><b>עדי סלפתי</b><small>מנהלת פרוייקטים, קרתא</small></span>
+            </figcaption>
+          </figure>
       </div>
     </div>
   </section>
@@ -691,6 +688,6 @@
     </button>
   </div>
 
-  <script src="script.js?v=22"></script>
+  <script src="script.js?v=25"></script>
 </body>
 </html>

@@ -214,7 +214,7 @@ document.addEventListener('keydown', (e) => {
 // REVEAL ON SCROLL
 // ===========================
 const revealEls = document.querySelectorAll(
-  '.process-row, .work-row, .about-grid, .contact-wrapper, .section-header'
+  '.process-row, .work-row, .about-grid, .contact-wrapper, .section-header, .clients-grid'
 );
 
 revealEls.forEach(el => el.classList.add('reveal'));
@@ -1132,25 +1132,84 @@ document.addEventListener('touchstart', () => {}, { passive: true });
 })();
 
 // ===========================
-// TESTIMONIALS — MARQUEE LOOP
+// TESTIMONIALS — VERTICAL COLUMNS
 // ===========================
-// Duplicate each track's cards once (hidden from assistive tech) so the
-// CSS translateX(-50%) animation loops seamlessly; speed scales with
-// track length so every row moves at the same px/s.
+// Deal the cards round-robin into 1–3 columns (by width), repeat each
+// column's set until it is taller than the window, then duplicate it so the
+// CSS translateY(-50%) loop is seamless. Speeds differ slightly per column.
+// Rebuilt only when the column count changes. Reduced motion / no JS: the
+// cards stay in the plain CSS grid.
 (function () {
-  const tracks = document.querySelectorAll('.tm-track');
-  if (!tracks.length) return;
+  const wrap = document.querySelector('.tm-columns');
+  if (!wrap) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  tracks.forEach(track => {
-    Array.from(track.children).forEach(card => {
-      const clone = card.cloneNode(true);
-      clone.setAttribute('aria-hidden', 'true');
-      track.appendChild(clone);
-    });
-    const PX_PER_SEC = 40;
-    const setDur = () => track.style.setProperty('--tm-dur', (track.scrollWidth / 2 / PX_PER_SEC).toFixed(1) + 's');
-    setDur();
-    window.addEventListener('resize', setDur);
+  const cards = Array.from(wrap.querySelectorAll('.tm-card'));
+  const PX_PER_SEC = 28;
+  const SPEED = [1, 0.8, 1.15];
+  let count = 0;
+
+  const build = () => {
+    const w = wrap.clientWidth;
+    const n = w >= 820 ? 3 : w >= 540 ? 2 : 1;
+    if (n === count) return;
+    count = n;
+    wrap.textContent = '';
+    wrap.classList.add('is-looping');
+    wrap.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
+    const viewH = wrap.clientHeight;
+
+    for (let c = 0; c < n; c++) {
+      const col = document.createElement('div');
+      col.className = 'tm-col';
+      const track = document.createElement('div');
+      track.className = 'tm-col-track';
+      col.appendChild(track);
+      wrap.appendChild(col);
+
+      const set = cards.filter((_, i) => i % n === c);
+      set.forEach(card => track.appendChild(card));
+      // repeat the set until one copy fills the column
+      let guard = 0;
+      while (track.scrollHeight < viewH + 20 && guard++ < 6) {
+        set.forEach(card => {
+          const clone = card.cloneNode(true);
+          clone.setAttribute('aria-hidden', 'true');
+          track.appendChild(clone);
+        });
+      }
+      // second copy for the seamless -50% loop
+      Array.from(track.children).forEach(card => {
+        const clone = card.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        track.appendChild(clone);
+      });
+      const dur = track.scrollHeight / 2 / (PX_PER_SEC * SPEED[c % SPEED.length]);
+      track.style.setProperty('--tm-dur', dur.toFixed(1) + 's');
+      if (c % 2) track.style.animationDelay = `-${(dur * 0.35).toFixed(1)}s`;
+    }
+  };
+
+  build();
+  let t;
+  window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(build, 150); });
+})();
+
+// ===========================
+// CLIENTS — LOGO WALL SPOTLIGHT
+// ===========================
+// The grid's gap lines carry a radial accent glow; follow the pointer with it.
+(function () {
+  const grid = document.querySelector('.clients-grid');
+  if (!grid || !window.matchMedia('(hover: hover)').matches) return;
+  grid.addEventListener('pointermove', e => {
+    const r = grid.getBoundingClientRect();
+    grid.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    grid.style.setProperty('--my', (e.clientY - r.top) + 'px');
   });
+  grid.addEventListener('pointerleave', () => {
+    grid.style.setProperty('--mx', '50%');
+    grid.style.setProperty('--my', '-400px');
+  });
+  grid.style.setProperty('--my', '-400px');
 })();

@@ -1935,6 +1935,13 @@ img { max-width: 100%; display: block; }
   font-size: 0.95rem;
 }
 
+/* client logo from mkaplin.com in place of initials */
+img.tm-avatar {
+  object-fit: cover;
+  background: var(--bg-3);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.12);
+}
+
 .tm-card figcaption b {
   display: block;
   font-size: 1rem;

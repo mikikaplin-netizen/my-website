@@ -1130,3 +1130,27 @@ document.addEventListener('touchstart', () => {}, { passive: true });
   }, { threshold: 0.6 });
   frames.forEach(f => io.observe(f));
 })();
+
+// ===========================
+// TESTIMONIALS — MARQUEE LOOP
+// ===========================
+// Duplicate each track's cards once (hidden from assistive tech) so the
+// CSS translateX(-50%) animation loops seamlessly; speed scales with
+// track length so every row moves at the same px/s.
+(function () {
+  const tracks = document.querySelectorAll('.tm-track');
+  if (!tracks.length) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  tracks.forEach(track => {
+    Array.from(track.children).forEach(card => {
+      const clone = card.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      track.appendChild(clone);
+    });
+    const PX_PER_SEC = 40;
+    const setDur = () => track.style.setProperty('--tm-dur', (track.scrollWidth / 2 / PX_PER_SEC).toFixed(1) + 's');
+    setDur();
+    window.addEventListener('resize', setDur);
+  });
+})();

@@ -37,7 +37,7 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
 ## Architecture / how the page is wired together
 
 **Sections are independent and stack in document order** inside `index.html`: navbar → hero →
-statement → portfolio → about → process → wave → contact → footer, plus a WhatsApp widget appended at
+statement → portfolio → about → process → magnet → wave → contact → testimonials → footer, plus a WhatsApp widget appended at
 the end of `<body>`. There's no JS component system — each section's behavior is a self-contained
 block in `script.js` that queries its own DOM by id/class and no-ops if the element isn't present
 (defensive `if (el) ...` guards throughout), so sections can be added/removed without touching
@@ -128,6 +128,9 @@ re-applied in CSS. Step 01 replays its Figma 2s loop (the brief's three text blo
   the pointer within 16–84% / 20–85% of the field, returns to rest on mouseleave, and pushes the
   other-business bubbles (storefront icons — no "competitor" wording, keep it positive) away;
   pushed bubbles shrink/fade via `--push`.
+- Testimonials (`.testimonials`, before the footer): 9 real client quotes from mkaplin.com in two
+  glass-card marquee rows scrolling in opposite directions ("TESTIMONIALS — MARQUEE LOOP" clones
+  each track for a seamless loop; hover pauses; reduced motion = swipeable rows).
 - Contact form is deliberately minimal: no card/frame, underlined transparent fields in a
   2-column grid (`.form-group--wide` spans both).
 

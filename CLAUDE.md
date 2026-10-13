@@ -95,11 +95,15 @@ so they render above it. Section backgrounds use semi-transparent colors
 
 **Mobile tab bar** (`#tabbar`, ≤768px only — replaces the hamburger, which is hidden there): a
 fixed liquid-glass pill at the bottom (backdrop blur + saturate, specular sheen `::before`, fading
-rim `::after`) with 4 icon+label links (אודות / שירותים / פרויקטים / בואו נדבר in accent). A glass
-`.tabbar-drop` springs behind the active item and stretches with its speed ("MOBILE TAB BAR — LIQUID
-DROP"); active = section in view, contact once the page bottom is reached; a tap locks it to the
-target during the smooth scroll. Hides while the WhatsApp sheet is open; the WhatsApp launcher and
-`body` padding sit above it.
+rim `::after`) with 4 icon+label links (אודות / שירותים / פרויקטים / בואו נדבר in accent). Refined with
+the apple-design skill: an accent-tinted `.tabbar-drop` (not light glass on light glass) rides an
+Apple-style spring (damping ratio 1.0, response 0.35s, real frame time, interruptible from its live
+position/velocity) and stretches with its speed ("MOBILE TAB BAR — LIQUID DROP"). Feedback starts on
+pointerdown (item presses in, drop heads there; pointercancel sends it back), commits on click and
+locks to the target during the smooth scroll; active = section in view, contact at page bottom.
+Labels are vibrancy-tuned (brighter, weight 500, +0.02em). Hides as a material (translate + scale +
+blur, same path back) while the WhatsApp sheet is open; reduced-transparency / more-contrast /
+reduced-motion variants included. The WhatsApp launcher and `body` padding sit above it.
 
 **Navbar items** all share the CTA's pill box (`border-radius: 999px`, same padding, 1px
 transparent border) so the hover background matches "בואו נדבר" exactly.

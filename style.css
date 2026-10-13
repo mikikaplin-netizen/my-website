@@ -2244,7 +2244,8 @@ img.tm-avatar {
       inset 0 0 0 1px rgba(255,255,255,0.08),
       0 12px 32px -8px rgba(0,0,0,0.55),
       0 2px 6px rgba(0,0,0,0.25);
-    transition: translate 0.45s cubic-bezier(.2,.8,.2,1), opacity 0.3s ease;
+    transition: translate 0.45s cubic-bezier(.2,.8,.2,1), scale 0.45s cubic-bezier(.2,.8,.2,1),
+                opacity 0.3s ease, filter 0.3s ease;
   }
 
   /* specular sheen: a soft highlight across the upper half of the glass */
@@ -2274,7 +2275,7 @@ img.tm-avatar {
   }
 
   /* hidden while the WhatsApp sheet is open */
-  .tabbar.is-hidden { translate: 0 140%; opacity: 0; }
+  .tabbar.is-hidden { translate: 0 140%; scale: 0.92; opacity: 0; filter: blur(6px); }
 
   .tabbar a {
     position: relative;
@@ -2286,14 +2287,19 @@ img.tm-avatar {
     gap: 3px;
     min-height: 54px;
     border-radius: 24px;
-    color: rgba(255,255,255,0.62);
+    color: rgba(255,255,255,0.8);
     font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;   /* small text: a touch of positive tracking */
     line-height: 1;
     -webkit-tap-highlight-color: transparent;
-    transition: color 0.3s ease, transform 0.2s ease;
+    -webkit-touch-callout: none;
+    user-select: none;
+    transition: color 0.25s ease, transform 0.1s ease-out;
   }
 
-  .tabbar a:active { transform: scale(0.92); }
+  /* instant press feedback on touch-down (class set on pointerdown) */
+  .tabbar a.is-pressed { transform: scale(0.94); }
 
   .tabbar svg {
     width: 22px;
@@ -2317,10 +2323,10 @@ img.tm-avatar {
     left: 0;
     width: var(--drop-w);
     border-radius: 24px;
-    background: rgba(255,255,255,0.12);
+    background: rgba(100,193,210,0.2);   /* accent-tinted, not white glass on white glass */
     box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.4),
-      inset 0 -1px 1px rgba(255,255,255,0.08),
+      inset 0 1px 0 rgba(255,255,255,0.3),
+      inset 0 0 0 1px rgba(100,193,210,0.22),
       0 4px 14px rgba(0,0,0,0.25);
     transform: translateX(var(--drop-x)) scaleX(var(--drop-stretch));
     opacity: 0;
@@ -2337,6 +2343,24 @@ img.tm-avatar {
 /* glass fallback where backdrop-filter isn't supported */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .tabbar { background: rgba(20,22,46,0.92); }
+}
+
+@media (max-width: 768px) and (prefers-reduced-transparency: reduce) {
+  .tabbar { background: var(--bg-2); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .tabbar::before { display: none; }
+}
+
+@media (max-width: 768px) and (prefers-contrast: more) {
+  .tabbar { background: var(--bg-2); }
+  .tabbar::after { background: rgba(255,255,255,0.7); }
+  .tabbar a { color: #fff; }
+}
+
+@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+  .tabbar,
+  .tabbar a { transition: opacity 0.2s ease; }
+  .tabbar.is-hidden { translate: none; scale: none; filter: none; }
+  .tabbar a.is-pressed { transform: none; }
 }
 
 /* ===========================

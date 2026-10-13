@@ -11,12 +11,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=36" />
+  <link rel="stylesheet" href="style.css?v=38" />
 </head>
 <body>
 
   <!-- GLOBAL DOT-FIELD BACKGROUND -->
   <div id="dot-field-bg"></div>
+  <!-- page tone: the concrete grey that fades over the dot field while a
+       light section owns the screen ("COLOR ZONES — PAGE THEME") -->
+  <div class="page-tone" aria-hidden="true"></div>
 
   <!-- NAVBAR -->
   <nav class="navbar" id="navbar">
@@ -72,7 +75,7 @@
   </section>
 
   <!-- STATEMENT -->
-  <section class="statement">
+  <section class="tone-light statement">
     <div class="container">
       <p class="statement-text">
         אני מאמין שלכל עסק יש אופי,
@@ -113,7 +116,7 @@
   <section class="portfolio section" id="portfolio">
     <div class="container">
       <div class="section-header section-header--edit">
-        <p class="section-label">עבודות נבחרות</p>
+        <p class="section-label">יצירות נבחרות</p>
         <h2 class="section-title">תוצאות שמדברות<br />בעד עצמן</h2>
         <p class="section-sub">
           כל פרויקט הוא שותפות. הנה כמה מהדברים שבנינו יחד.
@@ -588,7 +591,8 @@
     </div>
   </section>
 
-  <!-- FAQ — "ask me" chat: the real Q&As from mkaplin.com as a conversation.
+  <!-- FAQ — "ask me" conversation, right on the page (no window): the real Q&As
+       from mkaplin.com; each of Michael's answers carries his avatar.
        Without JS the thread below shows every question/answer pair; script.js
        ("FAQ — CHAT") turns the questions into suggestion chips that play the
        exchange out (visitor bubble → typing dots → Michael's answer). -->
@@ -600,13 +604,6 @@
         <p class="faq-sub">תשובות אמיתיות לשאלות שמלוות כמעט כל פרויקט. רוצים לשאול משהו אחר? <a href="https://wa.me/972542030381" target="_blank" rel="noopener">כתבו לי בוואטסאפ</a></p>
       </div>
       <div class="faq-chat">
-        <div class="faq-chat-head">
-          <img src="images/miki-hero.png" alt="" class="faq-chat-avatar" width="40" height="40" loading="lazy" />
-          <div>
-            <b>מיכאל קאפלין</b>
-            <span>עונה על השאלות הנפוצות</span>
-          </div>
-        </div>
         <div class="faq-thread" aria-live="polite">
           <p class="faq-msg faq-msg--q">למה אתר תדמית זה לא מותרות אלא השקעה חכמה לעסק?</p>
           <p class="faq-msg faq-msg--a">אתר תדמית הוא הנכס הדיגיטלי המרכזי של כל עסק. הוא לא רק מציג מידע, אלא יוצר אמון, מבליט את הייחוד שלך ומעביר את המסר של העסק בצורה שאי אפשר להתעלם ממנה.</p>
@@ -753,6 +750,6 @@
     </button>
   </div>
 
-  <script src="script.js?v=36"></script>
+  <script src="script.js?v=38"></script>
 </body>
 </html>

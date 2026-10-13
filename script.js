@@ -1273,31 +1273,27 @@ document.addEventListener('touchstart', () => {}, { passive: true });
 })();
 
 // ===========================
-// COLOR ZONES — CHROME FOLLOWS THE ZONE
+// COLOR ZONES — PAGE THEME
 // ===========================
-// The top bar's edge fade and the mobile tab bar flip to their light look
-// while a .tone-light section's grey (past its seam) is under them.
+// The section under the line 40% down the screen decides the page color:
+// .tone-light → html.theme-light (grey page, navy text), anything else →
+// dark. CSS crossfades the page-tone layer and the text colors.
 (function () {
-  const zones = Array.from(document.querySelectorAll('.tone-light'));
-  const nav = document.getElementById('navbar');
-  const bar = document.getElementById('tabbar');
-  if (!zones.length) return;
+  const sections = Array.from(document.querySelectorAll('body > section'));
+  if (!sections.some(s => s.classList.contains('tone-light'))) return;
+  const root = document.documentElement;
   let ticking = false;
-  const under = y => zones.some(z => {
-    const r = z.getBoundingClientRect();
-    const seam = window.innerHeight * 0.18 * 0.6;   // most of the way into the grey
-    const topSeam = z.previousElementSibling && z.previousElementSibling.classList.contains('tone-light') ? 0 : seam;
-    const next = z.nextElementSibling;
-    const botSeam = next && next.classList.contains('tone-light') ? 0 : seam;
-    return y > r.top + topSeam && y < r.bottom - botSeam;
-  });
   const check = () => {
     ticking = false;
-    if (nav) nav.classList.toggle('on-light', under(40));
-    if (bar) bar.classList.toggle('on-light', under(window.innerHeight - 50));
+    const mid = window.innerHeight * 0.4;   // a bit above center, so short sections still win
+    const cur = sections.find(s => { const r = s.getBoundingClientRect(); return r.top <= mid && r.bottom > mid; });
+    root.classList.toggle('theme-light', !!cur && cur.classList.contains('tone-light'));
   };
   window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(check); } }, { passive: true });
   window.addEventListener('resize', check);
+  // content that grows without scrolling (the FAQ chat) can change which
+  // section is under the line
+  if ('ResizeObserver' in window) new ResizeObserver(() => { if (!ticking) { ticking = true; requestAnimationFrame(check); } }).observe(document.body);
   check();
 })();
 
@@ -1320,12 +1316,23 @@ document.addEventListener('touchstart', () => {}, { passive: true });
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let busy = false;
 
+  // Michael's messages sit in a row with his avatar at the outer corner
+  const withAvatar = el => {
+    const row = document.createElement('div');
+    row.className = 'faq-row';
+    const img = document.createElement('img');
+    img.className = 'faq-avatar';
+    img.src = 'images/miki-hero.png';
+    img.alt = '';
+    img.width = img.height = 34;
+    row.append(el, img);
+    return row;
+  };
   const bubble = (cls, text) => {
     const p = document.createElement('p');
     p.className = 'faq-msg ' + cls + (reduce ? '' : ' is-new');
     p.textContent = text;
-    thread.appendChild(p);
-    thread.scrollTop = thread.scrollHeight;
+    thread.appendChild(cls === 'faq-msg--a' ? withAvatar(p) : p);
     return p;
   };
 
@@ -1342,8 +1349,9 @@ document.addEventListener('touchstart', () => {}, { passive: true });
     typing.className = 'faq-typing';
     typing.setAttribute('aria-label', 'מיכאל מקליד');
     typing.innerHTML = '<i></i><i></i><i></i>';
-    setTimeout(() => { thread.appendChild(typing); thread.scrollTop = thread.scrollHeight; }, 250);
-    setTimeout(() => { typing.remove(); bubble('faq-msg--a', pairs[i].a); busy = false; }, 1100);
+    const typingRow = withAvatar(typing);
+    setTimeout(() => thread.appendChild(typingRow), 250);
+    setTimeout(() => { typingRow.remove(); bubble('faq-msg--a', pairs[i].a); busy = false; }, 1100);
   };
 
   const buttons = pairs.map((pair, i) => {
@@ -1614,6 +1622,69 @@ document.addEventListener('touchstart', () => {}, { passive: true });
   build();
   let t;
   window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(build, 150); });
+})();
+
+// ===========================
+// CLIENTS — LOGO SHIFT
+// ===========================
+// The wall shows 10 cells (6 on phones) out of all the logos. Every ~1.8s
+// one cell (never the same twice in a row) swaps its logo for one that is
+// not on screen: the old logo lifts out, the next rises from below. New
+// logos keep appearing, so the wall reads as bigger than it is. Pauses off
+// screen and in background tabs; without JS all logos show statically.
+(function () {
+  const grid = document.querySelector('.clients-grid');
+  if (!grid) return;
+  const all = Array.from(grid.querySelectorAll('li img')).map(img => ({
+    src: img.getAttribute('src'), alt: img.alt, w: img.getAttribute('width'), h: img.getAttribute('height')
+  }));
+  const phone = window.matchMedia('(max-width: 900px)');
+  let pool = [], cells = [], lastCell = -1, timer = 0, visible = false;
+
+  const makeImg = d => {
+    const img = document.createElement('img');
+    img.src = d.src; img.alt = d.alt; img.width = d.w; img.height = d.h;
+    img.decoding = 'async';
+    return img;
+  };
+
+  const build = () => {
+    const count = phone.matches ? 6 : 10;
+    if (all.length <= count) return;
+    const lis = Array.from(grid.children);
+    lis.forEach((li, i) => { li.hidden = i >= count; });
+    cells = lis.slice(0, count);
+    cells.forEach((li, i) => { li.textContent = ''; li.appendChild(makeImg(all[i])); li.dataset.logo = i; });
+    pool = all.map((_, i) => i).slice(count);
+    grid.classList.add('is-cycling');
+  };
+
+  const swap = () => {
+    if (!pool.length) return;
+    let c;
+    do { c = Math.floor(Math.random() * cells.length); } while (c === lastCell && cells.length > 1);
+    lastCell = c;
+    const li = cells[c];
+    const out = li.querySelector('img:not(.is-out)');
+    const nextIdx = pool.shift();
+    pool.push(Number(li.dataset.logo));
+    li.dataset.logo = nextIdx;
+    const inc = makeImg(all[nextIdx]);
+    inc.classList.add('is-entering');
+    li.appendChild(inc);
+    void inc.offsetWidth;                          // commit the start pose
+    inc.classList.remove('is-entering');
+    if (out) { out.classList.add('is-out'); setTimeout(() => out.remove(), 800); }
+  };
+
+  const run = () => { clearInterval(timer); if (visible && !document.hidden) timer = setInterval(swap, 1800); };
+
+  build();
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(es => { visible = es.some(e => e.isIntersecting); run(); }).observe(grid);
+  }
+  document.addEventListener('visibilitychange', run);
+  phone.addEventListener('change', () => { build(); run(); });
 })();
 
 // ===========================

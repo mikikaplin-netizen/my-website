@@ -43,19 +43,21 @@ block in `script.js` that queries its own DOM by id/class and no-ops if the elem
 (defensive `if (el) ...` guards throughout), so sections can be added/removed without touching
 other blocks.
 
-**Color zones** ("COLOR ZONES" in `style.css`): sections with `.tone-light` (clients, about,
-testimonials, faq) sit on a cool concrete grey `--paper: #DCDEE2` (Michael rejected cream) instead of
-the dark dot field. Their background melts in/out over `--seam` (18vh gradient, added as extra
-padding so text never sits on it); consecutive light sections share one continuous grey (`+` /
-`:has(+)`). On grey, text uses `--ink` / `--ink-muted` / `--ink-accent` (#0B5F6C) /
-`--ink-accent-2` (#096A1A): brand cyan/green are only 1.8:1 on light, so never use them as text
-there. "COLOR ZONES — CHROME FOLLOWS THE ZONE" toggles `.on-light` on the navbar (solid glass, grey
-edge fade) and the mobile tab bar (ink labels) while grey is under them.
+**Page theme / color zones** ("COLOR ZONES — PAGE THEME" in `style.css` + `script.js`): the whole page
+changes color. Sections marked `.tone-light` (statement, clients, about, testimonials, faq) switch
+`html.theme-light` while they sit under the line 40% down the screen (also re-checked on body resize,
+since the FAQ chat grows without scrolling). Then the fixed `.page-tone` layer fades the concrete
+grey `--paper: #DCDEE2` over the dot field (0.6s) and page text flips to navy via `--fg` / `--text` /
+`--text-muted` / `--border`, so the tail of the previous section stays readable mid-switch. Dark
+surfaces (navbar, process windows, testimonial cards, work preview, buttons, WhatsApp) re-pin the
+dark variables. **Brand colors only** (Michael rejected added teal/green): on grey, accents are brand
+navy with a brand-cyan marker underline; cyan/green are never text on grey (1.8:1). Any new section
+text color must use `var(--fg)` / `var(--text)`, not `#fff`.
 
-**Section openings**: every `.section-label` gets an editorial index "(01)…" from a CSS counter in page
-order. Projects and process use `.section-header--edit` (oversized right-aligned title, subtitle on
-the left at its baseline); testimonials/FAQ have side titles, magnet stays centered. Don't
-reintroduce one centered label/title/sub template for every section.
+**Section openings**: no section numbering (Michael removed it). Projects and process use
+`.section-header--edit` (oversized right-aligned title, subtitle on the left at its baseline; Michael
+likes this); testimonials/FAQ have side titles, magnet stays centered. Don't reintroduce one centered
+label/title/sub template for every section.
 
 **Design tokens live in `:root` in `style.css`** (`--bg`, `--bg-2`, `--bg-3`, `--accent`,
 `--accent-2`, `--text`, `--text-muted`, `--radius`, `--font`, `--shadow`, `--glow`, etc.). Brand
@@ -181,17 +183,20 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
   cards into 1–3 columns by width and repeats each column until it overfills the window (so the loop
   never shows empty space). Hover pauses a column; reduced motion / no JS = plain grid. Avatars are the
   clients' logos/photo from mkaplin.com (`images/testimonials/`); מיכאל זכאי has none and keeps initials.
-- Clients (`.clients`, 3rd section, right before the portfolio, no heading on purpose): logo wall of the 15
+- Clients (`.clients`, 3rd section, light zone, right before the portfolio, no heading on purpose): logo wall of the 15
   grey client logos from mkaplin.com (`images/clients/`, sized by area so wide/tall marks weigh the
-  same) in a 5×3 hairline grid (3 columns on mobile) whose lines glow under the cursor
-  ("CLIENTS — LOGO WALL SPOTLIGHT"); cells fade up staggered via `--i` when revealed.
+  same) in a hairline grid whose lines glow under the cursor ("CLIENTS — LOGO WALL SPOTLIGHT").
+  "CLIENTS — LOGO SHIFT" shows only 10 cells (6 on phones) and every 1.8s swaps one cell's logo for
+  one not on screen (old lifts out blurred, next rises from below; after Aceternity's logo-cloud swap
+  and Framer's Logo Shift) so the wall reads as bigger; pauses off screen. No JS = all 15 static.
 - About (`.about`) is full screen (`min-height: 100svh`): photo + story, then `.about-stats`, a
   full-width band of oversized thin numerals (+5 / +30 / 100%) split by hairlines; "ABOUT — COUNT-UP
   NUMBERS" counts them up once half in view (final values live in the markup).
-- FAQ (`#faq`, between testimonials and contact): an "ask me" chat window (solid dark device in any
-  zone) with the 6 real Q&As from mkaplin.com. Markup holds all Q/A bubbles (no-JS fallback);
-  "FAQ — CHAT" turns questions into suggestion chips that play out visitor bubble (right, cyan) →
-  typing dots → Michael's answer (left); the first exchange auto-plays when first seen.
+- FAQ (`#faq`, between testimonials and contact): an "ask me" conversation right on the page (no
+  window, Michael didn't want one) with the 6 real Q&As from mkaplin.com. Markup holds all Q/A
+  bubbles (no-JS fallback); "FAQ — CHAT" turns questions into suggestion chips that play out visitor
+  bubble (right, cyan) → typing dots → Michael's answer (left, in a `.faq-row` with his round avatar
+  at the bubble's outer bottom corner); the first exchange auto-plays when first seen.
 - About opens with "קוראים לי מיכאל קאפלין, ואני מעצב ובונה אתרים עם אופי." (`.about-intro`); no badge
   on the photo (the +30 lives in the numbers band).
 - Testimonial cards have their own solid layer (navy + soft top light, no per-card backdrop blur).

@@ -236,21 +236,91 @@ revealEls.forEach(el => observer.observe(el));
 // ===========================
 // CONTACT FORM
 // ===========================
+// Validates inline (Apple: feedback during the interaction, not only at the
+// end): a field is judged once it has been left, then live while it's being
+// corrected. Submit shows status (sending) and completion (sent).
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
+  const RULES = {
+    name:    v => v.trim().length >= 2 || 'איך לפנות אליך? (לפחות 2 תווים)',
+    email:   v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) || 'נראה שחסר משהו בכתובת האימייל',
+    phone:   v => !v.trim() || v.replace(/\D/g, '').length >= 9 || 'מספר הטלפון קצר מדי',
+    message: v => v.trim().length >= 10 || 'עוד כמה מילים על הפרויקט (לפחות 10 תווים)',
+  };
+  const fields = Object.keys(RULES)
+    .map(name => contactForm.elements[name])
+    .filter(Boolean);
+
+  fields.forEach(field => {
+    const err = document.createElement('span');
+    err.className = 'form-error';
+    err.id = field.id + '-error';
+    err.setAttribute('aria-live', 'polite');
+    field.parentElement.appendChild(err);
+    field.setAttribute('aria-describedby', err.id);
+  });
+
+  function check(field) {
+    const group = field.parentElement;
+    const res = RULES[field.name](field.value);
+    const ok = res === true;
+    const empty = !field.value.trim();
+    group.classList.toggle('is-invalid', !ok);
+    // optional + empty is fine but doesn't earn a checkmark
+    group.classList.toggle('is-valid', ok && !empty);
+    field.setAttribute('aria-invalid', String(!ok));
+    group.querySelector('.form-error').textContent = ok ? '' : res;
+    return ok;
+  }
+
+  fields.forEach(field => {
+    field.addEventListener('blur', () => {
+      if (field.value.trim() || field.dataset.touched) { field.dataset.touched = '1'; check(field); }
+    });
+    field.addEventListener('input', () => { if (field.dataset.touched) check(field); });
+  });
+
   contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const btn = contactForm.querySelector('button[type="submit"]');
+    let firstBad = null;
+    fields.forEach(field => {
+      field.dataset.touched = '1';
+      if (!check(field) && !firstBad) firstBad = field;
+    });
+    if (firstBad) {
+      const group = firstBad.parentElement;
+      group.classList.remove('shake');
+      void group.offsetWidth; // restart the animation
+      group.classList.add('shake');
+      firstBad.focus();
+      return;
+    }
+
     const orig = btn.textContent;
-    btn.textContent = 'ההודעה נשלחה ✓';
-    btn.style.background = '#22c55e';
-    btn.style.boxShadow = '0 0 24px rgba(34,197,94,0.35)';
+    btn.classList.add('is-sending');
+    btn.textContent = 'שולח';
     setTimeout(() => {
-      btn.textContent = orig;
-      btn.style.background = '';
-      btn.style.boxShadow = '';
-      contactForm.reset();
-    }, 3000);
+      btn.classList.remove('is-sending');
+      btn.classList.add('is-sent');
+      btn.textContent = 'ההודעה נשלחה ✓';
+      contactForm.classList.add('is-sent');
+      setTimeout(() => {
+        btn.classList.remove('is-sent');
+        btn.textContent = orig;
+        contactForm.classList.remove('is-sent');
+        contactForm.reset();
+        fields.forEach(field => {
+          delete field.dataset.touched;
+          field.removeAttribute('aria-invalid');
+          field.parentElement.classList.remove('is-valid', 'is-invalid');
+        });
+      }, 3000);
+    }, 700);
+  });
+
+  contactForm.addEventListener('animationend', (e) => {
+    if (e.animationName === 'fieldShake') e.target.classList.remove('shake');
   });
 }
 
@@ -277,16 +347,27 @@ const waLauncher = document.getElementById('waLauncher');
 const waPanel = document.getElementById('waPanel');
 const waClose = document.getElementById('waClose');
 
+// The panel grows out of the launcher and closes back into it (CSS). It can
+// also be swiped down like an iOS sheet: it tracks the finger 1:1, resists
+// being pulled up (rubber-band), and on release either springs home or is
+// thrown away — decided by where its momentum would carry it, and the
+// finger's velocity is handed to the spring so there's no seam.
 if (waLauncher && waPanel) {
+  const isOpen = () => waPanel.classList.contains('is-open');
   const openPanel = () => {
-    waPanel.hidden = false;
+    waPanel.classList.add('is-open');
     waLauncher.classList.add('opened');
+    waLauncher.setAttribute('aria-expanded', 'true');
   };
-  const closePanel = () => { waPanel.hidden = true; };
+  const closePanel = () => {
+    waPanel.classList.remove('is-open');
+    waLauncher.setAttribute('aria-expanded', 'false');
+  };
+  waLauncher.setAttribute('aria-expanded', 'false');
 
   waLauncher.addEventListener('click', () => {
-    if (waPanel.hidden) openPanel();
-    else closePanel();
+    if (isOpen()) closePanel();
+    else openPanel();
   });
 
   if (waClose) {
@@ -295,6 +376,95 @@ if (waLauncher && waPanel) {
       closePanel();
     });
   }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isOpen()) closePanel();
+  });
+
+  // --- swipe down to dismiss ---
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let offset = 0, velocity = 0, raf = 0;
+  let drag = null; // { id, startY, startOffset, moved, history: [{y, t}] }
+
+  const setOffset = (v) => { offset = v; waPanel.style.translate = v ? `0 ${v.toFixed(1)}px` : ''; };
+  const rubberband = (over, dim, c = 0.55) => (over * dim * c) / (dim + c * Math.abs(over));
+  // Apple's projection: where momentum would carry the panel if left alone
+  const project = (v, d = 0.998) => (v / 1000) * d / (1 - d);
+
+  function springTo(target, { response = 0.4, damping = 1, onDone } = {}) {
+    cancelAnimationFrame(raf);
+    const k = Math.pow(2 * Math.PI / response, 2);
+    const c = 4 * Math.PI * damping / response;
+    let last = performance.now();
+    (function step(now) {
+      const dt = Math.min((now - last) / 1000, 1 / 30);
+      last = now;
+      velocity += (k * (target - offset) - c * velocity) * dt;
+      setOffset(offset + velocity * dt);
+      if (Math.abs(target - offset) < 0.5 && Math.abs(velocity) < 5) {
+        velocity = 0;
+        setOffset(target);
+        if (onDone) onDone();
+        return;
+      }
+      raf = requestAnimationFrame(step);
+    })(last);
+  }
+
+  waPanel.addEventListener('pointerdown', (e) => {
+    if (!isOpen() || e.pointerType === 'mouse' || e.target.closest('a, button')) return;
+    cancelAnimationFrame(raf); // grab it mid-flight: continue from where it is
+    drag = { id: e.pointerId, startY: e.clientY, startOffset: offset, moved: false,
+             history: [{ y: e.clientY, t: e.timeStamp }] };
+  });
+
+  waPanel.addEventListener('pointermove', (e) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dy = e.clientY - drag.startY;
+    if (!drag.moved) {
+      if (Math.abs(dy) < 8) return; // small hysteresis before committing
+      drag.moved = true;
+      try { waPanel.setPointerCapture(e.pointerId); } catch (_) { /* pointer already gone */ }
+      waPanel.classList.add('is-dragging');
+    }
+    const raw = drag.startOffset + dy;
+    setOffset(raw >= 0 ? raw : rubberband(raw, waPanel.offsetHeight));
+    drag.history.push({ y: e.clientY, t: e.timeStamp });
+    if (drag.history.length > 6) drag.history.shift();
+  });
+
+  function endDrag(e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    const d = drag;
+    drag = null;
+    if (!d.moved) return;
+    waPanel.classList.remove('is-dragging');
+    const h = d.history;
+    const a = h[0], b = h[h.length - 1];
+    velocity = b.t > a.t ? ((b.y - a.y) / (b.t - a.t)) * 1000 : 0; // px/s
+    const height = waPanel.offsetHeight;
+    const dismiss = offset > 0 && (offset + project(velocity) > height * 0.5 || velocity > 800);
+    if (reduce) {
+      if (dismiss) closePanel();
+      setOffset(0); velocity = 0;
+      return;
+    }
+    if (dismiss) {
+      springTo(height + 60, { response: 0.3, damping: 1, onDone: () => {
+        // already off-screen: close without replaying the shrink, then reset
+        waPanel.classList.add('is-dragging');
+        closePanel();
+        setOffset(0);
+        void waPanel.offsetWidth;
+        waPanel.classList.remove('is-dragging');
+      } });
+    } else {
+      // released with momentum → a little bounce on the way home
+      springTo(0, { response: 0.35, damping: 0.8 });
+    }
+  }
+  waPanel.addEventListener('pointerup', endDrag);
+  waPanel.addEventListener('pointercancel', endDrag);
 }
 
 // ===========================
@@ -784,6 +954,51 @@ document.addEventListener('touchstart', () => {}, { passive: true });
   window.addEventListener('scroll', () => {
     if (!ticking) { ticking = true; requestAnimationFrame(update); }
   }, { passive: true });
+
+  // Depth: the photo turns gently toward the cursor and shifts with it, on
+  // critically damped springs (no wobble — it follows, it isn't thrown).
+  // Uses `transform` so it composes with the scroll parallax on `translate`.
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  const hero = document.querySelector('.hero');
+  if (!hero) return;
+
+  const RESPONSE = 0.55;
+  const K = Math.pow(2 * Math.PI / RESPONSE, 2);
+  const C = 4 * Math.PI * 1.0 / RESPONSE;
+  const axes = { x: { v: 0, p: 0, t: 0 }, y: { v: 0, p: 0, t: 0 } };
+  let running = false, last = 0;
+
+  hero.addEventListener('mousemove', (e) => {
+    const r = hero.getBoundingClientRect();
+    axes.x.t = ((e.clientX - r.left) / r.width) * 2 - 1;   // -1 … 1
+    axes.y.t = ((e.clientY - r.top) / r.height) * 2 - 1;
+    wake();
+  });
+  hero.addEventListener('mouseleave', () => { axes.x.t = 0; axes.y.t = 0; wake(); });
+
+  function wake() {
+    if (running) return;
+    running = true;
+    last = performance.now();
+    requestAnimationFrame(tick);
+  }
+
+  function tick(now) {
+    const dt = Math.min((now - last) / 1000, 1 / 30);
+    last = now;
+    let active = false;
+    Object.values(axes).forEach(a => {
+      a.v += (K * (a.t - a.p) - C * a.v) * dt;
+      a.p += a.v * dt;
+      if (Math.abs(a.t - a.p) > 0.001 || Math.abs(a.v) > 0.01) active = true;
+    });
+    const { x, y } = axes;
+    photo.style.transform =
+      `translate3d(${(x.p * 14).toFixed(2)}px, ${(y.p * 8).toFixed(2)}px, 0) ` +
+      `rotateY(${(x.p * 7).toFixed(2)}deg) rotateX(${(-y.p * 4).toFixed(2)}deg)`;
+    if (active) requestAnimationFrame(tick);
+    else running = false;
+  }
 })();
 
 // ===========================

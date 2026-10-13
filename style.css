@@ -50,6 +50,7 @@
   --radius-lg: 20px;
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1); /* iOS sheet curve: fast start, long soft settle */
+  --danger: #ff6b6b;        /* form errors only */
   --font: 'Polin', 'Arial Hebrew', Arial, sans-serif;
   --shadow: 0 8px 48px rgba(0,0,0,0.5);
   --glow: 0 0 80px rgba(100,193,210,0.12);
@@ -518,7 +519,10 @@ img { max-width: 100%; display: block; }
   animation: fadeUp 0.7s ease forwards 0.5s;
 }
 
+.hero-image-wrap { perspective: 1100px; }
+
 .hero-photo {
+  will-change: transform;
   height: auto;
   width: auto;
   max-height: calc((100vh - 140px) * 0.9);
@@ -1742,7 +1746,92 @@ img { max-width: 100%; display: block; }
   border-bottom-color: var(--accent);
 }
 
+/* inline validation: shown once a field has been left (or on submit),
+   then updates live while correcting it */
+.form-group { position: relative; }
+
+.form-group input,
+.form-group textarea { padding-left: 28px; }
+
+.form-group::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 44px;
+  width: 14px;
+  height: 8px;
+  border-left: 2px solid var(--accent-2);
+  border-bottom: 2px solid var(--accent-2);
+  transform: rotate(-45deg) scale(0.4);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.35s var(--ease-fluid);
+  pointer-events: none;
+}
+
+.form-group.is-valid::after { opacity: 1; transform: rotate(-45deg) scale(1); }
+
+.form-group.is-valid input,
+.form-group.is-valid textarea { border-bottom-color: rgba(28,211,28,0.55); }
+
+.form-group.is-invalid input,
+.form-group.is-invalid textarea { border-bottom-color: var(--danger); }
+
+.form-group.is-invalid label { color: var(--danger); }
+
+.form-error {
+  font-size: 0.8rem;
+  color: var(--danger);
+  min-height: 0;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateY(-4px);
+  transition: max-height 0.3s var(--ease-fluid), opacity 0.2s ease, transform 0.3s var(--ease-fluid);
+}
+
+.form-group.is-invalid .form-error { max-height: 2.4em; opacity: 1; transform: none; }
+
+/* a field that blocks submit gives a short horizontal shake — the
+   "wrong password" gesture people already know */
+.form-group.shake { animation: fieldShake 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+
+@keyframes fieldShake {
+  15%, 75% { translate: -5px 0; }
+  35%, 55% { translate: 5px 0; }
+  0%, 100% { translate: 0 0; }
+}
+
 .contact-form .btn { justify-self: start; margin-top: 6px; width: auto; }
+
+/* submit: sending (status) → sent (completion) */
+.contact-form .btn.is-sending { pointer-events: none; opacity: 0.75; }
+
+.contact-form .btn.is-sending::after {
+  content: '';
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  animation: btnSpin 0.7s linear infinite;
+}
+
+@keyframes btnSpin { to { transform: rotate(360deg); } }
+
+.contact-form .btn.is-sent {
+  background: rgba(28,211,28,0.18);
+  border-color: rgba(28,211,28,0.6);
+  box-shadow: 0 0 28px rgba(28,211,28,0.3);
+  animation: sentPop 0.5s var(--ease-fluid);
+}
+
+@keyframes sentPop {
+  0% { scale: 0.94; }
+  60% { scale: 1.04; }
+  100% { scale: 1; }
+}
+
+.contact-form.is-sent .form-group { opacity: 0.35; transition: opacity 0.4s ease; }
 
 .form-note {
   font-size: 0.82rem;
@@ -1846,7 +1935,11 @@ img { max-width: 100%; display: block; }
   align-items: flex-end;
   gap: 16px;
   direction: rtl;
+  pointer-events: none; /* the (invisible) closed panel must not block the page */
 }
+
+.wa-launcher,
+.wa-panel.is-open { pointer-events: auto; }
 
 .wa-launcher {
   position: relative;
@@ -1894,8 +1987,15 @@ img { max-width: 100%; display: block; }
 
 .wa-launcher.opened .wa-badge { display: none; }
 
-/* Panel */
+/* Panel — grows out of the launcher and returns into it along the same
+   path (transform-origin on the launcher's corner), materializing with blur.
+   The standalone `translate` is reserved for the drag-to-dismiss gesture. */
 .wa-panel {
+  /* out of flow, so the closed (invisible) panel never widens the widget
+     and shifts the launcher */
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 16px);
   width: 300px;
   max-width: calc(100vw - 48px);
   background: #0b141a;
@@ -1903,14 +2003,43 @@ img { max-width: 100%; display: block; }
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0,0,0,0.55);
   transform-origin: bottom right;
-  animation: waPop 0.25s cubic-bezier(0.4,0,0.2,1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(18px) scale(0.55);
+  filter: blur(8px);
+  transition: opacity 0.22s ease, transform 0.45s var(--ease-fluid),
+              filter 0.35s var(--ease-fluid), visibility 0s linear 0.45s;
+  touch-action: none;
 }
 
-.wa-panel[hidden] { display: none; }
+.wa-panel.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  filter: none;
+  transition: opacity 0.22s ease, transform 0.55s var(--ease-fluid),
+              filter 0.4s var(--ease-fluid), visibility 0s;
+}
 
-@keyframes waPop {
-  from { opacity: 0; transform: translateY(12px) scale(0.96); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+.wa-panel.is-dragging { transition: none; }
+
+/* drag handle — only where the panel can be swiped away (touch) */
+.wa-grabber {
+  display: none;
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 36px;
+  height: 4px;
+  margin-left: -18px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.45);
+  z-index: 1;
+}
+
+@media (pointer: coarse) {
+  .wa-grabber { display: block; }
+  .wa-header { padding-top: 20px; }
 }
 
 .wa-header {
@@ -2243,6 +2372,11 @@ img { max-width: 100%; display: block; }
   .nav-links li,
   .nav-links.open li { transform: none; transition: opacity 0.2s ease; }
   .work-preview { scale: 1; filter: none; transition: opacity 0.2s ease; }
+  .wa-panel,
+  .wa-panel.is-open { transform: none; filter: none; transition: opacity 0.2s ease, visibility 0s linear 0.2s; }
+  .wa-panel.is-open { transition: opacity 0.2s ease, visibility 0s; }
+  .form-group.shake,
+  .contact-form .btn.is-sent { animation: none; }
   .btn:active,
   .nav-cta:active,
   .wa-launcher:active { transform: none; }

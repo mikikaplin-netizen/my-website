@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=20" />
+  <link rel="stylesheet" href="style.css?v=21" />
 </head>
 <body>
 
@@ -517,7 +517,7 @@
           </div>
         </div>
 
-        <form class="contact-form" id="contactForm">
+        <form class="contact-form" id="contactForm" novalidate>
           <div class="form-group">
             <label for="name">שם מלא</label>
             <input type="text" id="name" name="name" placeholder="השם שלך" required />
@@ -528,7 +528,7 @@
           </div>
           <div class="form-group form-group--wide">
             <label for="phone">טלפון (אופציונלי)</label>
-            <input type="tel" id="phone" name="phone" placeholder="05X-XXXXXXX" />
+            <input type="tel" id="phone" name="phone" placeholder="05X-XXXXXXX" inputmode="tel" />
           </div>
           <div class="form-group form-group--wide">
             <label for="message">ספרו לי על הפרויקט</label>
@@ -557,7 +557,8 @@
 
   <!-- WHATSAPP FLOATING WIDGET -->
   <div class="wa-widget" id="waWidget">
-    <div class="wa-panel" id="waPanel" hidden>
+    <div class="wa-panel" id="waPanel" role="dialog" aria-label="צ׳אט בוואטסאפ">
+      <span class="wa-grabber" aria-hidden="true"></span>
       <div class="wa-header">
         <button class="wa-close" id="waClose" aria-label="סגור">&times;</button>
         <div class="wa-header-text">
@@ -586,6 +587,6 @@
     </button>
   </div>
 
-  <script src="script.js?v=20"></script>
+  <script src="script.js?v=21"></script>
 </body>
 </html>

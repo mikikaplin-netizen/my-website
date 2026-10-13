@@ -2,14 +2,16 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+  <meta name="theme-color" content="#101024" />
+  <meta name="color-scheme" content="dark" />
   <title>מיכאל קאפלין | אפיון, עיצוב ופיתוח אתרים</title>
   <meta name="description" content="מיכאל קאפלין – מתמחה באפיון, עיצוב ופיתוח אתרים. יוצר נוכחות דיגיטלית שמביאה תוצאות." />
   <link rel="icon" href="images/logo-icon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=29" />
+  <link rel="stylesheet" href="style.css?v=30" />
 </head>
 <body>
 
@@ -621,15 +623,15 @@
         <form class="contact-form" id="contactForm" novalidate>
           <div class="form-group">
             <label for="name">שם מלא</label>
-            <input type="text" id="name" name="name" placeholder="השם שלך" required />
+            <input type="text" id="name" name="name" placeholder="השם שלך" autocomplete="name" enterkeyhint="next" required />
           </div>
           <div class="form-group">
             <label for="email">אימייל</label>
-            <input type="email" id="email" name="email" placeholder="your@email.com" required />
+            <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" required />
           </div>
           <div class="form-group form-group--wide">
             <label for="phone">טלפון (אופציונלי)</label>
-            <input type="tel" id="phone" name="phone" placeholder="05X-XXXXXXX" inputmode="tel" />
+            <input type="tel" id="phone" name="phone" placeholder="05X-XXXXXXX" inputmode="tel" autocomplete="tel" enterkeyhint="next" />
           </div>
           <div class="form-group form-group--wide">
             <label for="message">ספרו לי על הפרויקט</label>

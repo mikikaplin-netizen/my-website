@@ -93,7 +93,31 @@ img { max-width: 100%; display: block; }
 .container {
   width: 100%;
   padding: 0 5vw;
+  /* landscape iPhone: keep content clear of the notch (viewport-fit=cover) */
+  padding-left: max(5vw, env(safe-area-inset-left, 0px));
+  padding-right: max(5vw, env(safe-area-inset-right, 0px));
 }
+
+/* ---- native feel on touch (mobile-native skill) ----
+   no gray tap flash (every control has its own press state), no font
+   inflation in landscape, instant taps (no double-tap-zoom wait), and
+   control labels that a long-press doesn't select. Content stays selectable. */
+html {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+          text-size-adjust: 100%;
+}
+
+a, button, [role="button"], input, textarea, label { touch-action: manipulation; }
+
+button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
+  -webkit-user-select: none;
+          user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* press feedback for touch (hover styles are mouse-only) */
+.btn:active, .nav-cta:active { scale: 0.97; transition: scale 100ms ease-out; }
 
 .section { padding: 5vh 0; }
 
@@ -191,15 +215,19 @@ img { max-width: 100%; display: block; }
   z-index: -1;
 }
 
-.btn:hover {
-  transform: translateY(-2px);
-  border-color: transparent;
-  box-shadow: 0 0 34px rgba(100,193,210,0.4);
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover {
+    transform: translateY(-2px);
+    border-color: transparent;
+    box-shadow: 0 0 34px rgba(100,193,210,0.4);
+  }
 }
 
-.btn:hover::before {
-  opacity: 1;
-  animation-play-state: running;
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover::before {
+    opacity: 1;
+    animation-play-state: running;
+  }
 }
 
 /* press feedback — lands on pointer-down, not on release (Apple: respond instantly) */
@@ -328,9 +356,11 @@ img { max-width: 100%; display: block; }
 
 .nav-links a.is-active { color: #fff; }
 
-.nav-links a:not(.nav-cta):hover {
-  color: var(--bg);
-  background: var(--accent);
+@media (hover: hover) and (pointer: fine) {
+  .nav-links a:not(.nav-cta):hover {
+    color: var(--bg);
+    background: var(--accent);
+  }
 }
 
 .nav-links a:focus-visible {
@@ -378,14 +408,18 @@ img { max-width: 100%; display: block; }
   z-index: -1;
 }
 
-.nav-cta:hover {
-  border-color: transparent;
-  box-shadow: 0 0 30px rgba(100,193,210,0.45);
+@media (hover: hover) and (pointer: fine) {
+  .nav-cta:hover {
+    border-color: transparent;
+    box-shadow: 0 0 30px rgba(100,193,210,0.45);
+  }
 }
 
-.nav-cta:hover::before {
-  opacity: 1;
-  animation-play-state: running;
+@media (hover: hover) and (pointer: fine) {
+  .nav-cta:hover::before {
+    opacity: 1;
+    animation-play-state: running;
+  }
 }
 
 .nav-cta:active {
@@ -423,6 +457,7 @@ img { max-width: 100%; display: block; }
 .hero {
   position: relative;
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   align-items: flex-end;
   overflow: hidden;
@@ -526,6 +561,7 @@ img { max-width: 100%; display: block; }
   height: auto;
   width: auto;
   max-height: calc((100vh - 140px) * 0.9);
+  max-height: calc((100svh - 140px) * 0.9);
   max-width: 100%;
   object-fit: contain;
   display: block;
@@ -554,6 +590,7 @@ img { max-width: 100%; display: block; }
 .statement {
   background: transparent;
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   padding: 10vh 0;
@@ -1479,7 +1516,7 @@ img { max-width: 100%; display: block; }
   transition: background 0.4s ease;
 }
 
-.clients-grid li:hover { background: rgba(22,24,50,0.94); }
+@media (hover: hover) and (pointer: fine) { .clients-grid li:hover { background: rgba(22,24,50,0.94); } }
 
 .clients-grid img {
   max-width: 100%;
@@ -1489,7 +1526,7 @@ img { max-width: 100%; display: block; }
   transition: opacity 0.4s ease, filter 0.4s ease, transform 0.5s cubic-bezier(.2,.8,.2,1);
 }
 
-.clients-grid li:hover img { opacity: 1; filter: brightness(3); transform: scale(1.06); }
+@media (hover: hover) and (pointer: fine) { .clients-grid li:hover img { opacity: 1; filter: brightness(3); transform: scale(1.06); } }
 
 .clients-grid.reveal li { opacity: 0; transform: translateY(18px); }
 .clients-grid.reveal.visible li {
@@ -1808,7 +1845,7 @@ img { max-width: 100%; display: block; }
   transition: var(--transition);
 }
 
-.contact-details a:hover { color: var(--accent-2); }
+@media (hover: hover) and (pointer: fine) { .contact-details a:hover { color: var(--accent-2); } }
 
 .contact-image-wrap {
   position: relative;
@@ -2032,7 +2069,7 @@ img { max-width: 100%; display: block; }
   animation: tmRise var(--tm-dur, 60s) linear infinite;
 }
 
-.tm-col:hover .tm-col-track { animation-play-state: paused; }
+@media (hover: hover) and (pointer: fine) { .tm-col:hover .tm-col-track { animation-play-state: paused; } }
 
 @keyframes tmRise {
   from { transform: translateY(0); }
@@ -2053,9 +2090,11 @@ img { max-width: 100%; display: block; }
   transition: border-color 0.4s ease, background 0.4s ease;
 }
 
-.tm-card:hover {
-  border-color: rgba(100,193,210,0.35);
-  background: rgba(255,255,255,0.06);
+@media (hover: hover) and (pointer: fine) {
+  .tm-card:hover {
+    border-color: rgba(100,193,210,0.35);
+    background: rgba(255,255,255,0.06);
+  }
 }
 
 /* oversized quote mark */
@@ -2157,7 +2196,7 @@ img.tm-avatar {
   transition: var(--transition);
 }
 
-.footer-link:hover { color: #fff; }
+@media (hover: hover) and (pointer: fine) { .footer-link:hover { color: #fff; } }
 
 /* ===========================
    EDGE BLUR
@@ -2227,9 +2266,9 @@ img.tm-avatar {
     --drop-w: 0px;
     --drop-stretch: 1;
     position: fixed;
-    left: 12px;
-    right: 12px;
-    bottom: calc(12px + env(safe-area-inset-bottom));
+    left: max(12px, env(safe-area-inset-left, 0px));
+    right: max(12px, env(safe-area-inset-right, 0px));
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     z-index: 150;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -2399,9 +2438,11 @@ img.tm-avatar {
   transition: transform var(--transition), box-shadow var(--transition);
 }
 
-.wa-launcher:hover {
-  transform: scale(1.06);
-  box-shadow: 0 10px 34px rgba(37,211,102,0.6);
+@media (hover: hover) and (pointer: fine) {
+  .wa-launcher:hover {
+    transform: scale(1.06);
+    box-shadow: 0 10px 34px rgba(37,211,102,0.6);
+  }
 }
 
 .wa-launcher:active {
@@ -2504,7 +2545,7 @@ img.tm-avatar {
   margin-right: auto;
 }
 
-.wa-close:hover { opacity: 1; }
+@media (hover: hover) and (pointer: fine) { .wa-close:hover { opacity: 1; } }
 
 .wa-header-text {
   display: flex;
@@ -2594,7 +2635,7 @@ img.tm-avatar {
   transition: background var(--transition);
 }
 
-.wa-cta:hover { background: #1fbe5a; }
+@media (hover: hover) and (pointer: fine) { .wa-cta:hover { background: #1fbe5a; } }
 
 /* ===========================
    ANIMATIONS

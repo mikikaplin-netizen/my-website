@@ -16,7 +16,9 @@
       sparkle: false,
       gradientFrom: 'rgba(100, 193, 210, 0.5)',
       gradientTo:   'rgba(28, 211, 28, 0.24)',
-      glowColor:    '#0d1020',
+      // brand cyan (--accent) at a moderate strength
+      glowColor:    '#64C1D2',
+      glowOpacity:  0.22,
     }, opts);
 
     // container's own position:fixed (global full-page background) comes
@@ -33,7 +35,7 @@
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;';
     svg.innerHTML = `<defs><radialGradient id="${glowId}">
-      <stop offset="0%" stop-color="${o.glowColor}"/>
+      <stop offset="0%" stop-color="${o.glowColor}" stop-opacity="${o.glowOpacity}"/>
       <stop offset="100%" stop-color="transparent"/>
     </radialGradient></defs>
     <circle id="${glowId}c" cx="-9999" cy="-9999" r="${o.glowRadius}"
@@ -257,7 +259,7 @@ window.addEventListener('scroll', () => {
     if (window.scrollY >= section.offsetTop - 120) current = section.getAttribute('id');
   });
   navAnchors.forEach(a => {
-    a.style.color = a.getAttribute('href') === `#${current}` ? '#fff' : '';
+    a.classList.toggle('is-active', a.getAttribute('href') === `#${current}`);
   });
 }, { passive: true });
 
@@ -639,7 +641,8 @@ if (waLauncher && waPanel) {
 (function () {
   const section = document.querySelector('.wave');
   const track = section && section.querySelector('.wave-track');
-  if (!track) return;
+  const sticky = section && section.querySelector('.wave-sticky');
+  if (!track || !sticky) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   track.querySelectorAll('.wave-word').forEach(word => {
@@ -660,26 +663,41 @@ if (waLauncher && waPanel) {
   // px of travel per px scrolled — slower on phones, where the line is
   // short relative to scroll distance and would otherwise fly past
   const travelSpeed = () => (window.innerWidth < 768 ? 0.45 : 0.9);
-  let vw = 0, vh = 0, trackW = 0, amp = 0, ticking = false;
+  // Pinned-scroll timeline (q = 0 → 1 while the section is stuck):
+  //   0    → 0.15  white circle grows from the center to fill the screen
+  //   0.08 → 0.92  the line travels across
+  //   0.85 → 1     circle shrinks away, back to the dark page
+  const GROW_END = 0.15, TRAVEL_START = 0.08, TRAVEL_END = 0.92, SHRINK_START = 0.85;
+  let vw = 0, vh = 0, trackW = 0, amp = 0, maxR = 0, ticking = false;
+
+  const clamp01 = v => Math.max(0, Math.min(1, v));
+  const easeInOut = t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
   function measure() {
     vw = window.innerWidth;
     vh = window.innerHeight;
     trackW = track.scrollWidth;
     amp = parseFloat(getComputedStyle(track).fontSize) * 0.32;
+    maxR = Math.hypot(vw, vh) / 2 + 4;
     items.forEach(it => { it.cx = it.el.offsetLeft + it.el.offsetWidth / 2; });
     // wave chars sit inside .wave-word, whose offsetParent is still the
     // (absolutely positioned) track, so offsetLeft is track-relative
-    section.style.height = `${(trackW + vw) / travelSpeed()}px`;
+    const travelScroll = (trackW + vw) / travelSpeed();
+    const pinRange = travelScroll / (TRAVEL_END - TRAVEL_START);
+    section.style.height = `${pinRange + vh}px`;
     update();
   }
 
   function update() {
     ticking = false;
     const r = section.getBoundingClientRect();
-    // progress runs from "section top at mid-screen" to "section bottom at mid-screen"
-    let p = (vh / 2 - r.top) / r.height;
-    p = Math.max(0, Math.min(1, p));
+    const q = clamp01(-r.top / (r.height - vh));
+
+    const grow = easeInOut(clamp01(q / GROW_END));
+    const shrink = easeInOut(clamp01((q - SHRINK_START) / (1 - SHRINK_START)));
+    sticky.style.setProperty('--wave-r', `${(maxR * grow * (1 - shrink)).toFixed(1)}px`);
+
+    const p = clamp01((q - TRAVEL_START) / (TRAVEL_END - TRAVEL_START));
     const x = -trackW + p * (trackW + vw);
     track.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0)`;
 

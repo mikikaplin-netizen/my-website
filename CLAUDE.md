@@ -26,7 +26,8 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
   ABOUT, PROCESS, PORTFOLIO, CONTACT, FOOTER, WHATSAPP FLOATING WIDGET, ANIMATIONS, RESPONSIVE)
 - `script.js` — vanilla JS, organized in the same `// ==== SECTION ====` comment style, one IIFE
   or top-level block per feature (see below)
-- `fonts/` — self-hosted Google Sans `.ttf` files (`@font-face` declared in `style.css`)
+- `fonts/` — self-hosted Polin (Hebrew) `.woff2` files, `@font-face` declared in `style.css`
+  (Google Sans was removed on purpose — don't reintroduce it)
 - `images/` — logo SVGs (`logo-full.svg`, `logo-icon.svg`) and the hero photo (`miki-hero.png`)
 - `serve.py` — the only "tooling" in the repo
 - `index.html` links `style.css?v=N` / `script.js?v=N` — bump `N` whenever either file changes,
@@ -76,8 +77,12 @@ so they render above it. Section backgrounds use semi-transparent colors
 - Wave marquee (`.wave`, "WAVE MARQUEE — SCROLL-DRIVEN" in `script.js`): the section is pinned
   (`position: sticky`) while one giant line travels across it, mirrored for Hebrew (sentence start
   enters first, moving left → right); each letter/tile rides a sine wave fixed in screen space.
-  The section's height is set in JS from the track width. Without JS / under reduced motion it
-  renders as static centered text.
+  The section's height is set in JS from the track width. The white background is a
+  `clip-path: circle()` on `.wave-sticky` that grows from the center to fill the screen at the
+  start of the pin and shrinks away at the end (`--wave-r`). Without JS / under reduced motion it
+  renders as static centered text on a plain white band.
+- `.edge-blur` — fixed progressive backdrop blur along the bottom of the viewport (height via
+  `--edge-blur-h`), stacked masked layers with doubling blur.
 - Motion: magnetic `.btn`/`.nav-cta` (uses the standalone `translate` property so it doesn't
   clash with hover `transform`), cursor spotlight on `.portfolio-card`, hero photo parallax.
 

@@ -1,32 +1,47 @@
 /* ===========================
    FONTS
 =========================== */
+/* Self-hosted Polin (Hebrew). Expected files: fonts/Polin-{Light,Regular,
+   Medium,Bold,Black}.woff2 — until they're added, the stack falls back to
+   the system Hebrew sans. */
 @font-face {
-  font-family: 'Google Sans';
-  src: url('fonts/GoogleSans-Regular.ttf') format('truetype');
+  font-family: 'Polin';
+  src: local('Polin Light'), local('Polin-Light'),
+       url('fonts/Polin-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Polin';
+  src: local('Polin Regular'), local('Polin-Regular'),
+       url('fonts/Polin-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Google Sans';
-  src: url('fonts/GoogleSans-Medium.ttf') format('truetype');
+  font-family: 'Polin';
+  src: local('Polin Medium'), local('Polin-Medium'),
+       url('fonts/Polin-Medium.woff2') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Google Sans';
-  src: url('fonts/GoogleSans-Bold.ttf') format('truetype');
+  font-family: 'Polin';
+  src: local('Polin Bold'), local('Polin-Bold'),
+       url('fonts/Polin-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Google Sans';
-  src: url('fonts/GoogleSans-Italic.ttf') format('truetype');
-  font-weight: 400;
-  font-style: italic;
+  font-family: 'Polin';
+  src: local('Polin Black'), local('Polin-Black'),
+       url('fonts/Polin-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -53,7 +68,7 @@
   --radius: 12px;
   --radius-lg: 20px;
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --font: 'Google Sans', 'Heebo', sans-serif;
+  --font: 'Polin', 'Arial Hebrew', Arial, sans-serif;
   --shadow: 0 8px 48px rgba(0,0,0,0.5);
   --glow: 0 0 80px rgba(100,193,210,0.12);
 }
@@ -233,7 +248,6 @@ img { max-width: 100%; display: block; }
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   padding: 14px 0;
-  border-bottom: 1px solid var(--border);
 }
 
 .nav-container {
@@ -275,7 +289,17 @@ img { max-width: 100%; display: block; }
   transition: var(--transition);
 }
 
-.nav-links a:hover { color: var(--text); background: var(--bg-3); }
+.nav-links a.is-active { color: #fff; }
+
+.nav-links a:not(.nav-cta):hover {
+  color: var(--bg);
+  background: var(--accent);
+}
+
+.nav-links a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
 
 .nav-cta {
   position: relative;
@@ -412,10 +436,8 @@ img { max-width: 100%; display: block; }
 }
 
 .hero-highlight {
-  background: linear-gradient(135deg, var(--accent-2), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--accent-2);
+  -webkit-text-fill-color: var(--accent-2);
 }
 
 .hero-name {
@@ -428,9 +450,10 @@ img { max-width: 100%; display: block; }
 .hero-desc {
   font-size: 1.1rem;
   color: var(--text-muted);
-  max-width: 480px;
-  line-height: 1.8;
-  margin-bottom: 40px;
+  max-width: 440px;
+  line-height: 1.55;
+  margin-bottom: 36px;
+  text-wrap: balance;
   opacity: 0;
   animation: fadeUp 0.7s ease forwards 0.6s;
 }
@@ -603,13 +626,19 @@ img { max-width: 100%; display: block; }
 .wave.wave--on {
   padding: 0;
   overflow: visible;
+  background: transparent;
 }
 
+/* the white "screen" is a circle that grows from the center to fill the
+   viewport, holds while the line travels, then shrinks away (--wave-r is
+   driven by script.js) */
 .wave--on .wave-sticky {
   position: sticky;
   top: 0;
   height: 100vh;
   overflow: hidden;
+  background: #fff;
+  clip-path: circle(var(--wave-r, 0px) at 50% 50%);
 }
 
 .wave--on .wave-track {
@@ -1304,6 +1333,54 @@ img { max-width: 100%; display: block; }
 .footer-link:hover { color: #fff; }
 
 /* ===========================
+   EDGE BLUR
+=========================== */
+/* Progressive "glass" blur pinned to the bottom of the viewport: fully
+   blurred at the bottom edge, fading to sharp at the top. Built from
+   stacked backdrop-filter layers, each masked to a band, with the blur
+   doubling per layer. */
+.edge-blur {
+  --edge-blur-h: 2vh;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--edge-blur-h);
+  z-index: 90;
+  pointer-events: none;
+}
+
+.edge-blur i {
+  position: absolute;
+  inset: 0;
+}
+
+.edge-blur i:nth-child(1) {
+  -webkit-backdrop-filter: blur(1px);
+  backdrop-filter: blur(1px);
+  -webkit-mask: linear-gradient(to top, #000 0%, #000 60%, transparent 100%);
+          mask: linear-gradient(to top, #000 0%, #000 60%, transparent 100%);
+}
+.edge-blur i:nth-child(2) {
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  -webkit-mask: linear-gradient(to top, #000 0%, #000 40%, transparent 75%);
+          mask: linear-gradient(to top, #000 0%, #000 40%, transparent 75%);
+}
+.edge-blur i:nth-child(3) {
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  -webkit-mask: linear-gradient(to top, #000 0%, #000 20%, transparent 50%);
+          mask: linear-gradient(to top, #000 0%, #000 20%, transparent 50%);
+}
+.edge-blur i:nth-child(4) {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  -webkit-mask: linear-gradient(to top, #000 0%, transparent 25%);
+          mask: linear-gradient(to top, #000 0%, transparent 25%);
+}
+
+/* ===========================
    WHATSAPP FLOATING WIDGET
 =========================== */
 .wa-widget {
@@ -1566,21 +1643,8 @@ img { max-width: 100%; display: block; }
 }
 
 .tx-split .hero-highlight .tx-word {
-  background: linear-gradient(110deg, var(--accent-2) 0%, var(--accent) 40%, #fff 50%, var(--accent) 60%, var(--accent-2) 100%);
-  background-size: 250% 100%;
-  background-position: 100% 0;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.tx-in .hero-highlight .tx-word {
-  animation: txShimmer 2.4s ease-in-out 1.4s 1 both;
-}
-
-@keyframes txShimmer {
-  from { background-position: 100% 0; }
-  to   { background-position: 0 0; }
+  color: var(--accent-2);
+  -webkit-text-fill-color: var(--accent-2);
 }
 
 /* --- Section labels: scramble/decode --- */

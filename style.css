@@ -835,12 +835,12 @@ img { max-width: 100%; display: block; }
   max-width: 560px;
 }
 
-/* Stacked deck (script.js "PROCESS — STACKED DECK" adds .is-stacked):
-   the steps become glass cards piled in one sticky stage. Scrolling flies
-   the front card up and away and the next one steps forward, so the four
-   steps take ~1.6 screens instead of ~3.4. Upcoming cards peek out below
-   the front one. Without JS / reduced motion / short screens: the plain
-   list above. */
+/* Stacked steps (script.js "PROCESS — STACKED DECK" adds .is-stacked):
+   all four rows overlap in one sticky stage. On the right the glass
+   windows rise one over the other; on the left the texts cross-fade in
+   the same spot. Four thin lines underneath fill as you go and mark the
+   current step. ~1.6 screens of scroll instead of ~3.4. Without JS /
+   reduced motion / too-short screens: the plain list above. */
 .process-rows.is-stacked { display: block; }
 
 .process-stage {
@@ -850,69 +850,85 @@ img { max-width: 100%; display: block; }
   height: 100svh;
   display: grid;
   place-items: center;
-  padding: 84px 0 calc(8vh + 56px);
+  padding: 84px 0 calc(8vh + 48px);
 }
-
-.is-stacked .process-row {
-  grid-area: 1 / 1;
-  align-self: center;
-  width: 100%;
-  min-height: 0;
-  padding: clamp(28px, 4vw, 56px);
-  border-radius: var(--radius-lg);
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  box-shadow: inset -0.5px 0.5px 0.5px rgba(255,255,255,0.18), 0 30px 60px -20px rgba(0,0,0,0.6);
-  transform-origin: 50% 100%;
-  will-change: transform;
-  transition: none !important;
-}
-
-.is-stacked .process-row > * { transition: opacity 0.3s ease; }
-.is-stacked .process-row.is-behind > * { opacity: 0; }
 
 .process-stage-layers {
   display: grid;
   width: 100%;
 }
 
-/* phones: tighter card so text + window fit one screen */
-@media (max-width: 900px) {
-  .process-stage { padding-top: 76px; }
-  .is-stacked .process-row { gap: 16px; padding: 22px 18px 20px; }
-  .is-stacked .process-num { font-size: 1.2rem; }
-  .is-stacked .process-title { font-size: 1.7rem; margin-bottom: 8px; }
-  .is-stacked .process-body { font-size: 1rem; line-height: 1.5; }
+.is-stacked .process-row {
+  grid-area: 1 / 1;
+  min-height: 0;
+  padding: 0;
+  pointer-events: none;
 }
 
-/* step dots: 01–04, the active one filled; click jumps to that step */
+.is-stacked .process-row.is-front { pointer-events: auto; }
+
+.is-stacked .process-text {
+  min-height: var(--deck-text-h, auto);
+  justify-content: center;
+}
+
+.is-stacked .process-text,
+.is-stacked .pwin-frame {
+  will-change: transform, opacity;
+  transition: none !important;
+}
+
+/* step lines: one per step, filling as the scroll passes it */
 .process-steps {
   position: absolute;
-  bottom: calc(8vh + 8px);  /* clear of the bottom edge blur */
+  bottom: calc(8vh + 14px);  /* clear of the bottom edge blur */
   left: 50%;
   translate: -50% 0;
+  z-index: 10;
   display: flex;
-  gap: 8px;
+  gap: 10px;
   direction: ltr;
 }
 
 .process-steps button {
-  font: inherit;
-  font-size: 0.8rem;
-  letter-spacing: 0.06em;
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
+  position: relative;
+  width: clamp(40px, 6vw, 72px);
+  height: 18px;              /* hit area; the line itself is 2px */
+  padding: 0;
+  border: 0;
   background: transparent;
-  color: var(--text-muted);
   cursor: pointer;
-  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-.process-steps button.is-active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--bg);
+.process-steps button::before,
+.process-steps button i {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 8px;
+  height: 2px;
+  border-radius: 2px;
+}
+
+.process-steps button::before { background: rgba(255,255,255,0.15); }
+
+.process-steps button i {
+  background: rgba(255,255,255,0.55);
+  transform: scaleX(var(--fill, 0));
+  transform-origin: 0 50%;
+  transition: background 0.3s ease;
+}
+
+.process-steps button.is-active i { background: var(--accent); }
+
+/* phones: tighter text so text + window fit one screen */
+@media (max-width: 900px) {
+  .process-stage { padding-top: 76px; }
+  .is-stacked .process-row { gap: 18px; }
+  .is-stacked .process-num { font-size: 1.2rem; }
+  .is-stacked .process-title { font-size: 1.7rem; margin-bottom: 8px; }
+  .is-stacked .process-body { font-size: 1rem; line-height: 1.5; }
 }
 
 /* ---------------------------------------------------------------

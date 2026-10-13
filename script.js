@@ -1134,10 +1134,11 @@ document.addEventListener('touchstart', () => {}, { passive: true });
 // ===========================
 // PROCESS — STACKED DECK
 // ===========================
-// Pile the step rows into one sticky stage. Scroll progress p runs 0 → N-1
-// over (N-1) × STEP; card i is "front" when p ≈ i. Cards before p fly up and
-// tilt away, cards after it wait underneath (offset down, scaled, dimmed).
-// Only on screens tall enough for a card; otherwise the plain list stays.
+// All step rows overlap in one sticky stage. Scroll progress p runs 0 → N-1
+// over (N-1) × STEP viewport heights. Window i rises from below over window
+// i-1 (which sinks back slightly); text i cross-fades in place. Four lines
+// under the stage fill with p. Only on screens tall enough for a row;
+// otherwise the plain list stays.
 (function () {
   const deck = document.querySelector('.process-rows');
   if (!deck) return;
@@ -1145,6 +1146,8 @@ document.addEventListener('touchstart', () => {}, { passive: true });
   const rows = Array.from(deck.querySelectorAll(':scope > .process-row'));
   const N = rows.length;
   if (N < 2) return;
+  const texts = rows.map(r => r.querySelector('.process-text'));
+  const wins = rows.map(r => r.querySelector('.pwin-frame'));
 
   const STEP = 0.55;                       // viewport heights of scroll per step
   const stage = document.createElement('div');
@@ -1153,11 +1156,11 @@ document.addEventListener('touchstart', () => {}, { passive: true });
   layers.className = 'process-stage-layers';
   const nav = document.createElement('div');
   nav.className = 'process-steps';
-  const dots = rows.map((_, i) => {
+  const lines = rows.map((_, i) => {
     const b = document.createElement('button');
     b.type = 'button';
-    b.textContent = String(i + 1).padStart(2, '0');
     b.setAttribute('aria-label', 'שלב ' + (i + 1));
+    b.appendChild(document.createElement('i'));
     b.addEventListener('click', () => {
       const top = deck.getBoundingClientRect().top + window.scrollY;
       window.scrollTo({ top: top + i * STEP * window.innerHeight + 2, behavior: 'smooth' });
@@ -1169,60 +1172,77 @@ document.addEventListener('touchstart', () => {}, { passive: true });
 
   let on = false, front = -1, ticking = false;
   const ease = t => t * t * (3 - 2 * t);
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
   const enable = () => {
-    rows.forEach((r, i) => { r.style.zIndex = N - i; layers.appendChild(r); });
+    rows.forEach((r, i) => { r.style.zIndex = i + 1; layers.appendChild(r); });
     deck.appendChild(stage);
     deck.classList.add('is-stacked');
     on = true;
   };
   const disable = () => {
-    rows.forEach(r => { r.style.cssText = ''; r.classList.remove('is-behind'); deck.appendChild(r); });
+    rows.forEach(r => { r.style.zIndex = ''; r.classList.remove('is-front'); deck.appendChild(r); });
+    [...texts, ...wins].forEach(el => { if (el) el.style.cssText = ''; });
     stage.remove();
     deck.classList.remove('is-stacked');
     deck.style.height = '';
+    deck.style.removeProperty('--deck-text-h');
     on = false; front = -1;
   };
 
   const fits = () => {
-    // measure a card in deck layout against the room the stage gives it
     if (!on) enable();
+    // equal text heights so every window sits in the same spot (matters
+    // when text stacks above the window on phones)
+    deck.style.removeProperty('--deck-text-h');
+    const th = Math.max(...texts.map(t => t.offsetHeight));
+    deck.style.setProperty('--deck-text-h', th + 'px');
     const tallest = Math.max(...rows.map(r => r.offsetHeight));
     const cs = getComputedStyle(stage);
-    const room = stage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - 3 * 22;
-    return tallest <= room;
+    return tallest <= stage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
   };
 
   const update = () => {
     ticking = false;
     if (!on) return;
     const vh = window.innerHeight;
-    const p = Math.min(N - 1, Math.max(0, -deck.getBoundingClientRect().top / (STEP * vh)));
+    const p = clamp(-deck.getBoundingClientRect().top / (STEP * vh), 0, N - 1);
     rows.forEach((r, i) => {
-      const d = i - p;
-      let tf, behind = false;
-      if (d <= -1) {
-        tf = `translateY(${-vh}px)`;
-        r.style.visibility = 'hidden';
-      } else if (d < 0) {
-        const t = ease(-d);
-        tf = `translateY(${-t * vh * 0.95}px) rotate(${-t * 5}deg)`;
-        r.style.visibility = '';
-      } else {
-        const k = Math.min(d, 3);
-        tf = `translateY(${k * 22}px) scale(${1 - k * 0.05})`;
-        r.style.visibility = d > 3.5 ? 'hidden' : '';
-        behind = d > 0.5;
+      const d = i - p;                     // >0 upcoming, <0 already covered
+      const win = wins[i], txt = texts[i];
+      // window: rises over the previous one, then sinks back under the next
+      if (win) {
+        if (d >= 1) {
+          win.style.visibility = 'hidden';
+        } else if (d > 0) {
+          const t = ease(d);
+          win.style.visibility = '';
+          win.style.transform = `translateY(${t * vh * 0.75}px) rotate(${t * 3}deg)`;
+          win.style.opacity = String(clamp(1.6 - t * 1.6, 0, 1));
+        } else {
+          // covered: sink back and fade fast (the glass would show through)
+          const k = Math.min(-d, 1);
+          win.style.visibility = -d >= 0.75 ? 'hidden' : '';
+          win.style.transform = `translateY(${-k * 18}px) scale(${1 - k * 0.06})`;
+          win.style.opacity = String(clamp(1 - k * 1.4, 0, 1));
+        }
       }
-      r.style.transform = tf;
-      r.classList.toggle('is-behind', behind);
+      // text: cross-fade in place with a small drift
+      if (txt) {
+        const a = clamp(1 - Math.abs(d) * 2.2, 0, 1);
+        txt.style.opacity = String(a);
+        txt.style.transform = `translateY(${clamp(d, -1, 1) * 24}px)`;
+        txt.style.visibility = a === 0 ? 'hidden' : '';
+      }
+      lines[i].style.setProperty('--fill', clamp(p - i + 1, 0, 1).toFixed(3));
     });
     const f = Math.min(N - 1, Math.round(p));
     if (f !== front) {
       front = f;
-      dots.forEach((b, i) => b.classList.toggle('is-active', i === f));
-      const win = rows[f].querySelector('.pwin');
-      if (win) { win.classList.remove('is-playing'); void win.offsetWidth; win.classList.add('is-playing'); }
+      rows.forEach((r, i) => r.classList.toggle('is-front', i === f));
+      lines.forEach((b, i) => b.classList.toggle('is-active', i === f));
+      const pw = rows[f].querySelector('.pwin');
+      if (pw) { pw.classList.remove('is-playing'); void pw.offsetWidth; pw.classList.add('is-playing'); }
     }
   };
 

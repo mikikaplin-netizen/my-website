@@ -1325,6 +1325,8 @@ img { max-width: 100%; display: block; }
   letter-spacing: -0.015em;
 }
 
+.text-accent { color: var(--accent); }
+
 .magnet-hint {
   font-size: clamp(1rem, 1.3vw, 1.2rem);
   color: var(--text-muted);
@@ -1342,8 +1344,11 @@ img { max-width: 100%; display: block; }
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 18px 28px;
-  border-radius: 999px;
+  /* other businesses: a storefront icon in a soft circle */
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border-radius: 50%;
   font-family: var(--font);
   font-size: 1.05rem;
   font-weight: 500;
@@ -1360,9 +1365,22 @@ img { max-width: 100%; display: block; }
   scale: calc(1 - var(--push, 0) * 0.2);
 }
 
+.magnet-bubble svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .magnet-bubble--dominant {
   left: 50%;
   top: 50%;
+  width: auto;
+  height: auto;
+  border-radius: 999px;
   flex-direction: column;
   gap: 2px;
   padding: 22px 40px;
@@ -1378,27 +1396,6 @@ img { max-width: 100%; display: block; }
 
 .magnet-dominant-title { font-size: 1.5rem; font-weight: 700; line-height: 1.1; }
 .magnet-dominant-sub { font-size: 0.9rem; font-weight: 500; opacity: 0.8; }
-
-/* the dominant's "personal space" — size from script.js (--halo) */
-.magnet-bubble--dominant::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: var(--halo, 480px);
-  height: var(--halo, 480px);
-  translate: -50% -50%;
-  border-radius: 50%;
-  border: 1px dashed rgba(28,211,28,0.35);
-  background: radial-gradient(circle, rgba(28,211,28,0.12), transparent 65%);
-  z-index: -1;
-  animation: magnetHalo 4s ease-in-out infinite;
-}
-
-@keyframes magnetHalo {
-  0%, 100% { scale: 1; opacity: 0.9; }
-  50% { scale: 1.06; opacity: 0.6; }
-}
 
 /* ===========================
    PORTFOLIO
@@ -2077,10 +2074,8 @@ img { max-width: 100%; display: block; }
 
   .magnet-hint { font-size: 0.95rem; }
 
-  .magnet-bubble {
-    padding: 10px 16px;
-    font-size: 0.85rem;
-  }
+  .magnet-bubble { width: 46px; height: 46px; }
+  .magnet-bubble svg { width: 20px; height: 20px; }
 
   .magnet-bubble--dominant { padding: 14px 24px; }
   .magnet-dominant-title { font-size: 1.15rem; }

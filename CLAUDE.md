@@ -126,7 +126,8 @@ re-applied in CSS. Step 01 replays its Figma 2s loop (the brief's three text blo
   `object-position`); no `placehold.co` images remain.
 - Magnet section ("MAGNET FIELD"): the green "העסק שלך" bubble (z-index above the heading) follows
   the pointer within 16–84% / 20–85% of the field, returns to rest on mouseleave, and pushes the
-  "מתחרה" bubbles out of its dashed halo; pushed bubbles shrink/fade via `--push`.
+  other-business bubbles (storefront icons — no "competitor" wording, keep it positive) away;
+  pushed bubbles shrink/fade via `--push`.
 - Contact form is deliberately minimal: no card/frame, underlined transparent fields in a
   2-column grid (`.form-group--wide` spans both).
 

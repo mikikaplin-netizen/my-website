@@ -329,7 +329,6 @@ if (waLauncher && waPanel) {
     // the dominant's "personal space" scales with the field
     repelRadius = Math.max(170, Math.min(360, Math.min(rect.w, rect.h) * 0.36));
     repelStrength = repelRadius * 0.85;
-    dominant.style.setProperty('--halo', (repelRadius * 1.5).toFixed(0) + 'px');
     bubbleState.forEach(b => {
       b.homeX = b.el.offsetLeft + b.el.offsetWidth / 2;
       b.homeY = b.el.offsetTop + b.el.offsetHeight / 2;

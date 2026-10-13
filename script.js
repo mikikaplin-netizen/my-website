@@ -183,7 +183,39 @@
 const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
   navbar.classList.toggle('scrolled', window.scrollY > 40);
-});
+}, { passive: true });
+
+// The bar is always laid out as the condensed island; the wide state at the
+// top is a transform. On load and resize only (never per scroll frame),
+// briefly apply the old wide layout (.nav-measure), read where the logo and
+// links sit there, then read them in the island and store the difference.
+(function () {
+  const box = navbar && navbar.querySelector('.nav-container');
+  const logo = box && box.querySelector('.nav-logo');
+  const links = box && box.querySelector('.nav-links');
+  if (!logo || !links) return;
+  const measure = () => {
+    navbar.classList.add('nav-measure');
+    const wl = logo.getBoundingClientRect(), wn = links.getBoundingClientRect();
+    navbar.classList.remove('nav-measure');
+    const il = logo.getBoundingClientRect(), inn = links.getBoundingClientRect();
+    // getBoundingClientRect includes any current transform; undo it via offset math
+    const st = (el, r) => {
+      const m = new DOMMatrixReadOnly(getComputedStyle(el).transform);
+      return { left: r.left - m.e, top: r.top - m.f, width: r.width / (m.a || 1) };
+    };
+    const l = st(logo, il), n = st(links, inn);
+    const set = (k, v) => box.style.setProperty(k, v);
+    set('--nav-logo-dx', (wl.left - l.left).toFixed(1) + 'px');
+    set('--nav-logo-dy', (wl.top - l.top).toFixed(1) + 'px');
+    set('--nav-logo-s', (wl.width / l.width).toFixed(4));
+    set('--nav-links-dx', (wn.left - n.left).toFixed(1) + 'px');
+    set('--nav-links-dy', (wn.top - n.top).toFixed(1) + 'px');
+  };
+  measure();
+  window.addEventListener('resize', measure);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+})();
 
 // ===========================
 // MOBILE NAV TOGGLE
@@ -370,10 +402,13 @@ window.addEventListener('scroll', () => {
     const b = bar.getBoundingClientRect(), r = items[i].getBoundingClientRect();
     return { x: r.left - b.left, w: r.width };
   };
+  // write straight to the drop (not CSS vars on the bar, which would
+  // restyle every child of the bar each frame)
+  const drop = bar.querySelector('.tabbar-drop');
   const paint = stretch => {
-    bar.style.setProperty('--drop-x', x.toFixed(2) + 'px');
-    bar.style.setProperty('--drop-w', w.toFixed(2) + 'px');
-    bar.style.setProperty('--drop-stretch', stretch.toFixed(3));
+    if (!drop) return;
+    drop.style.width = w.toFixed(2) + 'px';
+    drop.style.transform = `translateX(${x.toFixed(2)}px) scaleX(${stretch.toFixed(3)})`;
   };
   const step = now => {
     const dt = Math.min((now - last) / 1000, 1 / 30);   // real frame time, capped after a stall

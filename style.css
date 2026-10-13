@@ -50,6 +50,7 @@
   --radius-lg: 20px;
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1); /* iOS sheet curve: fast start, long soft settle */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);    /* strong ease-out: entrances and reveals */
   --danger: #ff6b6b;        /* form errors only */
   --font: 'Polin', 'Arial Hebrew', Arial, sans-serif;
   --shadow: 0 8px 48px rgba(0,0,0,0.5);
@@ -253,14 +254,18 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 100;
-  padding: 22px 0;
-  transition: padding 0.6s var(--ease-fluid);
+  padding: 12px 0;
 }
 
 /* Once scrolled, the bar condenses into a floating glass island (Apple-style
    material): content keeps scrolling visibly underneath instead of being
-   cut off by an opaque strip. */
-.navbar.scrolled { padding: 12px 0; }
+   cut off by an opaque strip.
+   The layout is always the island's; the wide resting state at the top of
+   the page is drawn with transforms only (logo + links pushed out to the
+   page edges and down, logo scaled up), so the condense animates on the
+   compositor with no layout work. script.js measures the wide layout
+   (.nav-measure) against the island on load and resize and sets the
+   --nav-logo-* / --nav-links-* offsets. */
 
 /* scroll edge effect: a soft fade where content meets the floating chrome,
    instead of a hard divider */
@@ -281,14 +286,33 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
   position: relative;
   isolation: isolate;
   width: 100%;
-  max-width: 100%;
+  max-width: min(1080px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 0 5vw;
+  padding: 7px 7px 7px 22px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: max-width 0.6s var(--ease-fluid), padding 0.6s var(--ease-fluid);
 }
+
+.nav-logo,
+.nav-links {
+  transition: transform 0.6s var(--ease-fluid);
+}
+
+.navbar:not(.scrolled) .nav-logo {
+  transform: translate(var(--nav-logo-dx, 0px), var(--nav-logo-dy, 10px)) scale(var(--nav-logo-s, 1.2143));
+}
+
+.navbar:not(.scrolled) .nav-links {
+  transform: translate(var(--nav-links-dx, 0px), var(--nav-links-dy, 10px));
+}
+
+/* the wide resting layout, applied for one synchronous measurement only */
+.navbar.nav-measure { padding: 22px 0; }
+.navbar.nav-measure .nav-container { max-width: 100%; padding: 0 5vw; }
+.navbar.nav-measure .nav-logo-img { height: 34px; }
+.navbar.nav-measure .nav-logo,
+.navbar.nav-measure .nav-links { transform: none !important; transition: none !important; }
 
 /* The glass lives on a pseudo-element: backdrop-filter on an ancestor would
    turn it into the containing block of the fixed mobile menu and trap it. */
@@ -310,11 +334,6 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
   pointer-events: none;
 }
 
-.navbar.scrolled .nav-container {
-  max-width: min(1080px, calc(100% - 32px));
-  padding: 7px 7px 7px 22px;
-}
-
 .navbar.scrolled .nav-container::before {
   opacity: 1;
   transform: none;
@@ -323,16 +342,12 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
 .nav-logo {
   display: inline-flex;
   align-items: center;
+  transform-origin: 0 0;
 }
 
 .nav-logo-img {
-  height: 34px;
-  width: auto;
-  transition: var(--transition);
-}
-
-.navbar.scrolled .nav-logo-img {
   height: 28px;
+  width: auto;
 }
 
 .nav-links {
@@ -1523,7 +1538,7 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
   height: auto;
   opacity: 0.6;
   filter: brightness(1.5);
-  transition: opacity 0.4s ease, filter 0.4s ease, transform 0.5s cubic-bezier(.2,.8,.2,1);
+  transition: opacity 0.4s ease, filter 0.4s ease, transform 0.5s var(--ease-out);
 }
 
 @media (hover: hover) and (pointer: fine) { .clients-grid li:hover img { opacity: 1; filter: brightness(3); transform: scale(1.06); } }
@@ -1532,7 +1547,7 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
 .clients-grid.reveal.visible li {
   opacity: 1;
   transform: none;
-  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.2,.8,.2,1), background 0.4s ease;
+  transition: opacity 0.7s ease, transform 0.7s var(--ease-out), background 0.4s ease;
   transition-delay: calc(var(--i) * 45ms);
 }
 
@@ -1688,7 +1703,7 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
   background: var(--accent);
   transform: scaleX(0);
   transform-origin: right;
-  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.7s var(--ease-out);
 }
 
 .work-row.is-active::after { transform: scaleX(1); }
@@ -1702,7 +1717,7 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
      floating preview */
   padding: clamp(26px, 3vw, 40px) 5vw clamp(26px, 3vw, 40px) 45vw;
   color: var(--text);
-  transition: padding 0.5s cubic-bezier(0.22, 1, 0.36, 1), background 0.4s ease;
+  transition: padding 0.5s var(--ease-out), background 0.4s ease;
 }
 
 .work-row.is-active .work-link {
@@ -1730,7 +1745,7 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+  transition: max-height 0.5s var(--ease-out), opacity 0.4s ease;
 }
 
 .work-row.is-active .work-desc { max-height: 6em; opacity: 1; }
@@ -1772,7 +1787,7 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
   inset: 0;
   clip-path: inset(100% 0 0 0);
   transform: scale(1.08);
-  transition: clip-path 0.7s cubic-bezier(0.77, 0, 0.18, 1), transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: clip-path 0.7s cubic-bezier(0.77, 0, 0.18, 1), transform 1.1s var(--ease-out);
 }
 
 .work-preview-item.is-active {
@@ -2262,9 +2277,6 @@ img.tm-avatar {
   body { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
 
   .tabbar {
-    --drop-x: 0px;
-    --drop-w: 0px;
-    --drop-stretch: 1;
     position: fixed;
     left: max(12px, env(safe-area-inset-left, 0px));
     right: max(12px, env(safe-area-inset-right, 0px));
@@ -2283,7 +2295,7 @@ img.tm-avatar {
       inset 0 0 0 1px rgba(255,255,255,0.08),
       0 12px 32px -8px rgba(0,0,0,0.55),
       0 2px 6px rgba(0,0,0,0.25);
-    transition: translate 0.45s cubic-bezier(.2,.8,.2,1), scale 0.45s cubic-bezier(.2,.8,.2,1),
+    transition: translate 0.45s var(--ease-out), scale 0.45s var(--ease-out),
                 opacity 0.3s ease, filter 0.3s ease;
   }
 
@@ -2360,14 +2372,13 @@ img.tm-avatar {
     top: 6px;
     bottom: 6px;
     left: 0;
-    width: var(--drop-w);
+    width: 0;               /* width + transform are set on this element by script.js */
     border-radius: 24px;
     background: rgba(100,193,210,0.2);   /* accent-tinted, not white glass on white glass */
     box-shadow:
       inset 0 1px 0 rgba(255,255,255,0.3),
       inset 0 0 0 1px rgba(100,193,210,0.22),
       0 4px 14px rgba(0,0,0,0.25);
-    transform: translateX(var(--drop-x)) scaleX(var(--drop-stretch));
     opacity: 0;
     transition: opacity 0.3s ease;
     pointer-events: none;
@@ -2678,7 +2689,7 @@ img.tm-avatar {
   opacity: 0;
   filter: blur(8px);
   transition:
-    transform 1s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1s var(--ease-out),
     opacity 0.8s ease,
     filter 0.9s ease;
   transition-delay: calc(var(--i, 0) * 70ms);
@@ -2831,10 +2842,14 @@ img.tm-avatar {
   .nav-links a { font-size: 1.3rem; padding: 18px 40px; }
   .nav-toggle { display: flex; z-index: 100; }
 
-  .navbar.scrolled .nav-container {
+  .nav-container {
     max-width: calc(100% - 24px);
     padding: 8px 14px 8px 18px;
   }
+
+  /* the links list is the full-screen drawer here: a transform would
+     become its containing block and move it */
+  .navbar:not(.scrolled) .nav-links { transform: none; }
 
   .contact-form { grid-template-columns: 1fr; }
 }
@@ -2851,6 +2866,8 @@ img.tm-avatar {
   .navbar,
   .nav-container,
   .nav-container::before { transition: opacity 0.2s ease; }
+  .nav-logo,
+  .nav-links { transition: none; }
   .nav-container::before { transform: none; }
   .nav-links li,
   .nav-links.open li { transform: none; transition: opacity 0.2s ease; }

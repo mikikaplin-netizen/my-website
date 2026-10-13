@@ -105,6 +105,13 @@ Labels are vibrancy-tuned (brighter, weight 500, +0.02em). Hides as a material (
 blur, same path back) while the WhatsApp sheet is open; reduced-transparency / more-contrast /
 reduced-motion variants included. The WhatsApp launcher and `body` padding sit above it.
 
+**Navbar condense** (`.navbar.scrolled`): the bar is always laid out as the floating island; the
+wide resting state at the top of the page is drawn with transforms only (logo + links translated out
+to the page edges/down, logo scaled), so the condense runs on the compositor with no layout work.
+"NAVBAR SCROLL" measures the old wide layout via `.nav-measure` on load/resize/fonts-ready and sets
+`--nav-logo-dx/dy/s` and `--nav-links-dx/dy` on `.nav-container`. Easing tokens: `--ease-out`
+(cubic-bezier(0.23, 1, 0.32, 1)) for entrances/reveals, `--ease-fluid` for sheets/morphs.
+
 **Navbar items** all share the CTA's pill box (`border-radius: 999px`, same padding, 1px
 transparent border) so the hover background matches "בואו נדבר" exactly.
 

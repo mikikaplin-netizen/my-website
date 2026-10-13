@@ -86,8 +86,8 @@ so they render above it. Section backgrounds use semi-transparent colors
   `--edge-blur-h`), stacked masked layers with doubling blur.
 - Motion: magnetic `.btn`/`.nav-cta` (uses the standalone `translate` property so it doesn't
   clash with hover `transform`), hero photo parallax.
-- Portfolio (`.work`, "PORTFOLIO — HOVER-REVEAL LIST"): full-bleed rows (number, name, field/year),
-  no icons. Hovering a row activates it (accent underline + description); on desktop a
+- Portfolio (`.work`, "PORTFOLIO — HOVER-REVEAL LIST"): full-bleed rows (name in --accent, white when active;
+  field/year), no numbers or icons. Hovering a row activates it (accent underline + description); on desktop a
   `.work-preview` floats on the left, eased toward the cursor's height with a velocity tilt,
   wiping between projects. Touch screens activate the mid-viewport row and show each row's
   `.work-thumb` inline. Visuals are gradient placeholders until Michael's screen recordings

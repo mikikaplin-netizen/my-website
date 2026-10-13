@@ -1398,9 +1398,11 @@ img { max-width: 100%; display: block; }
   display: flex;
   align-items: center;
   justify-content: center;
-  /* other businesses: a storefront icon in a soft circle */
-  width: 64px;
-  height: 64px;
+  /* other businesses: a storefront icon in a soft circle; position,
+     size and float rhythm are randomized by script.js */
+  width: calc(64px * var(--size, 1));
+  height: calc(64px * var(--size, 1));
+  animation: magnetFloat var(--float-dur, 5s) ease-in-out var(--float-delay, 0s) infinite;
   padding: 0;
   border-radius: 50%;
   font-family: var(--font);
@@ -1419,6 +1421,15 @@ img { max-width: 100%; display: block; }
   scale: calc(1 - var(--push, 0) * 0.2);
 }
 
+@keyframes magnetFloat {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 calc(var(--float-y, 10px) * -1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .magnet-bubble { animation: none; }
+}
+
 .magnet-bubble svg {
   width: 28px;
   height: 28px;
@@ -1434,6 +1445,7 @@ img { max-width: 100%; display: block; }
   top: 50%;
   width: auto;
   height: auto;
+  animation: none;
   border-radius: 999px;
   flex-direction: column;
   gap: 2px;
@@ -2128,7 +2140,7 @@ img { max-width: 100%; display: block; }
 
   .magnet-hint { font-size: 0.95rem; }
 
-  .magnet-bubble { width: 46px; height: 46px; }
+  .magnet-bubble { width: calc(46px * var(--size, 1)); height: calc(46px * var(--size, 1)); }
   .magnet-bubble svg { width: 20px; height: 20px; }
 
   .magnet-bubble--dominant { padding: 14px 24px; }

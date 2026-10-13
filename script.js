@@ -310,6 +310,29 @@ if (waLauncher && waPanel) {
   if (!field || !dominant) return;
 
   const bubbles = Array.from(field.querySelectorAll('.magnet-bubble:not(.magnet-bubble--dominant)'));
+
+  // scatter the other-business icons randomly around the edges (never
+  // over the centered heading) with varied size and a float rhythm each
+  (function scatter() {
+    const placed = [];
+    const inHeading = (x, y) => x > 14 && x < 86 && y > 18 && y < 62;
+    bubbles.forEach(el => {
+      let x, y, tries = 0;
+      do {
+        x = 6 + Math.random() * 88;
+        y = 8 + Math.random() * 84;
+        tries++;
+      } while (tries < 200 && (inHeading(x, y) ||
+        placed.some(p => Math.hypot((p.x - x) * 1.6, p.y - y) < 17)));
+      placed.push({ x, y });
+      el.style.setProperty('--hx', x.toFixed(1) + '%');
+      el.style.setProperty('--hy', y.toFixed(1) + '%');
+      el.style.setProperty('--size', (0.8 + Math.random() * 0.45).toFixed(2));
+      el.style.setProperty('--float-dur', (4 + Math.random() * 3).toFixed(2) + 's');
+      el.style.setProperty('--float-delay', (-Math.random() * 6).toFixed(2) + 's');
+      el.style.setProperty('--float-y', (6 + Math.random() * 8).toFixed(1) + 'px');
+    });
+  })();
   const bubbleState = bubbles.map(el => ({ el, homeX: 0, homeY: 0, dx: 0, dy: 0 }));
 
   const MIN_DIR_DIST = 10;

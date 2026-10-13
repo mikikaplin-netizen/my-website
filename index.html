@@ -11,15 +11,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=38" />
+  <link rel="stylesheet" href="style.css?v=40" />
 </head>
 <body>
-
-  <!-- GLOBAL DOT-FIELD BACKGROUND -->
-  <div id="dot-field-bg"></div>
-  <!-- page tone: the concrete grey that fades over the dot field while a
-       light section owns the screen ("COLOR ZONES — PAGE THEME") -->
-  <div class="page-tone" aria-hidden="true"></div>
 
   <!-- NAVBAR -->
   <nav class="navbar" id="navbar">
@@ -38,6 +32,17 @@
       </a>
     </div>
   </nav>
+
+  <!-- PAGE — everything that scrolls over the footer. clip-path keeps the
+       fixed dot field / page tone inside it, so when the page slides away at
+       the end the footer behind it is revealed (curtain). -->
+  <main class="page">
+  <!-- GLOBAL DOT-FIELD BACKGROUND -->
+  <div id="dot-field-bg"></div>
+  <!-- page tone: the concrete grey that fades over the dot field while a
+       light section owns the screen ("COLOR ZONES — PAGE THEME") -->
+  <div class="page-tone" aria-hidden="true"></div>
+
 
   <!-- HERO -->
   <section class="hero" id="hero">
@@ -88,27 +93,48 @@
     </div>
   </section>
 
-  <!-- CLIENTS — logo wall of businesses Michael worked with (logos from
-       mkaplin.com); hairline grid whose lines light up under the cursor -->
+  <!-- CLIENTS — two full-bleed rows of client logos (from mkaplin.com) running
+       in opposite directions; script.js fills each track and loops it -->
   <section class="tone-light clients" aria-label="עסקים שעבדו איתי">
-    <div class="container">
-    <ul class="clients-grid">
-      <li style="--i:0"><img src="images/clients/wst.webp" alt="WST" width="135" height="85" loading="lazy" /></li>
-      <li style="--i:1"><img src="images/clients/alter.webp" alt="אלתר ספרים" width="182" height="63" loading="lazy" /></li>
-      <li style="--i:2"><img src="images/clients/dimri-investments.webp" alt="דימרי השקעות" width="66" height="88" loading="lazy" /></li>
-      <li style="--i:3"><img src="images/clients/chinuch-labina.webp" alt="חינוך לבינה" width="146" height="78" loading="lazy" /></li>
-      <li style="--i:4"><img src="images/clients/yoter-nadlan.webp" alt="יותר נדל&quot;ן משכל" width="191" height="60" loading="lazy" /></li>
-      <li style="--i:5"><img src="images/clients/lidor-barel.webp" alt="לידור בראל" width="230" height="44" loading="lazy" /></li>
-      <li style="--i:6"><img src="images/clients/lechatchila.webp" alt="לכתחילה" width="161" height="71" loading="lazy" /></li>
-      <li style="--i:7"><img src="images/clients/lishkat-hatoanim.webp" alt="לשכת הטוענים הרבניים" width="177" height="65" loading="lazy" /></li>
-      <li style="--i:8"><img src="images/clients/birnbaum-dimentman.webp" alt="בירנבאום דימנטמן, משרד עורכי דין" width="211" height="54" loading="lazy" /></li>
-      <li style="--i:9"><img src="images/clients/israel-ziskind.webp" alt="עו&quot;ד ישראל זיסקינד" width="230" height="28" loading="lazy" /></li>
-      <li style="--i:10"><img src="images/clients/wolfeld-group.webp" alt="קבוצת וולפלד" width="226" height="51" loading="lazy" /></li>
-      <li style="--i:11"><img src="images/clients/karta.webp" alt="קרתא" width="184" height="62" loading="lazy" /></li>
-      <li style="--i:12"><img src="images/clients/shimony.webp" alt="Shimony House of Finance" width="188" height="61" loading="lazy" /></li>
-      <li style="--i:13"><img src="images/clients/tevua.webp" alt="תבואה השקעות נדל&quot;ן" width="146" height="78" loading="lazy" /></li>
-      <li style="--i:14"><img src="images/clients/tamar-baniel.webp" alt="תמר בניאל" width="96" height="88" loading="lazy" /></li>
-    </ul>
+    <div class="clients-marquee">
+      <div class="cl-row">
+        <ul class="cl-track">
+          <li><img src="images/clients/wst.webp" alt="WST" width="135" height="85" loading="lazy" /></li>
+          <li><img src="images/clients/alter.webp" alt="אלתר ספרים" width="182" height="63" loading="lazy" /></li>
+          <li><img src="images/clients/dimri-investments.webp" alt="דימרי השקעות" width="66" height="88" loading="lazy" /></li>
+          <li><img src="images/clients/chinuch-labina.webp" alt="חינוך לבינה" width="146" height="78" loading="lazy" /></li>
+          <li><img src="images/clients/yoter-nadlan.webp" alt="יותר נדל&quot;ן משכל" width="191" height="60" loading="lazy" /></li>
+          <li><img src="images/clients/lidor-barel.webp" alt="לידור בראל" width="230" height="44" loading="lazy" /></li>
+          <li><img src="images/clients/lechatchila.webp" alt="לכתחילה" width="161" height="71" loading="lazy" /></li>
+          <li><img src="images/clients/lishkat-hatoanim.webp" alt="לשכת הטוענים הרבניים" width="177" height="65" loading="lazy" /></li>
+          <li><img src="images/clients/birnbaum-dimentman.webp" alt="בירנבאום דימנטמן, משרד עורכי דין" width="211" height="54" loading="lazy" /></li>
+          <li><img src="images/clients/israel-ziskind.webp" alt="עו&quot;ד ישראל זיסקינד" width="230" height="28" loading="lazy" /></li>
+          <li><img src="images/clients/wolfeld-group.webp" alt="קבוצת וולפלד" width="226" height="51" loading="lazy" /></li>
+          <li><img src="images/clients/karta.webp" alt="קרתא" width="184" height="62" loading="lazy" /></li>
+          <li><img src="images/clients/shimony.webp" alt="Shimony House of Finance" width="188" height="61" loading="lazy" /></li>
+          <li><img src="images/clients/tevua.webp" alt="תבואה השקעות נדל&quot;ן" width="146" height="78" loading="lazy" /></li>
+          <li><img src="images/clients/tamar-baniel.webp" alt="תמר בניאל" width="96" height="88" loading="lazy" /></li>
+        </ul>
+      </div>
+      <div class="cl-row cl-row--rev" aria-hidden="true">
+        <ul class="cl-track">
+          <li><img src="images/clients/lishkat-hatoanim.webp" alt="לשכת הטוענים הרבניים" width="177" height="65" loading="lazy" /></li>
+          <li><img src="images/clients/dimri-investments.webp" alt="דימרי השקעות" width="66" height="88" loading="lazy" /></li>
+          <li><img src="images/clients/shimony.webp" alt="Shimony House of Finance" width="188" height="61" loading="lazy" /></li>
+          <li><img src="images/clients/wst.webp" alt="WST" width="135" height="85" loading="lazy" /></li>
+          <li><img src="images/clients/israel-ziskind.webp" alt="עו&quot;ד ישראל זיסקינד" width="230" height="28" loading="lazy" /></li>
+          <li><img src="images/clients/yoter-nadlan.webp" alt="יותר נדל&quot;ן משכל" width="191" height="60" loading="lazy" /></li>
+          <li><img src="images/clients/tamar-baniel.webp" alt="תמר בניאל" width="96" height="88" loading="lazy" /></li>
+          <li><img src="images/clients/alter.webp" alt="אלתר ספרים" width="182" height="63" loading="lazy" /></li>
+          <li><img src="images/clients/karta.webp" alt="קרתא" width="184" height="62" loading="lazy" /></li>
+          <li><img src="images/clients/lechatchila.webp" alt="לכתחילה" width="161" height="71" loading="lazy" /></li>
+          <li><img src="images/clients/chinuch-labina.webp" alt="חינוך לבינה" width="146" height="78" loading="lazy" /></li>
+          <li><img src="images/clients/tevua.webp" alt="תבואה השקעות נדל&quot;ן" width="146" height="78" loading="lazy" /></li>
+          <li><img src="images/clients/birnbaum-dimentman.webp" alt="בירנבאום דימנטמן, משרד עורכי דין" width="211" height="54" loading="lazy" /></li>
+          <li><img src="images/clients/lidor-barel.webp" alt="לידור בראל" width="230" height="44" loading="lazy" /></li>
+          <li><img src="images/clients/wolfeld-group.webp" alt="קבוצת וולפלד" width="226" height="51" loading="lazy" /></li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -623,75 +649,88 @@
     </div>
   </section>
 
-  <!-- CONTACT -->
-  <section class="contact section" id="contact">
-    <div class="container">
-      <div class="contact-wrapper">
-        <div class="contact-info">
-          <p class="section-label">בואו נדבר</p>
-          <h2 class="section-title">יש לכם פרויקט<br />שמחכה לקרות?</h2>
-          <p class="contact-intro">
-            אני תמיד שמח לשמוע על רעיונות חדשים. שלחו לי הודעה ואחזור אליכם בהקדם,
-            בדרך כלל תוך יום עסקים אחד.
-          </p>
-          <ul class="contact-details">
-            <li>
-              <span class="contact-icon">✉</span>
-              <a href="mailto:michael@mkaplin.com">michael@mkaplin.com</a>
-            </li>
-            <li>
-              <span class="contact-icon">🌐</span>
-              <a href="https://mkaplin.com" target="_blank" rel="noopener">mkaplin.com</a>
-            </li>
-          </ul>
-          <div class="contact-image-wrap">
-            <img
-              src="images/miki-hero.png"
-              alt="מיכאל קאפלין"
-              class="contact-photo"
-              width="280"
-              height="280"
-            />
-            <div class="contact-quote">
-              "כל עסק ראוי לאתר<br />שמייצג אותו נכון."
+    <!-- #contact lands here: scrolling to it slides the page fully off
+         the footer -->
+    <div id="contact" class="page-end"></div>
+  </main>
+
+  <!-- SITE END — the footer the page reveals as it scrolls away (sticky
+       behind <main>): full-screen wave, Michael's logo huge in one color
+       blended into it, and the contact form + footer bar on top. -->
+  <footer class="site-end">
+    <img class="site-end-waves" src="images/webp/footer-waves.webp" alt="" aria-hidden="true" loading="lazy" />
+    <div class="site-end-logo" aria-hidden="true"></div>
+    <!-- CONTACT -->
+    <section class="contact section" aria-label="צור קשר">
+      <div class="container">
+        <div class="contact-wrapper">
+          <div class="contact-info">
+            <p class="section-label">בואו נדבר</p>
+            <h2 class="section-title">יש לכם פרויקט<br />שמחכה לקרות?</h2>
+            <p class="contact-intro">
+              אני תמיד שמח לשמוע על רעיונות חדשים. שלחו לי הודעה ואחזור אליכם בהקדם,
+              בדרך כלל תוך יום עסקים אחד.
+            </p>
+            <ul class="contact-details">
+              <li>
+                <span class="contact-icon">✉</span>
+                <a href="mailto:michael@mkaplin.com">michael@mkaplin.com</a>
+              </li>
+              <li>
+                <span class="contact-icon">🌐</span>
+                <a href="https://mkaplin.com" target="_blank" rel="noopener">mkaplin.com</a>
+              </li>
+            </ul>
+            <div class="contact-image-wrap">
+              <img
+                src="images/miki-hero.png"
+                alt="מיכאל קאפלין"
+                class="contact-photo"
+                width="280"
+                height="280"
+              />
+              <div class="contact-quote">
+                "כל עסק ראוי לאתר<br />שמייצג אותו נכון."
+              </div>
             </div>
           </div>
+
+          <form class="contact-form" id="contactForm" novalidate>
+            <div class="form-group">
+              <label for="name">שם מלא</label>
+              <input type="text" id="name" name="name" placeholder="השם שלך" autocomplete="name" enterkeyhint="next" required />
+            </div>
+            <div class="form-group">
+              <label for="email">אימייל</label>
+              <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" required />
+            </div>
+            <div class="form-group form-group--wide">
+              <label for="phone">טלפון (אופציונלי)</label>
+              <input type="tel" id="phone" name="phone" placeholder="05X-XXXXXXX" inputmode="tel" autocomplete="tel" enterkeyhint="next" />
+            </div>
+            <div class="form-group form-group--wide">
+              <label for="message">ספרו לי על הפרויקט</label>
+              <textarea id="message" name="message" rows="3" placeholder="מה אתם בונים? מה המטרה? כל פרט עוזר..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">שליחת הודעה</button>
+            <p class="form-note">אחזור אליכם תוך יום עסקים ✓</p>
+          </form>
         </div>
-
-        <form class="contact-form" id="contactForm" novalidate>
-          <div class="form-group">
-            <label for="name">שם מלא</label>
-            <input type="text" id="name" name="name" placeholder="השם שלך" autocomplete="name" enterkeyhint="next" required />
-          </div>
-          <div class="form-group">
-            <label for="email">אימייל</label>
-            <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" required />
-          </div>
-          <div class="form-group form-group--wide">
-            <label for="phone">טלפון (אופציונלי)</label>
-            <input type="tel" id="phone" name="phone" placeholder="05X-XXXXXXX" inputmode="tel" autocomplete="tel" enterkeyhint="next" />
-          </div>
-          <div class="form-group form-group--wide">
-            <label for="message">ספרו לי על הפרויקט</label>
-            <textarea id="message" name="message" rows="3" placeholder="מה אתם בונים? מה המטרה? כל פרט עוזר..." required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">שליחת הודעה</button>
-          <p class="form-note">אחזור אליכם תוך יום עסקים ✓</p>
-        </form>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-inner">
-        <img src="images/logo-full.svg" alt="מיכאל קאפלין" class="footer-logo" />
-        <p class="footer-copy">© 2026 כל הזכויות שמורות</p>
-        <a href="https://mkaplin.com" class="footer-link">mkaplin.com</a>
+
+    <div class="footer">
+      <div class="container">
+        <div class="footer-inner">
+          <img src="images/logo-full.svg" alt="מיכאל קאפלין" class="footer-logo" />
+          <p class="footer-copy">© 2026 כל הזכויות שמורות</p>
+          <a href="https://mkaplin.com" class="footer-link">mkaplin.com</a>
+        </div>
       </div>
     </div>
   </footer>
+
 
   <!-- MOBILE TAB BAR — fixed liquid-glass bar at the bottom (phones only);
        the drop behind the active item slides between sections -->
@@ -750,6 +789,6 @@
     </button>
   </div>
 
-  <script src="script.js?v=38"></script>
+  <script src="script.js?v=40"></script>
 </body>
 </html>

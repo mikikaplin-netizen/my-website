@@ -37,11 +37,22 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
 ## Architecture / how the page is wired together
 
 **Sections are independent and stack in document order** inside `index.html`: navbar → hero →
-statement → clients → portfolio → about → process → magnet → wave → testimonials → faq → contact → footer, plus a WhatsApp widget appended at
-the end of `<body>`. There's no JS component system — each section's behavior is a self-contained
+statement → clients → portfolio → about → process → magnet → wave → testimonials → faq, all inside
+`<main class="page">`, then `<footer class="site-end">` (contact form + footer bar), plus the tab bar,
+edge blur and WhatsApp widget appended at the end of `<body>`. There's no JS component system — each section's behavior is a self-contained
 block in `script.js` that queries its own DOM by id/class and no-ops if the element isn't present
 (defensive `if (el) ...` guards throughout), so sections can be added/removed without touching
 other blocks.
+
+**Curtain footer** ("PAGE + SITE END" in `style.css`, "SITE END — CURTAIN FOOTER" in `script.js`):
+`main.page` (z-index 1, opaque, `clip-path: inset(0)` so its fixed dot field / page tone are clipped to
+it) scrolls over `footer.site-end`, which is `position: sticky; bottom: 0` behind it (`.is-curtain`,
+only when the footer fits the screen; on phones the long form makes it taller, so it just flows).
+The footer: the wave (`images/webp/footer-waves.webp`, 1600px RGBA <100KB from Michael's PNG, softened
+with a 3px blur), Michael's logo huge in one color (`.site-end-logo`: accent fill masked by
+`logo-full.svg`, `mix-blend-mode: soft-light`) behind the contact form, then the footer bar.
+`#contact` is an empty `.page-end` marker at the end of `<main>`; scrolling to it slides the page
+off the footer. JS that looks for page sections must query `main.page > section`.
 
 **Page theme / color zones** ("COLOR ZONES — PAGE THEME" in `style.css` + `script.js`): the whole page
 changes color. Sections marked `.tone-light` (statement, clients, about, testimonials, faq) switch
@@ -185,10 +196,10 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
   clients' logos/photo from mkaplin.com (`images/testimonials/`); מיכאל זכאי has none and keeps initials.
 - Clients (`.clients`, 3rd section, light zone, right before the portfolio, no heading on purpose): logo wall of the 15
   grey client logos from mkaplin.com (`images/clients/`, sized by area so wide/tall marks weigh the
-  same) in a hairline grid whose lines glow under the cursor ("CLIENTS — LOGO WALL SPOTLIGHT").
-  "CLIENTS — LOGO SHIFT" shows only 10 cells (6 on phones) and every 1.8s swaps one cell's logo for
-  one not on screen (old lifts out blurred, next rises from below; after Aceternity's logo-cloud swap
-  and Framer's Logo Shift) so the wall reads as bigger; pauses off screen. No JS = all 15 static.
+  same) logo marquee.
+  Now two full-bleed rows running in opposite directions ("CLIENTS — LOGO MARQUEE" clones each
+  track to overfill the screen and loop; hover pauses a row). A cell-swap wall was tried and dropped:
+  Michael didn't notice the swaps; continuous motion reads as "many".
 - About (`.about`) is full screen (`min-height: 100svh`): photo + story, then `.about-stats`, a
   full-width band of oversized thin numerals (+5 / +30 / 100%) split by hairlines; "ABOUT — COUNT-UP
   NUMBERS" counts them up once half in view (final values live in the markup).
@@ -199,7 +210,9 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
   at the bubble's outer bottom corner); the first exchange auto-plays when first seen.
 - About opens with "קוראים לי מיכאל קאפלין, ואני מעצב ובונה אתרים עם אופי." (`.about-intro`); no badge
   on the photo (the +30 lives in the numbers band).
-- Testimonial cards have their own solid layer (navy + soft top light, no per-card backdrop blur).
+- Testimonial cards follow the page theme: solid navy layer in dark, white with navy text on the grey
+  page (Michael disliked dark cards on grey). No per-card backdrop blur.
+- The contact section now lives inside `footer.site-end` (see Curtain footer).
 - Contact form is deliberately minimal: no card/frame, underlined transparent fields in a
   2-column grid (`.form-group--wide` spans both).
 

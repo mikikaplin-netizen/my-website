@@ -246,7 +246,7 @@ document.addEventListener('keydown', (e) => {
 // REVEAL ON SCROLL
 // ===========================
 const revealEls = document.querySelectorAll(
-  '.process-row, .work-row, .about-grid, .contact-wrapper, .section-header, .clients-grid, .faq-chat'
+  '.process-row, .work-row, .about-grid, .contact-wrapper, .section-header, .clients-marquee, .faq-chat'
 );
 
 revealEls.forEach(el => el.classList.add('reveal'));
@@ -1273,13 +1273,28 @@ document.addEventListener('touchstart', () => {}, { passive: true });
 })();
 
 // ===========================
+// SITE END — CURTAIN FOOTER
+// ===========================
+// The footer sits sticky behind the page and is revealed as the page
+// scrolls off it, but only when it fits the screen (a taller footer could
+// never be seen whole); otherwise it just follows in the flow.
+(function () {
+  const end = document.querySelector('.site-end');
+  if (!end) return;
+  const fit = () => end.classList.toggle('is-curtain', end.offsetHeight <= window.innerHeight + 1);
+  fit();
+  window.addEventListener('resize', fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+})();
+
+// ===========================
 // COLOR ZONES — PAGE THEME
 // ===========================
 // The section under the line 40% down the screen decides the page color:
 // .tone-light → html.theme-light (grey page, navy text), anything else →
 // dark. CSS crossfades the page-tone layer and the text colors.
 (function () {
-  const sections = Array.from(document.querySelectorAll('body > section'));
+  const sections = Array.from(document.querySelectorAll('main.page > section'));
   if (!sections.some(s => s.classList.contains('tone-light'))) return;
   const root = document.documentElement;
   let ticking = false;
@@ -1625,83 +1640,31 @@ document.addEventListener('touchstart', () => {}, { passive: true });
 })();
 
 // ===========================
-// CLIENTS — LOGO SHIFT
+// CLIENTS — LOGO MARQUEE
 // ===========================
-// The wall shows 10 cells (6 on phones) out of all the logos. Every ~1.8s
-// one cell (never the same twice in a row) swaps its logo for one that is
-// not on screen: the old logo lifts out, the next rises from below. New
-// logos keep appearing, so the wall reads as bigger than it is. Pauses off
-// screen and in background tabs; without JS all logos show statically.
+// Fill each row with copies of its logos until one copy is wider than the
+// screen, then duplicate it so the CSS translateX(-50%) loop is seamless.
+// Both rows move at the same px/s. Reduced motion: CSS shows them static.
 (function () {
-  const grid = document.querySelector('.clients-grid');
-  if (!grid) return;
-  const all = Array.from(grid.querySelectorAll('li img')).map(img => ({
-    src: img.getAttribute('src'), alt: img.alt, w: img.getAttribute('width'), h: img.getAttribute('height')
-  }));
-  const phone = window.matchMedia('(max-width: 900px)');
-  let pool = [], cells = [], lastCell = -1, timer = 0, visible = false;
-
-  const makeImg = d => {
-    const img = document.createElement('img');
-    img.src = d.src; img.alt = d.alt; img.width = d.w; img.height = d.h;
-    img.decoding = 'async';
-    return img;
-  };
-
-  const build = () => {
-    const count = phone.matches ? 6 : 10;
-    if (all.length <= count) return;
-    const lis = Array.from(grid.children);
-    lis.forEach((li, i) => { li.hidden = i >= count; });
-    cells = lis.slice(0, count);
-    cells.forEach((li, i) => { li.textContent = ''; li.appendChild(makeImg(all[i])); li.dataset.logo = i; });
-    pool = all.map((_, i) => i).slice(count);
-    grid.classList.add('is-cycling');
-  };
-
-  const swap = () => {
-    if (!pool.length) return;
-    let c;
-    do { c = Math.floor(Math.random() * cells.length); } while (c === lastCell && cells.length > 1);
-    lastCell = c;
-    const li = cells[c];
-    const out = li.querySelector('img:not(.is-out)');
-    const nextIdx = pool.shift();
-    pool.push(Number(li.dataset.logo));
-    li.dataset.logo = nextIdx;
-    const inc = makeImg(all[nextIdx]);
-    inc.classList.add('is-entering');
-    li.appendChild(inc);
-    void inc.offsetWidth;                          // commit the start pose
-    inc.classList.remove('is-entering');
-    if (out) { out.classList.add('is-out'); setTimeout(() => out.remove(), 800); }
-  };
-
-  const run = () => { clearInterval(timer); if (visible && !document.hidden) timer = setInterval(swap, 1800); };
-
-  build();
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(es => { visible = es.some(e => e.isIntersecting); run(); }).observe(grid);
-  }
-  document.addEventListener('visibilitychange', run);
-  phone.addEventListener('change', () => { build(); run(); });
-})();
-
-// ===========================
-// CLIENTS — LOGO WALL SPOTLIGHT
-// ===========================
-// The grid's gap lines carry a radial accent glow; follow the pointer with it.
-(function () {
-  const grid = document.querySelector('.clients-grid');
-  if (!grid || !window.matchMedia('(hover: hover)').matches) return;
-  grid.addEventListener('pointermove', e => {
-    const r = grid.getBoundingClientRect();
-    grid.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-    grid.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  const tracks = document.querySelectorAll('.cl-track');
+  if (!tracks.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const PX_PER_SEC = 45;
+  tracks.forEach(track => {
+    const base = Array.from(track.children);
+    const cloneSet = () => base.forEach(li => {
+      const c = li.cloneNode(true);
+      c.setAttribute('aria-hidden', 'true');
+      track.appendChild(c);
+    });
+    let guard = 0;
+    while (track.scrollWidth < window.innerWidth * 1.2 && guard++ < 4) cloneSet();
+    Array.from(track.children).forEach(li => {           // second half for the loop
+      const c = li.cloneNode(true);
+      c.setAttribute('aria-hidden', 'true');
+      track.appendChild(c);
+    });
+    const setDur = () => track.style.setProperty('--cl-dur', (track.scrollWidth / 2 / PX_PER_SEC).toFixed(1) + 's');
+    setDur();
+    window.addEventListener('resize', setDur);
   });
-  grid.addEventListener('pointerleave', () => {
-    grid.style.setProperty('--mx', '50%');
-    grid.style.setProperty('--my', '-400px');
-  });
-  grid.style.setProperty('--my', '-400px');
 })();

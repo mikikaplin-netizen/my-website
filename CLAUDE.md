@@ -93,6 +93,14 @@ so they render above it. Section backgrounds use semi-transparent colors
   `.work-thumb` inline. Visuals are gradient placeholders until Michael's screen recordings
   arrive (`images/portfolio/`).
 
+**Mobile tab bar** (`#tabbar`, ≤768px only — replaces the hamburger, which is hidden there): a
+fixed liquid-glass pill at the bottom (backdrop blur + saturate, specular sheen `::before`, fading
+rim `::after`) with 4 icon+label links (אודות / שירותים / פרויקטים / בואו נדבר in accent). A glass
+`.tabbar-drop` springs behind the active item and stretches with its speed ("MOBILE TAB BAR — LIQUID
+DROP"); active = section in view, contact once the page bottom is reached; a tap locks it to the
+target during the smooth scroll. Hides while the WhatsApp sheet is open; the WhatsApp launcher and
+`body` padding sit above it.
+
 **Navbar items** all share the CTA's pill box (`border-radius: 999px`, same padding, 1px
 transparent border) so the hover background matches "בואו נדבר" exactly.
 

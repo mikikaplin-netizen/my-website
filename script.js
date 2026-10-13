@@ -341,6 +341,81 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 // ===========================
+// MOBILE TAB BAR — LIQUID DROP
+// ===========================
+// Highlights the section in view (same rule as the top nav) and moves the
+// glass drop behind it on a spring; while it travels it stretches with its
+// speed, like a liquid bead. Hidden while the WhatsApp sheet is open.
+(function () {
+  const bar = document.getElementById('tabbar');
+  if (!bar) return;
+  const items = Array.from(bar.querySelectorAll('a[href^="#"]'));
+  const targets = items.map(a => document.querySelector(a.getAttribute('href')));
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let x = 0, w = 0, vx = 0, tx = 0, tw = 0, raf = 0, placed = false, active = -1;
+  let lockUntil = 0;                      // after a tap, ignore the smooth scroll's in-between sections
+
+  const measure = i => {
+    const a = items[i], b = bar.getBoundingClientRect(), r = a.getBoundingClientRect();
+    return { x: r.left - b.left, w: r.width };
+  };
+  const paint = stretch => {
+    bar.style.setProperty('--drop-x', x.toFixed(2) + 'px');
+    bar.style.setProperty('--drop-w', w.toFixed(2) + 'px');
+    bar.style.setProperty('--drop-stretch', stretch.toFixed(3));
+  };
+  const step = () => {
+    // critically-damped-ish spring (stiffness 340, damping 30) at ~60fps
+    const dt = 1 / 60, k = 340, c = 30;
+    vx += (k * (tx - x) - c * vx) * dt;
+    x += vx * dt;
+    w += (tw - w) * 0.25;
+    paint(1 + Math.min(Math.abs(vx) / 2600, 0.35));
+    if (Math.abs(tx - x) > 0.3 || Math.abs(vx) > 5) raf = requestAnimationFrame(step);
+    else { x = tx; vx = 0; paint(1); raf = 0; }
+  };
+  const moveTo = i => {
+    if (i < 0 || !items[i].offsetParent) return;
+    const m = measure(i);
+    tx = m.x; tw = m.w;
+    if (!placed || reduce) { x = tx; w = tw; vx = 0; placed = true; paint(1); return; }
+    if (!raf) raf = requestAnimationFrame(step);
+  };
+  const setActive = i => {
+    if (i === active) return;
+    active = i;
+    items.forEach((a, k) => a.classList.toggle('is-active', k === i));
+    bar.classList.toggle('has-active', i >= 0);
+    moveTo(i);
+  };
+
+  const onScroll = () => {
+    if (performance.now() < lockUntil) return;
+    let cur = -1;
+    targets.forEach((t, i) => { if (t && window.scrollY >= t.offsetTop - window.innerHeight * 0.4) cur = i; });
+    // contact is short and last: count it once the page bottom is reached
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) cur = items.length - 1;
+    setActive(cur);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', () => { placed = false; moveTo(active); });
+  items.forEach((a, i) => a.addEventListener('click', () => {
+    setActive(i);
+    lockUntil = performance.now() + 1200;
+    clearTimeout(a._t); a._t = setTimeout(onScroll, 1250);
+  }));
+  onScroll();
+
+  // step aside for the WhatsApp sheet
+  const waPanel = document.getElementById('waPanel');
+  if (waPanel && 'MutationObserver' in window) {
+    new MutationObserver(() => bar.classList.toggle('is-hidden', waPanel.classList.contains('is-open')))
+      .observe(waPanel, { attributes: true, attributeFilter: ['class'] });
+  }
+})();
+
+// ===========================
 // WHATSAPP FLOATING WIDGET
 // ===========================
 const waLauncher = document.getElementById('waLauncher');

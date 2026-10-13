@@ -200,6 +200,12 @@ img { max-width: 100%; display: block; }
   animation-play-state: running;
 }
 
+/* press feedback — lands on pointer-down, not on release (Apple: respond instantly) */
+.btn:active {
+  transform: translateY(-1px) scale(0.97);
+  transition-duration: 100ms;
+}
+
 .btn-primary {
   background: rgba(100,193,210,0.12);
 }
@@ -284,6 +290,8 @@ img { max-width: 100%; display: block; }
 
 .nav-cta {
   position: relative;
+  display: inline-block; /* transforms (press scale) don't apply to inline boxes */
+  line-height: 1.02; /* keeps the pill the same 35px height it had as an inline box */
   isolation: isolate;
   color: #fff !important;
   background: rgba(100,193,210,0.12) !important;
@@ -292,7 +300,7 @@ img { max-width: 100%; display: block; }
   border: 1px solid rgba(255,255,255,0.14);
   border-radius: 999px !important;
   padding: 9px 22px !important;
-  transition: box-shadow var(--transition), border-color var(--transition);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
 }
 
 .nav-cta::before {
@@ -328,6 +336,11 @@ img { max-width: 100%; display: block; }
 .nav-cta:hover::before {
   opacity: 1;
   animation-play-state: running;
+}
+
+.nav-cta:active {
+  transform: scale(0.96);
+  transition-duration: 100ms;
 }
 
 .nav-toggle {
@@ -1737,6 +1750,11 @@ img { max-width: 100%; display: block; }
 .wa-launcher:hover {
   transform: scale(1.06);
   box-shadow: 0 10px 34px rgba(37,211,102,0.6);
+}
+
+.wa-launcher:active {
+  transform: scale(0.94);
+  transition-duration: 100ms;
 }
 
 .wa-badge {

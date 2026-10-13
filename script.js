@@ -555,6 +555,13 @@ if (waLauncher && waPanel) {
 })();
 
 // ===========================
+// MOTION — PRESS FEEDBACK
+// ===========================
+// iOS Safari only applies :active (the instant press state on .btn, .nav-cta,
+// .wa-launcher) once the page has a touchstart listener.
+document.addEventListener('touchstart', () => {}, { passive: true });
+
+// ===========================
 // MOTION — MAGNETIC BUTTONS
 // ===========================
 // CTAs lean toward the cursor while hovered. Uses the standalone `translate`

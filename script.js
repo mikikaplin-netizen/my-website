@@ -191,16 +191,23 @@ window.addEventListener('scroll', () => {
 const navToggle = document.getElementById('navToggle');
 const navLinks = document.querySelector('.nav-links');
 
+function setNavOpen(open) {
+  navLinks.classList.toggle('open', open);
+  navToggle.classList.toggle('active', open);
+  navToggle.setAttribute('aria-expanded', String(open));
+}
+
+navToggle.setAttribute('aria-expanded', 'false');
 navToggle.addEventListener('click', () => {
-  navLinks.classList.toggle('open');
-  navToggle.classList.toggle('active');
+  setNavOpen(!navLinks.classList.contains('open'));
 });
 
 navLinks.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    navLinks.classList.remove('open');
-    navToggle.classList.remove('active');
-  });
+  link.addEventListener('click', () => setNavOpen(false));
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && navLinks.classList.contains('open')) setNavOpen(false);
 });
 
 // ===========================
@@ -564,39 +571,74 @@ document.addEventListener('touchstart', () => {}, { passive: true });
 // ===========================
 // CTAs lean toward the cursor while hovered. Uses the standalone `translate`
 // property so it never fights the existing :hover `transform` on .btn.
+// Motion is a real spring per axis (Apple's damping/response model): it always
+// continues from the live position and velocity, so it can be re-grabbed
+// mid-flight. Critically damped while tracking the cursor; on leave the button
+// is released with the momentum it has, so it springs home with a small bounce.
 (function () {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
 
-  const STRENGTH = 0.3;
-  const EASE = 0.18;
+  const STRENGTH = 0.35;
+  const RESPONSE = 0.35;        // seconds — how quickly it reaches the target
+  const TRACK_DAMPING = 1.0;    // no overshoot while following the cursor
+  const RELEASE_DAMPING = 0.6;  // springy return once let go
+  const K = Math.pow(2 * Math.PI / RESPONSE, 2);
+
   const items = Array.from(document.querySelectorAll('.btn, .nav-cta')).map(el => ({
-    el, x: 0, y: 0, tx: 0, ty: 0,
+    el, x: 0, y: 0, vx: 0, vy: 0, tx: 0, ty: 0, damping: TRACK_DAMPING,
   }));
   if (!items.length) return;
+
+  let running = false;
+  let last = 0;
 
   items.forEach(item => {
     item.el.addEventListener('mousemove', (e) => {
       const r = item.el.getBoundingClientRect();
-      item.tx = (e.clientX - (r.left + r.width / 2)) * STRENGTH;
-      item.ty = (e.clientY - (r.top + r.height / 2)) * STRENGTH;
+      // r includes the current translate; subtract it so the target is
+      // measured from the button's resting centre
+      item.tx = (e.clientX - (r.left - item.x + r.width / 2)) * STRENGTH;
+      item.ty = (e.clientY - (r.top - item.y + r.height / 2)) * STRENGTH;
+      item.damping = TRACK_DAMPING;
+      wake();
     });
-    item.el.addEventListener('mouseleave', () => { item.tx = 0; item.ty = 0; });
+    item.el.addEventListener('mouseleave', () => {
+      item.tx = 0; item.ty = 0;
+      item.damping = RELEASE_DAMPING;
+      wake();
+    });
   });
 
-  function tick() {
-    items.forEach(item => {
-      item.x += (item.tx - item.x) * EASE;
-      item.y += (item.ty - item.y) * EASE;
-      if (Math.abs(item.x) < 0.05 && Math.abs(item.y) < 0.05 && !item.tx && !item.ty) {
-        if (item.el.style.translate) item.el.style.translate = '';
-        return;
-      }
-      item.el.style.translate = `${item.x.toFixed(2)}px ${item.y.toFixed(2)}px`;
-    });
+  function wake() {
+    if (running) return;
+    running = true;
+    last = performance.now();
     requestAnimationFrame(tick);
   }
-  requestAnimationFrame(tick);
+
+  function tick(now) {
+    const dt = Math.min((now - last) / 1000, 1 / 30);
+    last = now;
+    let active = false;
+    items.forEach(item => {
+      const c = 4 * Math.PI * item.damping / RESPONSE;
+      item.vx += (K * (item.tx - item.x) - c * item.vx) * dt;
+      item.vy += (K * (item.ty - item.y) - c * item.vy) * dt;
+      item.x += item.vx * dt;
+      item.y += item.vy * dt;
+      const settled = Math.abs(item.tx - item.x) < 0.05 && Math.abs(item.ty - item.y) < 0.05 &&
+        Math.abs(item.vx) < 1 && Math.abs(item.vy) < 1;
+      if (settled) {
+        item.x = item.tx; item.y = item.ty; item.vx = 0; item.vy = 0;
+      } else {
+        active = true;
+      }
+      item.el.style.translate = item.x || item.y ? `${item.x.toFixed(2)}px ${item.y.toFixed(2)}px` : '';
+    });
+    if (active) requestAnimationFrame(tick);
+    else running = false;
+  }
 })();
 
 // ===========================

@@ -48,9 +48,13 @@ other blocks.
 `main.page` (z-index 1, opaque, `clip-path: inset(0)` so its fixed dot field / page tone are clipped to
 it) scrolls over `footer.site-end`, which is `position: sticky; bottom: 0` behind it (`.is-curtain`,
 only when the footer fits the screen; on phones the long form makes it taller, so it just flows).
-The footer: the wave (`images/webp/footer-waves.webp`, 1600px RGBA <100KB from Michael's PNG, softened
-with a 3px blur), Michael's logo huge in one color (`.site-end-logo`: accent fill masked by
-`logo-full.svg`, `mix-blend-mode: soft-light`) behind the contact form, then the footer bar.
+The page's bottom corners are rounded (`clip-path: inset(0 round …)`) and `.page-lip` (a sibling,
+since the clip would cut a box-shadow) casts a soft shadow on the footer. The footer: the wave
+(`images/webp/footer-waves.webp`, 1600px RGBA <100KB from Michael's PNG) blurred 28px like the process
+windows' waves (so the source's aliasing never shows), Michael's logo huge in one color
+(`.site-end-logo`: accent fill masked by `logo-full.svg`, `mix-blend-mode: soft-light`) as the lowest
+layer, edge to edge along the bottom, with a light band sweeping through it on a 7s loop; above it
+the compact contact block (no photo; Michael removed it) and the footer bar.
 `#contact` is an empty `.page-end` marker at the end of `<main>`; scrolling to it slides the page
 off the footer. JS that looks for page sections must query `main.page > section`.
 
@@ -108,10 +112,9 @@ so they render above it. Section backgrounds use semi-transparent colors
 - Wave marquee (`.wave`, "WAVE MARQUEE — SCROLL-DRIVEN" in `script.js`): the section is pinned
   (`position: sticky`) while one giant line travels across it, mirrored for Hebrew (sentence start
   enters first, moving left → right); each letter/tile rides a sine wave fixed in screen space.
-  The section's height is set in JS from the track width. The white background is a
-  `clip-path: circle()` on `.wave-sticky` that grows from the center to fill the screen at the
-  start of the pin and shrinks away at the end (`--wave-r`). Without JS / under reduced motion it
-  renders as static centered text on a plain white band.
+  The section's height is set in JS from the track width. The pinned screen is solid brand cyan
+  edge to edge (no opening white circle; Michael removed it) with brand-navy text and navy tiles.
+  Without JS / under reduced motion it renders as static centered text on the cyan band.
 - `.edge-blur` — fixed progressive backdrop blur along the bottom of the viewport (height via
   `--edge-blur-h`, 8vh), stacked masked layers with doubling blur.
 - Motion: magnetic `.btn`/`.nav-cta` (uses the standalone `translate` property so it doesn't
@@ -213,6 +216,11 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
 - Testimonial cards follow the page theme: solid navy layer in dark, white with navy text on the grey
   page (Michael disliked dark cards on grey). No per-card backdrop blur.
 - The contact section now lives inside `footer.site-end` (see Curtain footer).
+- FAQ is full screen (`min-height: 100svh`, content centered).
+- WhatsApp sheet body uses WhatsApp's own light wallpaper: cream `#EFEAE2` + `images/wa-doodles.svg`
+  (generated tile of 25 scattered line doodles).
+- `.mcp.json` registers the shadcn MCP server (`npx shadcn@latest mcp`) for component inspiration;
+  it is not a dependency of the site (no package.json on purpose).
 - Contact form is deliberately minimal: no card/frame, underlined transparent fields in a
   2-column grid (`.form-group--wide` spans both).
 

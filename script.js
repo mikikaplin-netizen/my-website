@@ -1177,21 +1177,17 @@ document.addEventListener('touchstart', () => {}, { passive: true });
   // short relative to scroll distance and would otherwise fly past
   const travelSpeed = () => (window.innerWidth < 768 ? 0.45 : 0.9);
   // Pinned-scroll timeline (q = 0 → 1 while the section is stuck):
-  //   0    → 0.15  white circle grows from the center to fill the screen
-  //   0.08 → 0.92  the line travels across
-  //   0.85 → 1     circle shrinks away, back to the dark page
-  const GROW_END = 0.15, TRAVEL_START = 0.08, TRAVEL_END = 0.92, SHRINK_START = 0.85;
-  let vw = 0, vh = 0, trackW = 0, amp = 0, maxR = 0, ticking = false;
+  //   0.08 → 0.92  the line travels across the pinned cyan screen
+  const TRAVEL_START = 0.08, TRAVEL_END = 0.92;
+  let vw = 0, vh = 0, trackW = 0, amp = 0, ticking = false;
 
   const clamp01 = v => Math.max(0, Math.min(1, v));
-  const easeInOut = t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
   function measure() {
     vw = window.innerWidth;
     vh = window.innerHeight;
     trackW = track.scrollWidth;
     amp = parseFloat(getComputedStyle(track).fontSize) * 0.32;
-    maxR = Math.hypot(vw, vh) / 2 + 4;
     items.forEach(it => { it.cx = it.el.offsetLeft + it.el.offsetWidth / 2; });
     // wave chars sit inside .wave-word, whose offsetParent is still the
     // (absolutely positioned) track, so offsetLeft is track-relative
@@ -1205,10 +1201,6 @@ document.addEventListener('touchstart', () => {}, { passive: true });
     ticking = false;
     const r = section.getBoundingClientRect();
     const q = clamp01(-r.top / (r.height - vh));
-
-    const grow = easeInOut(clamp01(q / GROW_END));
-    const shrink = easeInOut(clamp01((q - SHRINK_START) / (1 - SHRINK_START)));
-    sticky.style.setProperty('--wave-r', `${(maxR * grow * (1 - shrink)).toFixed(1)}px`);
 
     const p = clamp01((q - TRAVEL_START) / (TRAVEL_END - TRAVEL_START));
     const x = -trackW + p * (trackW + vw);

@@ -42,7 +42,6 @@
   --border: rgba(255,255,255,0.08);
   --accent: #64C1D2;
   --accent-2: #1CD31C;
-  --blue: #1E40C8;          /* deep blue for text on light (white) bands */
   --accent-glow: rgba(100,193,210,0.18);
   --text: #ffffff;
   --text-muted: rgba(255,255,255,0.62);
@@ -797,7 +796,7 @@ html.theme-light .navbar::after {
   padding: 12vh 0;
   overflow: hidden;
   /* light "break" band before contact */
-  background: #fff;
+  background: var(--accent);   /* brand cyan band */
 }
 
 .wave-track {
@@ -811,7 +810,7 @@ html.theme-light .navbar::after {
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.01em;
-  color: var(--blue);
+  color: var(--ink);             /* brand navy on the cyan band */
 }
 
 .wave-word { white-space: nowrap; }
@@ -836,7 +835,7 @@ html.theme-light .navbar::after {
 }
 
 .wave-tile--cyan {
-  background: var(--accent);
+  background: var(--bg);          /* navy tile: a cyan one would vanish on the cyan band */
   box-shadow: 0 10px 30px rgba(16,16,36,0.18);
 }
 
@@ -845,6 +844,7 @@ html.theme-light .navbar::after {
   height: 52%;
   fill: var(--bg);
 }
+.wave-tile--cyan svg { fill: var(--accent); }
 
 .wave-tile--photo img {
   width: 100%;
@@ -859,16 +859,13 @@ html.theme-light .navbar::after {
   background: transparent;
 }
 
-/* the white "screen" is a circle that grows from the center to fill the
-   viewport, holds while the line travels, then shrinks away (--wave-r is
-   driven by script.js) */
+/* the pinned screen is solid brand cyan, edge to edge (no opening circle) */
 .wave--on .wave-sticky {
   position: sticky;
   top: 0;
   height: 100vh;
   overflow: hidden;
-  background: #fff;
-  clip-path: circle(var(--wave-r, 0px) at 50% 50%);
+  background: var(--accent);
 }
 
 .wave--on .wave-track {
@@ -2008,6 +2005,14 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
    the left. The window is its own solid dark device in any color zone.
    Visitor questions: right, brand-cyan bubbles; Michael's answers: left,
    soft glass bubbles. Suggestion chips play each exchange out (JS). */
+.faq {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .faq-layout {
   display: grid;
   grid-template-columns: minmax(240px, 0.8fr) 2fr;
@@ -2236,38 +2241,8 @@ html.theme-light .faq-chip:not([disabled]) { color: var(--ink); border-color: va
 
 @media (hover: hover) and (pointer: fine) { .contact-details a:hover { color: var(--accent-2); } }
 
-.contact-image-wrap {
-  position: relative;
-  margin-top: 32px;
-}
 
-.contact-photo {
-  width: 100%;
-  max-width: 260px;
-  aspect-ratio: 1;
-  height: auto;
-  border-radius: var(--radius-lg);
-  object-fit: cover;
-  object-position: 50% 8%;
-  background: var(--bg-3);
-  box-shadow: var(--shadow), var(--glow);
-}
 
-.contact-quote {
-  position: absolute;
-  bottom: -12px;
-  left: -12px;
-  background: var(--bg-3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px 20px;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--accent-2);
-  line-height: 1.6;
-  max-width: 220px;
-  box-shadow: var(--shadow);
-}
 
 /* FORM — minimal: no card, just underlined fields on the page */
 .contact-form {
@@ -2579,11 +2554,32 @@ main.page {
   position: relative;
   z-index: 1;
   background: var(--bg);
-  clip-path: inset(0);
-  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  /* rounded bottom corners: the footer shows through them as it's revealed */
+  clip-path: inset(0 round 0 0 var(--page-r) var(--page-r));
+  --page-r: clamp(28px, 4vw, 56px);
 }
 
 .page-end { height: 0; }
+
+/* the page's soft shadow, cast on the footer right under its rounded edge
+   (main's clip-path would cut a box-shadow, so it lives on this sibling) */
+.page-lip {
+  position: relative;
+  z-index: 1;
+  height: 0;
+  pointer-events: none;
+}
+
+.page-lip::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 80px;
+  border-radius: 0 0 clamp(28px, 4vw, 56px) clamp(28px, 4vw, 56px);
+  box-shadow: 0 22px 46px -14px rgba(0,0,0,0.55);
+}
 
 .site-end {
   position: relative;
@@ -2609,30 +2605,65 @@ main.page {
   height: 100%;
   object-fit: cover;
   object-position: 50% 60%;
-  opacity: 0.85;
-  filter: blur(3px);          /* the source edges are aliased; soften at full-screen size */
-  transform: scale(1.03);     /* hide the blurred outer edge */
+  opacity: 0.9;
+  /* same treatment as the process windows' waves (13.7px blur on a 560px
+     window ≈ 2.4% of its width): soft enough that the source's aliased
+     edges disappear at full-screen size */
+  filter: blur(28px);
+  transform: scale(1.12);     /* push the blurred outer edge off screen */
   pointer-events: none;
 }
 
-/* Michael's logo, huge, in one color, blended into the wave behind the form */
+/* Michael's logo, huge, in one color, blended into the wave: the lowest
+   layer, edge to edge along the bottom, with all the content above it.
+   A soft band of light sweeps through the letters on a loop. */
 .site-end-logo {
   position: absolute;
   z-index: -1;
-  left: 50%;
-  top: 50%;
-  width: 96vw;
+  left: 0;
+  right: 0;
+  bottom: 0;
   aspect-ratio: 417.45 / 104.17;
-  translate: -50% -50%;
+  overflow: hidden;
   background: var(--accent);
-  -webkit-mask: url(images/logo-full.svg) center / contain no-repeat;
-          mask: url(images/logo-full.svg) center / contain no-repeat;
+  -webkit-mask: url(images/logo-full.svg) center bottom / 100% auto no-repeat;
+          mask: url(images/logo-full.svg) center bottom / 100% auto no-repeat;
   mix-blend-mode: soft-light;
-  opacity: 0.9;
+  opacity: 0.95;
   pointer-events: none;
 }
 
-.site-end .contact { background: transparent; }
+.site-end-logo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 60%;
+  background: linear-gradient(100deg, transparent 0%, rgba(255,255,255,0.9) 50%, transparent 100%);
+  transform: translateX(-120%);
+  animation: logoSweep 7s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+}
+
+@keyframes logoSweep {
+  0%   { transform: translateX(-120%); }
+  55%  { transform: translateX(260%); }
+  100% { transform: translateX(260%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-end-logo::before { animation: none; display: none; }
+}
+
+/* compact contact block: no photo, smaller fields, the form narrower */
+.site-end .contact { padding-bottom: clamp(56px, 12vw, 200px); }
+@media (min-width: 901px) {
+  .site-end .contact-wrapper { grid-template-columns: 1fr minmax(0, 520px); gap: clamp(40px, 6vw, 96px); align-items: end; }
+}
+.site-end .form-group { margin-bottom: 20px; }
+.site-end .form-group input,
+.site-end .form-group textarea { font-size: 1rem; padding: 8px 0 9px; padding-left: 28px; }
+.site-end .contact-form .btn { justify-self: start; }
+
+.site-end .contact { background: transparent; padding-top: clamp(72px, 9vh, 104px); }
 .site-end .contact-form input,
 .site-end .contact-form textarea { background: transparent; }
 
@@ -3054,8 +3085,8 @@ main.page {
 }
 
 .wa-body {
-  background: #0b141a;
-  background-image: linear-gradient(rgba(11,20,26,0.92), rgba(11,20,26,0.92));
+  /* WhatsApp's own light chat wallpaper: cream with scattered doodles */
+  background: #EFEAE2 url(images/wa-doodles.svg) 0 0 / 260px 260px repeat;
   padding: 22px 16px;
   min-height: 120px;
   display: flex;

@@ -1986,31 +1986,59 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
 
 .laptop { width: 100%; position: relative; z-index: 1; }
 
+/* MacBook-style: black glass bezel (thin, a touch deeper at the chin),
+   a camera notch, an aluminium rim and a soft glare across the glass */
 .laptop-lid {
-  padding: 2.2% 2.2% 3.2%;
-  border-radius: 18px 18px 6px 6px;
-  background: linear-gradient(180deg, #1c1e3a, #0d0e1c);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.09), inset 0 1px 0 rgba(255,255,255,0.14),
-              0 30px 60px -30px rgba(0,0,0,0.7);
+  position: relative;
+  padding: 1.7% 1.7% 2.5%;
+  border-radius: 16px 16px 5px 5px;
+  background: #07070c;
+  box-shadow:
+    0 0 0 1.5px #3d4054,
+    0 0 0 2.5px #15162a,
+    inset 0 0 0 1px rgba(255,255,255,0.05),
+    0 40px 80px -34px rgba(0,0,0,0.8);
+}
+
+.laptop-lid::after {        /* camera notch */
+  content: '';
+  position: absolute;
+  top: 1.7%;
+  left: 50%;
+  width: 8.5%;
+  height: 3.4%;
+  translate: -50% 0;
+  border-radius: 0 0 6px 6px;
+  background: radial-gradient(circle at 50% 42%, #1c2340 0 9%, #0d1020 10% 16%, #07070c 18%);
+  z-index: 3;
 }
 
 .laptop-screen {
   position: relative;
   aspect-ratio: 1280 / 690;   /* the screen recordings' own ratio */
   overflow: hidden;
-  border-radius: 4px;
+  border-radius: 3px;
   background: #05060d;
 }
 
-/* the hinge + thin base, slightly wider than the lid */
+.laptop-screen::after {     /* glass glare */
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(118deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.03) 30%, rgba(255,255,255,0) 31%);
+}
+
+/* the deck: a thin aluminium wedge, wider than the lid */
 .laptop-base {
   position: relative;
-  width: 114%;
-  margin-left: -7%;
-  height: clamp(10px, 1.05vw, 16px);
-  border-radius: 2px 2px 16px 16px / 2px 2px 100% 100%;
-  background: linear-gradient(180deg, #4a4e74 0%, #262947 45%, #14162e 100%);
-  box-shadow: 0 14px 22px -10px rgba(0,0,0,0.6);
+  width: 118%;
+  margin-left: -9%;
+  height: clamp(9px, 0.95vw, 14px);
+  border-radius: 1px 1px 18px 18px / 1px 1px 100% 100%;
+  background: linear-gradient(180deg, #a7aabd 0%, #686b82 16%, #34374d 55%, #17182b 100%);
+  box-shadow: 0 16px 24px -12px rgba(0,0,0,0.65);
 }
 
 .laptop-base::before {      /* thumb notch */
@@ -2018,11 +2046,11 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
   position: absolute;
   top: 0;
   left: 50%;
-  width: 14%;
-  height: 40%;
+  width: 13%;
+  height: 42%;
   translate: -50% 0;
-  border-radius: 0 0 8px 8px;
-  background: rgba(0,0,0,0.35);
+  border-radius: 0 0 9px 9px;
+  background: linear-gradient(180deg, #2a2c40, #4a4d63);
 }
 
 /* the podium: one color (brand cyan) played through tones */

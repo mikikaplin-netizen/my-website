@@ -124,8 +124,8 @@ so they render above it. Section backgrounds use semi-transparent colors
   `--edge-blur-h`, 8vh), stacked masked layers with doubling blur.
 - Motion: magnetic `.btn`/`.nav-cta` (uses the standalone `translate` property so it doesn't
   clash with hover `transform`), hero photo parallax.
-- Portfolio (`.work`, "PORTFOLIO — HOVER-REVEAL LIST + LAPTOP STAND"): 6 projects (שמעוני, תמר בניאל,
-  ישראל זיסקינד, לשכת הטוענים הרבניים, WST, אלתר ספרים) in compact full-bleed rows split by a fixed
+- Portfolio (`.work`, "PORTFOLIO — HOVER-REVEAL LIST + LAPTOP STAND"): 5 projects (שמעוני, תמר בניאל,
+  ישראל זיסקינד, לשכת הטוענים הרבניים, WST; Michael dropped אלתר ספרים) in compact full-bleed rows split by a fixed
   hairline in brand blue at 50%, followed by a "לכל הפרויקטים" `.btn-ghost` (`.work-more`) linking to
   the future `projects.html`; name in brand blue at 50% (`data-text` copy in white wipes in from the
   right when active, nothing in the row moves), description always shown, field/year; no numbers or
@@ -137,7 +137,10 @@ so they render above it. Section backgrounds use semi-transparent colors
   Recordings: `images/portfolio/{shimony,tamar-baniel,ziskind}.mp4` (1280×690 = the recordings' own
   ratio, which the laptop screen matches; 30fps, h264 crf 30, faststart, no audio, 1.3–2MB; a VP9 `.webm` fallback only
   loads where H.264 can't play, e.g. Playwright's Chromium) + `NAME-poster.webp` (`.work-poster`, shown in the laptop and the mobile thumb).
-  Michael's raw .mov files (2878×1552, 60fps) live in his Google Drive folder.
+  Michael's raw .mov files (2878×1552, 60fps) live in his Google Drive folder; their openings are
+  trimmed (he hit record before loading the site): shimony from 7s, ziskind from 4.8s (just before
+  the reload's headline entrance). The laptop is MacBook-style: black bezel, camera notch, aluminium
+  rim, glass glare, wedge deck.
   Touch screens hide the stand, activate the mid-viewport row and show each row's `.work-thumb` inline.
 
 **Mobile tab bar** (`#tabbar`, ≤768px only — replaces the hamburger, which is hidden there): a

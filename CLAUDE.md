@@ -153,7 +153,7 @@ so they render above it. Section backgrounds use semi-transparent colors
   turned toward the list (Michael's ask: it "looks at the list"). `.laptop-art` is laid out at the
   photo's px and scaled by JS (`--lap-s`); `.laptop-screen` (1280×800 `.laptop-view`, no browser bar: Michael removed it) is mapped onto the photo's screen corners with a fixed `matrix3d` (homography; redo
   it if the image changes). Recordings fill the view (`object-fit: fill`, a squeeze instead of
-  cropping the sites' edge logos); the podium is pulled up 2vh under the laptop so its top edge hides; a soft diagonal glare sits on the glass.
+  cropping the sites' edge logos); the podium has no visible top face and is pulled up 10.8% of the width so its top edge sits behind the laptop's lowest outline (measured from the photo's alpha), so the laptop reads as resting on it, not floating; a soft diagonal glare sits on the glass.
   Touch screens hide the stand, activate the mid-viewport row and show each row's `.work-thumb` inline.
 
 **Mobile tab bar** (`#tabbar`, ≤768px only — replaces the hamburger, which is hidden there): a

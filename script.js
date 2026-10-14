@@ -1170,9 +1170,9 @@ document.addEventListener('touchstart', () => {}, { passive: true });
 // ===========================
 // HERO — LIVE PORTRAIT
 // ===========================
-// A short clip of the hero photo breathing and blinking, laid over the
-// photo. It plays once, holds its last frame (= its first) for a random
-// pause, then plays again, so the blinks never fall into a visible rhythm.
+// A short clip of the hero photo blinking once, laid over the photo. It
+// plays once, holds its last frame (= its first) for a random pause, then
+// plays again, so blinks come every ~4.5-7.5s with no visible rhythm.
 // Loaded only when the photo is shown (desktop) and never under reduced
 // motion; paused while the hero is off screen.
 (function () {
@@ -1198,7 +1198,7 @@ document.addEventListener('touchstart', () => {}, { passive: true });
     v.addEventListener('playing', () => v.classList.add('is-live'), { once: true });
     v.addEventListener('ended', () => {
       timer = setTimeout(() => { timer = 0; v.currentTime = 0; if (onScreen) v.play().catch(() => {}); },
-        1200 + Math.random() * 3800);
+        1500 + Math.random() * 3000);
     });
     if (onScreen) v.play().catch(() => {});
   }

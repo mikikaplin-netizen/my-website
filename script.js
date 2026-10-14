@@ -1696,31 +1696,53 @@ document.addEventListener('touchstart', () => {}, { passive: true });
 })();
 
 // ===========================
-// CLIENTS — LOGO MARQUEE
+// CLIENTS — SCROLL-LINKED ROWS
 // ===========================
-// Fill each row with copies of its logos until one copy is wider than the
-// screen, then duplicate it so the CSS translateX(-50%) loop is seamless.
-// Both rows move at the same px/s. Reduced motion: CSS shows them static.
+// Each row slides sideways only as the page scrolls (direction and speed
+// from data-dir / data-speed), centered when the section is mid-screen.
+// The row doesn't follow the scroll 1:1: it eases toward its target every
+// frame (a soft lerp), which is what makes the motion feel calm. Each track
+// is cloned once so there is always logo beyond both edges. Reduced
+// motion: CSS shows one static, wrapped row.
 (function () {
-  const tracks = document.querySelectorAll('.cl-track');
-  if (!tracks.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const PX_PER_SEC = 45;
-  tracks.forEach(track => {
-    const base = Array.from(track.children);
-    const cloneSet = () => base.forEach(li => {
+  const section = document.querySelector('.clients');
+  const rows = section ? Array.from(section.querySelectorAll('.cl-row')) : [];
+  if (!rows.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const state = rows.map(row => {
+    const track = row.querySelector('.cl-track');
+    Array.from(track.children).forEach(li => {
       const c = li.cloneNode(true);
       c.setAttribute('aria-hidden', 'true');
       track.appendChild(c);
     });
-    let guard = 0;
-    while (track.scrollWidth < window.innerWidth * 1.2 && guard++ < 4) cloneSet();
-    Array.from(track.children).forEach(li => {           // second half for the loop
-      const c = li.cloneNode(true);
-      c.setAttribute('aria-hidden', 'true');
-      track.appendChild(c);
-    });
-    const setDur = () => track.style.setProperty('--cl-dur', (track.scrollWidth / 2 / PX_PER_SEC).toFixed(1) + 's');
-    setDur();
-    window.addEventListener('resize', setDur);
+    return { track, dir: Number(row.dataset.dir) || 1, speed: Number(row.dataset.speed) || 0.3, x: null, base: 0 };
   });
+
+  let raf = 0;
+  const measure = () => state.forEach(s => { s.base = -(s.track.scrollWidth - window.innerWidth) / 2; });
+  const target = s => {
+    const r = section.getBoundingClientRect();
+    const fromCenter = (r.top + r.height / 2) - window.innerHeight / 2;   // 0 when mid-screen
+    const limit = (s.track.scrollWidth - window.innerWidth) / 2 - 40;
+    return s.base + Math.max(-limit, Math.min(limit, -fromCenter * s.speed * s.dir));
+  };
+  const frame = () => {
+    raf = 0;
+    let moving = false;
+    state.forEach(s => {
+      const t = target(s);
+      if (s.x === null) s.x = t;
+      s.x += (t - s.x) * 0.08;                                  // ease after the scroll
+      if (Math.abs(t - s.x) > 0.2) moving = true; else s.x = t;
+      s.track.style.transform = `translate3d(${s.x.toFixed(2)}px, 0, 0)`;
+    });
+    if (moving) raf = requestAnimationFrame(frame);
+  };
+  const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+
+  measure();
+  frame();
+  window.addEventListener('scroll', kick, { passive: true });
+  window.addEventListener('resize', () => { measure(); kick(); });
 })();

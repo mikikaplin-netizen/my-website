@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=43" />
+  <link rel="stylesheet" href="style.css?v=44" />
 </head>
 <body>
 
@@ -93,11 +93,12 @@
     </div>
   </section>
 
-  <!-- CLIENTS — two full-bleed rows of client logos (from mkaplin.com) running
-       in opposite directions; script.js fills each track and loops it -->
+  <!-- CLIENTS — three full-bleed rows of client logos (from mkaplin.com) that
+       glide sideways with the page scroll, alternating directions, each
+       easing after the scroll ("CLIENTS — SCROLL-LINKED ROWS") -->
   <section class="tone-light clients" aria-label="עסקים שעבדו איתי">
     <div class="clients-marquee">
-      <div class="cl-row">
+      <div class="cl-row" data-dir="1" data-speed="0.28">
         <ul class="cl-track">
           <li><img src="images/clients/wst.webp" alt="WST" width="135" height="85" loading="lazy" /></li>
           <li><img src="images/clients/alter.webp" alt="אלתר ספרים" width="182" height="63" loading="lazy" /></li>
@@ -116,7 +117,7 @@
           <li><img src="images/clients/tamar-baniel.webp" alt="תמר בניאל" width="96" height="88" loading="lazy" /></li>
         </ul>
       </div>
-      <div class="cl-row cl-row--rev" aria-hidden="true">
+      <div class="cl-row" aria-hidden="true" data-dir="-1" data-speed="0.4">
         <ul class="cl-track">
           <li><img src="images/clients/lishkat-hatoanim.webp" alt="לשכת הטוענים הרבניים" width="177" height="65" loading="lazy" /></li>
           <li><img src="images/clients/dimri-investments.webp" alt="דימרי השקעות" width="66" height="88" loading="lazy" /></li>
@@ -133,6 +134,25 @@
           <li><img src="images/clients/birnbaum-dimentman.webp" alt="בירנבאום דימנטמן, משרד עורכי דין" width="211" height="54" loading="lazy" /></li>
           <li><img src="images/clients/lidor-barel.webp" alt="לידור בראל" width="230" height="44" loading="lazy" /></li>
           <li><img src="images/clients/wolfeld-group.webp" alt="קבוצת וולפלד" width="226" height="51" loading="lazy" /></li>
+        </ul>
+      </div>
+      <div class="cl-row" aria-hidden="true" data-dir="1" data-speed="0.22">
+        <ul class="cl-track">
+          <li><img src="images/clients/karta.webp" alt="קרתא" width="184" height="62" loading="lazy" /></li>
+          <li><img src="images/clients/lidor-barel.webp" alt="לידור בראל" width="230" height="44" loading="lazy" /></li>
+          <li><img src="images/clients/wst.webp" alt="WST" width="135" height="85" loading="lazy" /></li>
+          <li><img src="images/clients/tevua.webp" alt="תבואה השקעות נדל&quot;ן" width="146" height="78" loading="lazy" /></li>
+          <li><img src="images/clients/chinuch-labina.webp" alt="חינוך לבינה" width="146" height="78" loading="lazy" /></li>
+          <li><img src="images/clients/birnbaum-dimentman.webp" alt="בירנבאום דימנטמן, משרד עורכי דין" width="211" height="54" loading="lazy" /></li>
+          <li><img src="images/clients/tamar-baniel.webp" alt="תמר בניאל" width="96" height="88" loading="lazy" /></li>
+          <li><img src="images/clients/lechatchila.webp" alt="לכתחילה" width="161" height="71" loading="lazy" /></li>
+          <li><img src="images/clients/alter.webp" alt="אלתר ספרים" width="182" height="63" loading="lazy" /></li>
+          <li><img src="images/clients/wolfeld-group.webp" alt="קבוצת וולפלד" width="226" height="51" loading="lazy" /></li>
+          <li><img src="images/clients/yoter-nadlan.webp" alt="יותר נדל&quot;ן משכל" width="191" height="60" loading="lazy" /></li>
+          <li><img src="images/clients/shimony.webp" alt="Shimony House of Finance" width="188" height="61" loading="lazy" /></li>
+          <li><img src="images/clients/dimri-investments.webp" alt="דימרי השקעות" width="66" height="88" loading="lazy" /></li>
+          <li><img src="images/clients/israel-ziskind.webp" alt="עו&quot;ד ישראל זיסקינד" width="230" height="28" loading="lazy" /></li>
+          <li><img src="images/clients/lishkat-hatoanim.webp" alt="לשכת הטוענים הרבניים" width="177" height="65" loading="lazy" /></li>
         </ul>
       </div>
     </div>
@@ -696,20 +716,20 @@
 
           <form class="contact-form" id="contactForm" novalidate>
             <div class="form-group">
-              <label for="name">שם מלא</label>
-              <input type="text" id="name" name="name" placeholder="השם שלך" autocomplete="name" enterkeyhint="next" required />
+              <label for="name" class="sr-only">שם מלא</label>
+              <input type="text" id="name" name="name" placeholder="שם מלא" autocomplete="name" enterkeyhint="next" required />
             </div>
             <div class="form-group">
-              <label for="email">אימייל</label>
-              <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" required />
+              <label for="email" class="sr-only">אימייל</label>
+              <input type="email" id="email" name="email" placeholder="אימייל" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" required />
             </div>
             <div class="form-group form-group--wide">
-              <label for="phone">טלפון (אופציונלי)</label>
-              <input type="tel" id="phone" name="phone" placeholder="05X-XXXXXXX" inputmode="tel" autocomplete="tel" enterkeyhint="next" />
+              <label for="phone" class="sr-only">טלפון (אופציונלי)</label>
+              <input type="tel" id="phone" name="phone" placeholder="טלפון (אופציונלי)" inputmode="tel" autocomplete="tel" enterkeyhint="next" />
             </div>
             <div class="form-group form-group--wide">
-              <label for="message">ספרו לי על הפרויקט</label>
-              <textarea id="message" name="message" rows="3" placeholder="מה אתם בונים? מה המטרה? כל פרט עוזר..." required></textarea>
+              <label for="message" class="sr-only">ספרו לי על הפרויקט</label>
+              <textarea id="message" name="message" rows="3" placeholder="ספרו לי על הפרויקט" required></textarea>
             </div>
             <button type="submit" class="btn btn-primary">שליחת הודעה</button>
             <p class="form-note">אחזור אליכם תוך יום עסקים ✓</p>
@@ -791,6 +811,6 @@
     </button>
   </div>
 
-  <script src="script.js?v=43"></script>
+  <script src="script.js?v=44"></script>
 </body>
 </html>

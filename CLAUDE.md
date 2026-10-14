@@ -211,9 +211,12 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
 - Clients (`.clients`, 3rd section, light zone, right before the portfolio, no heading on purpose): logo wall of the 15
   grey client logos from mkaplin.com (`images/clients/`, sized by area so wide/tall marks weigh the
   same) logo marquee.
-  Now two full-bleed rows running in opposite directions ("CLIENTS — LOGO MARQUEE" clones each
-  track to overfill the screen and loop; hover pauses a row). A cell-swap wall was tried and dropped:
-  Michael didn't notice the swaps; continuous motion reads as "many".
+  Now three full-bleed rows (each all 15 logos, different order, smaller marks so many show) that
+  move only with the page scroll, sideways, alternating direction (`data-dir`) at slightly different
+  speeds (`data-speed`), centered when the section is mid-screen; each row eases after the scroll
+  (lerp 0.08/frame) for a calm, elegant feel ("CLIENTS — SCROLL-LINKED ROWS"). Michael wants "many
+  logos, gentle elegant motion on scroll" and is still deciding on the style; tried and dropped: a
+  cell-swap wall (swaps went unnoticed) and auto-running marquee rows ("not special").
 - About (`.about`) is full screen (`min-height: 100svh`): photo + story, then `.about-stats`, a
   full-width band of oversized thin numerals (+5 / +30 / 100%) split by hairlines; "ABOUT — COUNT-UP
   NUMBERS" counts them up once half in view (final values live in the markup).
@@ -233,7 +236,10 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
 - `.mcp.json` registers the shadcn MCP server (`npx shadcn@latest mcp`) for component inspiration;
   it is not a dependency of the site (no package.json on purpose).
 - Contact form is deliberately minimal: no card/frame, underlined transparent fields in a
-  2-column grid (`.form-group--wide` spans both).
+  2-column grid (`.form-group--wide` spans both). No visible labels: the placeholder carries the
+  field name (labels stay for screen readers via `.sr-only`). In the footer the wave video is
+  shifted down so its dark crease runs under the form, and a soft navy radial pad
+  (`.site-end::before`) sits behind the form for legibility.
 
 ## Git workflow used in this repo
 

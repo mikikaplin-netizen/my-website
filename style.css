@@ -870,6 +870,8 @@ html.theme-light .navbar::after {
 .wave {
   padding: 12vh 0;
   overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, #000 80%, transparent 100%);
+          mask-image: linear-gradient(180deg, #000 80%, transparent 100%);
   /* light "break" band before contact */
   background: var(--bg);       /* brand navy band */
 }
@@ -940,6 +942,10 @@ html.theme-light .navbar::after {
   height: 100vh;
   overflow: hidden;
   background: var(--bg);
+  /* the bottom dissolves into the page, so leaving the band never draws a
+     straight edge across the grey testimonials (Michael) */
+  -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
+          mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
 }
 
 .wave--on .wave-track {
@@ -1980,13 +1986,6 @@ html.theme-light .craft-visual { background: #F1F2F5; }
   text-align: right;
 }
 
-.craft-v-copy s {
-  font-size: 1rem;
-  color: var(--text-muted);
-  text-decoration-color: var(--accent);
-  text-decoration-thickness: 2px;
-}
-
 .craft-copy-new {
   font-family: var(--font-display);
   font-weight: 700;
@@ -2103,6 +2102,116 @@ html.theme-light .craft-visual { background: #F1F2F5; }
 @keyframes craftCursor {
   0%, 100% { translate: 28px 22px; }
   45%, 70% { translate: 0 0; }
+}
+
+/* idle motion: every card breathes very gently once revealed (.visible);
+   slow, small, compositor-friendly, and off under reduced motion */
+.craft-copy-old {
+  font-size: 1rem;
+  color: var(--text-muted);
+  background: linear-gradient(var(--accent), var(--accent)) no-repeat 100% 58% / 100% 2px;
+}
+
+.craft-v-diff span.is-you { position: relative; }
+
+.craft-v-diff span.is-you::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--accent-2);
+  opacity: 0;
+}
+
+.craft-v-type::before,
+.craft-v-type::after {            /* type guides: baseline and cap height */
+  content: '';
+  position: absolute;
+  left: 50%;
+  right: 6%;
+  height: 1px;
+  background: var(--accent);
+  opacity: 0.55;
+  transform-origin: 100% 50%;
+}
+
+.craft-v-type::before { top: 31%; }
+.craft-v-type::after { top: 69%; }
+
+@media (hover: hover) and (pointer: fine) {
+  .craft-card { transition: background-color 0.6s ease, box-shadow 0.6s ease, translate 0.5s var(--ease-out); }
+  .craft-card:hover { translate: 0 -4px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .craft-card.visible .is-you::after { animation: craftPing 3.2s var(--ease-out) infinite; }
+  .craft-card.visible .craft-bubble { animation: craftFloat 5s ease-in-out infinite; }
+  .craft-card.visible .craft-bubble--alt { animation-delay: -2.5s; }
+  .craft-card.visible .craft-v-type::before,
+  .craft-card.visible .craft-v-type::after { animation: craftGuide 6s var(--ease-out) infinite; }
+  .craft-card.visible .craft-v-type::after { animation-delay: 0.25s; }
+  .craft-card.visible .craft-v-color span { animation: craftSwatch 9s ease-in-out infinite; }
+  .craft-card.visible .craft-v-color span:nth-child(2) { animation-delay: 3s; }
+  .craft-card.visible .craft-v-color span:nth-child(3) { animation-delay: 6s; }
+  .craft-card.visible .craft-copy-old { animation: craftStrike 7s var(--ease-out) infinite; }
+  .craft-card.visible .craft-copy-new { animation: craftNew 7s var(--ease-out) infinite; }
+  .craft-card.visible .craft-v-icons svg { animation: craftIcon 6s ease-in-out infinite; }
+  .craft-card.visible .craft-v-icons svg:nth-child(2) { animation-delay: 1s; }
+  .craft-card.visible .craft-v-icons svg:nth-child(3) { animation-delay: 2s; }
+  .craft-card.visible .craft-v-icons svg:nth-child(4) { animation-delay: 3s; }
+  .craft-card.visible .craft-v-icons svg:nth-child(5) { animation-delay: 4s; }
+  .craft-card.visible .craft-v-icons svg:nth-child(6) { animation-delay: 5s; }
+  .craft-card.visible .craft-retouch-after { animation: craftSplit 9s ease-in-out infinite; }
+  .craft-card.visible .craft-retouch-line { animation: craftLine 9s ease-in-out infinite; }
+}
+
+@keyframes craftPing {
+  0% { transform: scale(1); opacity: 0.6; }
+  70%, 100% { transform: scale(2.4); opacity: 0; }
+}
+
+@keyframes craftFloat {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -4px; }
+}
+
+@keyframes craftGuide {
+  0% { transform: scaleX(0); }
+  30%, 85% { transform: scaleX(1); opacity: 0.55; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+
+@keyframes craftSwatch {
+  0%, 30%, 100% { flex-grow: 1; }
+  12%, 20% { flex-grow: 1.7; }
+}
+
+@keyframes craftStrike {
+  0% { background-size: 0% 2px; }
+  22%, 100% { background-size: 100% 2px; }
+}
+
+@keyframes craftNew {
+  0%, 20% { opacity: 0; translate: 0 8px; }
+  38%, 92% { opacity: 1; translate: 0 0; }
+  100% { opacity: 0; translate: 0 0; }
+}
+
+@keyframes craftIcon {
+  0%, 14%, 100% { translate: 0 0; stroke: var(--fg); }
+  6% { translate: 0 -3px; stroke: var(--accent); }
+}
+
+@keyframes craftSplit {
+  0%, 100% { clip-path: inset(0 0 0 50%); }
+  35% { clip-path: inset(0 0 0 32%); }
+  70% { clip-path: inset(0 0 0 66%); }
+}
+
+@keyframes craftLine {
+  0%, 100% { left: 50%; }
+  35% { left: 32%; }
+  70% { left: 66%; }
 }
 
 @media (max-width: 1100px) {
@@ -2285,19 +2394,27 @@ html.theme-light .craft-visual { background: #F1F2F5; }
   color: rgba(100,193,210,0.5);   /* brand blue, half opacity */
 }
 
-/* white copy of the name wipes in over it from the right (RTL reading
-   direction) when the row is active; the text itself never moves */
-.work-name::after {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  color: var(--fg);
-  clip-path: inset(0 0 0 100%);
-  transition: clip-path 0.6s var(--ease-out);
-  pointer-events: none;
+/* letter roll: script.js splits the name into letters; each one rolls up
+   and its lit copy (a text-shadow one line below) rises into place, with a
+   small stagger in reading order. The row itself never moves. */
+.wn-word { display: inline-block; white-space: nowrap; }
+
+.wn-ch {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  line-height: 1.15;
+  padding-bottom: 0.04em;
 }
 
-.work-row.is-active .work-name::after { clip-path: inset(0 0 0 0); }
+.wn-in {
+  display: inline-block;
+  text-shadow: 0 1.19em 0 var(--fg);
+  transition: transform 0.55s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 16ms);
+}
+
+.work-row.is-active .wn-in { transform: translateY(-1.19em); }
 
 .work-desc {
   font-size: 0.95rem;
@@ -3901,6 +4018,7 @@ main.page {
 =========================== */
 /* Reduced motion keeps the feedback but swaps travel for a plain cross-fade */
 @media (prefers-reduced-motion: reduce) {
+  .wn-in { transition: none; }
   .navbar,
   .nav-container,
   .nav-container::before { transition: opacity 0.2s ease; }

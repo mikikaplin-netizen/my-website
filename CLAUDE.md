@@ -133,7 +133,8 @@ so they render above it. Section backgrounds use semi-transparent colors
   Copy: "אין שני לרושם ראשוני". The section's height is set in JS from the track width; travel
   starts the moment the section enters the screen with a quarter of the line already in view (no
   empty screen). The pinned screen is solid brand navy edge to edge (Michael rejected cyan and the
-  opening white circle) with white text, cyan/green tiles. No JS / reduced motion = static text.
+  opening white circle) with white text, cyan/green tiles; its bottom 28% is masked to transparent so
+  leaving it never draws a straight edge across the grey testimonials. No JS / reduced motion = static text.
 - `.edge-blur` — fixed progressive backdrop blur along the bottom of the viewport (height via
   `--edge-blur-h`, 8vh), stacked masked layers with doubling blur.
 - Motion: magnetic `.btn`/`.nav-cta` (uses the standalone `translate` property so it doesn't
@@ -141,8 +142,9 @@ so they render above it. Section backgrounds use semi-transparent colors
 - Portfolio (`.work`, "PORTFOLIO — HOVER-REVEAL LIST + LAPTOP STAND"): 5 projects (שמעוני, תמר בניאל,
   ישראל זיסקינד, לשכת הטוענים הרבניים, אלימנט; Michael dropped אלתר ספרים and, for now, WST) in compact full-bleed rows split by a fixed
   hairline in brand blue at 50%, followed by a "לכל הפרויקטים" `.btn-ghost` (`.work-more`) linking to
-  the future `projects.html`; name in brand blue at 50% (`data-text` copy in white wipes in from the
-  right when active, nothing in the row moves), description always shown, field/year; no numbers or
+  the future `projects.html`; name in brand blue at 50%; on hover/active a letter roll (Michael replaced the old white wipe):
+  JS splits each name into `.wn-ch > .wn-in` letters, each rolls up 1.19em and its lit copy (a
+  `text-shadow` one line below in `--fg`) rises into place, 16ms stagger in reading order; nothing in the row moves, description always shown, field/year; no numbers or
   icons. On desktop `.work-stand` holds a still laptop (`.laptop`) resting on a tall narrow podium in tones of
   brand cyan (Michael's idea), sticky in the left column; hovering a row cross-fades the laptop screen
   to that project. Projects with a screen recording have `<video data-src="images/portfolio/NAME">`
@@ -259,7 +261,11 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
   its craft: בידול (one green dot among grey), שפה וקול (bubbles), טיפוגרפיה (Anomalia/Polin),
   צבע (brand swatches), כתיבה (generic line struck out → "אין שני לרושם ראשוני."), איקונים
   (hand-drawn SVG set), ליטוש תמונות ומוצרים (laptop before/after split), תנועה ופרטים קטנים (the
-  site's spinning-ring button + cursor). Cards: navy in dark, white on grey.
+  site's spinning-ring button + cursor); the retouch card is titled "בימוי ויזואלי" (Michael found
+  "ליטוש תמונות" unprofessional). Cards: navy in dark, white on grey, lift 4px on hover. Once revealed
+  each card has a very gentle idle loop (ping on the green dot, floating bubbles, type guides drawing,
+  swatches taking turns to widen, strike-through redrawn then the new line rising, icons lighting in
+  turn, the before/after split sliding); all off under reduced motion.
 - Hero title on phones (≤768px) is fitted by JS ("HERO — MOBILE TITLE FIT") to half the screen height
   (binary search on font size, since wrapping depends on width; re-fits on width change only).
 - About photo (`.about-photo`, the transparent `miki-hero.png` cut-out) has no panel, radius or shadow: Michael asked to remove its background; it stands straight on the page (hidden on phones).

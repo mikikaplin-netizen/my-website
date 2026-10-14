@@ -1073,6 +1073,32 @@ document.addEventListener('touchstart', () => {}, { passive: true });
     });
   }
 
+  // split each name into letters for the hover roll (CSS .wn-ch / .wn-in);
+  // the accessible name stays the full text via aria-label
+  document.querySelectorAll('.work-name').forEach(name => {
+    const text = name.textContent.trim();
+    name.setAttribute('aria-label', text);
+    name.textContent = '';
+    let i = 0;
+    text.split(' ').forEach((word, w) => {
+      if (w) name.appendChild(document.createTextNode(' '));
+      const ws = document.createElement('span');
+      ws.className = 'wn-word';
+      ws.setAttribute('aria-hidden', 'true');
+      for (const ch of word) {
+        const c = document.createElement('span');
+        c.className = 'wn-ch';
+        const inner = document.createElement('span');
+        inner.className = 'wn-in';
+        inner.style.setProperty('--i', i++);
+        inner.textContent = ch;
+        c.appendChild(inner);
+        ws.appendChild(c);
+      }
+      name.appendChild(ws);
+    });
+  });
+
   function activate(i) {
     current = i;
     rows.forEach(r => r.classList.toggle('is-active', r.dataset.work === i));

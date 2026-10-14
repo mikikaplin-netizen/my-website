@@ -248,6 +248,7 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
   bubbles (no-JS fallback); "FAQ — CHAT" turns questions into suggestion chips that play out visitor
   bubble (right, cyan) → typing dots → Michael's answer (left, in a `.faq-row` with his round avatar
   at the bubble's outer bottom corner); the first exchange auto-plays when first seen.
+- About photo (`.about-photo`, the transparent `miki-hero.png` cut-out) has no panel, radius or shadow: Michael asked to remove its background; it stands straight on the page (hidden on phones).
 - About opens with "קוראים לי מיכאל קאפלין, ואני מעצב ובונה אתרים עם אופי." (`.about-intro`); no badge
   on the photo (the +30 lives in the numbers band).
 - Testimonial cards follow the page theme: solid navy layer in dark, white with navy text on the grey

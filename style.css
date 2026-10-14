@@ -611,11 +611,6 @@ html.theme-light .faq-sub a { color: var(--ink); text-decoration-color: var(--ac
 html.theme-light .work-row { border-bottom-color: rgba(16,16,36,0.2); }
 html.theme-light .work-name { color: rgba(16,16,36,0.45); }
 
-html.theme-light .about-photo {
-  background: #c9ccd2;
-  box-shadow: 0 30px 60px -28px rgba(16,16,36,0.45);
-}
-
 /* chrome over grey: solid glass top bar with a grey edge fade; tab bar
    labels in ink */
 .navbar .nav-container::before { transition: opacity 0.35s ease, transform 0.6s var(--ease-fluid), background-color 0.6s ease; }
@@ -958,11 +953,11 @@ html.theme-light .navbar::after {
   width: 100%;
   aspect-ratio: 4 / 5;
   height: auto;
-  border-radius: var(--radius-lg);
   object-fit: cover;
   object-position: 50% 0%;
-  background: var(--bg-3);
-  box-shadow: var(--shadow), var(--glow);
+  /* the cut-out stands straight on the page: no panel, frame or shadow
+     (Michael asked to drop the background); the PNG's own bottom fade
+     blends it into the section */
 }
 
 

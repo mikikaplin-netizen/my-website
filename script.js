@@ -1168,6 +1168,53 @@ document.addEventListener('touchstart', () => {}, { passive: true });
 })();
 
 // ===========================
+// HERO — LIVE PORTRAIT
+// ===========================
+// A short clip of the hero photo blinking once, laid over the photo. It
+// plays once, holds its last frame (= its first) for a random pause, then
+// plays again, so blinks come every ~4.5-7.5s with no visible rhythm.
+// Loaded only when the photo is shown (desktop) and never under reduced
+// motion; paused while the hero is off screen.
+(function () {
+  const v = document.querySelector('.hero-live');
+  if (!v || typeof v.play !== 'function') return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const wide = window.matchMedia('(min-width: 901px)');
+  const hero = document.querySelector('.hero');
+  let loaded = false, onScreen = true, timer = 0;
+
+  function load() {
+    if (loaded || !wide.matches) return;
+    loaded = true;
+    const src = v.dataset.src;
+    [['webm', 'video/webm'], ['mp4', 'video/mp4']].forEach(([ext, type]) => {
+      const s = document.createElement('source');
+      s.src = `${src}.${ext}`;
+      s.type = type;
+      v.appendChild(s);
+    });
+    v.preload = 'auto';
+    v.load();
+    v.addEventListener('playing', () => v.classList.add('is-live'), { once: true });
+    v.addEventListener('ended', () => {
+      timer = setTimeout(() => { timer = 0; v.currentTime = 0; if (onScreen) v.play().catch(() => {}); },
+        1500 + Math.random() * 3000);
+    });
+    if (onScreen) v.play().catch(() => {});
+  }
+
+  if (hero && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => {
+      onScreen = e.isIntersecting;
+      if (!loaded) { if (onScreen) load(); return; }
+      if (!onScreen) v.pause();
+      else if (!timer && !v.ended) v.play().catch(() => {});
+    }).observe(hero);
+  } else load();
+  wide.addEventListener('change', () => { if (onScreen) load(); });
+})();
+
+// ===========================
 // WAVE MARQUEE — SCROLL-DRIVEN
 // ===========================
 // One giant line that travels across the screen while the section is

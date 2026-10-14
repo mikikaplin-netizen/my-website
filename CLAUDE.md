@@ -30,6 +30,15 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
   `@font-face` with weight ranges in `style.css`
   (Google Sans was removed on purpose — don't reintroduce it)
 - `images/` — logo SVGs (`logo-full.svg`, `logo-icon.svg`) and the hero photo (`miki-hero.png`)
+- Hero live portrait (`.hero-photo` wraps the `<img class="hero-photo-img">` + `<video class="hero-live">`,
+  "HERO — LIVE PORTRAIT" in `script.js`): a 3s AI clip of the same photo blinking once
+  (Seedance 2.5 on Magnific, start = end frame = the photo on flat grey; the take's 14px head lift and
+  its second blink were cut out (Michael found two blinks too close), edges/bottom fade carry the
+  photo's own pixels), `images/video/hero-live-2.{webm,mp4}` (rename on re-encode: browsers cache it), masked
+  by the photo's alpha (`images/webp/hero-live-mask.webp`, same 3:4 frame, photo bottom-aligned).
+  Plays once, holds its last frame (= first) for a random 1.5–4.5s, replays (a blink every ~4.5–7.5s, no rhythm);
+  desktop only (photo hidden ≤900px), never under reduced motion, paused off screen, fades in over the img.
+  The parallax/tilt transforms target the `.hero-photo` wrapper so both layers move together.
 - `serve.py` — the only "tooling" in the repo
 - `index.html` links `style.css?v=N` / `script.js?v=N` — bump `N` whenever either file changes,
   otherwise browsers/GitHub Pages can pair a new `index.html` with a stale cached stylesheet

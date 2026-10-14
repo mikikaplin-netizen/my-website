@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=45" />
+  <link rel="stylesheet" href="style.css?v=46" />
 </head>
 <body>
 
@@ -68,11 +68,21 @@
           </div>
         </div>
         <div class="hero-image-wrap">
-          <img
-            src="images/miki-hero.png"
-            alt="מיכאל קאפלין"
-            class="hero-photo"
-          />
+          <div class="hero-photo">
+            <img
+              src="images/miki-hero.png"
+              alt="מיכאל קאפלין"
+              class="hero-photo-img"
+            />
+            <video
+              class="hero-live"
+              data-src="images/video/hero-live"
+              muted
+              playsinline
+              preload="none"
+              aria-hidden="true"
+            ></video>
+          </div>
         </div>
       </div>
       <div class="hero-scroll"><span></span></div>
@@ -845,6 +855,6 @@
     </button>
   </div>
 
-  <script src="script.js?v=45"></script>
+  <script src="script.js?v=46"></script>
 </body>
 </html>

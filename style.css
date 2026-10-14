@@ -730,7 +730,12 @@ html.theme-light .navbar::after {
 .hero-image-wrap { perspective: 1100px; }
 
 .hero-photo {
+  position: relative;
+  max-width: 100%;
   will-change: transform;
+}
+
+.hero-photo-img {
   height: auto;
   width: auto;
   max-height: calc((100vh - 140px) * 0.9);
@@ -739,6 +744,26 @@ html.theme-light .navbar::after {
   object-fit: contain;
   display: block;
 }
+
+/* Live portrait: an AI loop of the same photo (breathing, blinks) laid
+   exactly over it. The clip is 3:4 with the photo bottom-aligned, so it
+   sits on the photo's bottom edge and runs a little above it; the photo's
+   own cutout (alpha) masks it. Fades in once it plays. */
+.hero-live {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  display: block;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s var(--ease-out);
+  -webkit-mask: url("images/webp/hero-live-mask.webp") center / 100% 100% no-repeat;
+          mask: url("images/webp/hero-live-mask.webp") center / 100% 100% no-repeat;
+}
+.hero-live.is-live { opacity: 1; }
 
 .hero-scroll {
   position: absolute;

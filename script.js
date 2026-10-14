@@ -1047,13 +1047,14 @@ document.addEventListener('touchstart', () => {}, { passive: true });
       if (on) {
         if (!v.dataset.loaded) {
           v.dataset.loaded = '1';
-          ['webm', 'mp4'].forEach(ext => {
+          v.addEventListener('playing', () => it.classList.add('has-video'));
+          // MP4 first (smaller); WebM only where H.264 can't play
+          ['mp4', 'webm'].forEach(ext => {
             const s = document.createElement('source');
             s.src = v.dataset.src + '.' + ext;
             s.type = 'video/' + ext;
             v.appendChild(s);
           });
-          v.addEventListener('playing', () => it.classList.add('has-video'));
           v.load();
         }
         const p = v.play();

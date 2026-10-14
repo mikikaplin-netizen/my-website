@@ -132,10 +132,12 @@ so they render above it. Section backgrounds use semi-transparent colors
   icons. On desktop `.work-stand` holds a still laptop (`.laptop`) on a tall narrow podium in tones of
   brand cyan (Michael's idea), sticky in the left column; hovering a row cross-fades the laptop screen
   to that project. Projects with a screen recording have `<video data-src="images/portfolio/NAME">`
-  (JS adds `.webm`/`.mp4` sources on first activation, plays only the active one while the section is
+  (JS adds `NAME.mp4` then `NAME.webm` sources on first activation, plays only the active one while the section is
   on screen, never under reduced motion; `.has-video` fades it in over the gradient placeholder).
-  Michael's raw recordings (.mov, 100-150MB) are in his Google Drive; ship web-size encodes
-  (~1280px, muted, h264 faststart + vp9) as `images/portfolio/{shimony,tamar-baniel,ziskind}.{webm,mp4}`.
+  Recordings: `images/portfolio/{shimony,tamar-baniel,ziskind}.mp4` (1280×690 = the recordings' own
+  ratio, which the laptop screen matches; 30fps, h264 crf 30, faststart, no audio, 1.3–2MB; a VP9 `.webm` fallback only
+  loads where H.264 can't play, e.g. Playwright's Chromium) + `NAME-poster.webp` (`.work-poster`, shown in the laptop and the mobile thumb).
+  Michael's raw .mov files (2878×1552, 60fps) live in his Google Drive folder.
   Touch screens hide the stand, activate the mid-viewport row and show each row's `.work-thumb` inline.
 
 **Mobile tab bar** (`#tabbar`, ≤768px only — replaces the hamburger, which is hidden there): a

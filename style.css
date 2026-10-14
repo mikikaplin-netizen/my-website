@@ -1971,7 +1971,7 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
   top: 0;
   bottom: 0;
   left: calc(50% - 50vw + 5vw);
-  width: min(34vw, 520px);
+  width: min(37vw, 580px);
   pointer-events: none;
   z-index: 2;
 }
@@ -1984,80 +1984,103 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
   align-items: center;
 }
 
-.laptop { width: 100%; position: relative; z-index: 1; }
-
-/* MacBook-style: black glass bezel (thin, a touch deeper at the chin),
-   a camera notch, an aluminium rim and a soft glare across the glass */
-.laptop-lid {
+/* a realistic silver laptop (Magnific stock render, images/webp/laptop.webp,
+   1400x1031, turned toward the list). The art is laid out at its own px in
+   .laptop-art and scaled to the column by script.js (--lap-s); the screen is
+   a 1280x800 box mapped onto the photo's screen corners with matrix3d
+   (corners tl 31,74 / tr 802,32 / br 881,571 / bl 118,683). */
+.laptop {
   position: relative;
-  padding: 1.7% 1.7% 2.5%;
-  border-radius: 16px 16px 5px 5px;
-  background: #07070c;
-  box-shadow:
-    0 0 0 1.5px #3d4054,
-    0 0 0 2.5px #15162a,
-    inset 0 0 0 1px rgba(255,255,255,0.05),
-    0 40px 80px -34px rgba(0,0,0,0.8);
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 1400 / 1031;
 }
 
-.laptop-lid::after {        /* camera notch */
-  content: '';
+.laptop-art {
   position: absolute;
-  top: 1.7%;
-  left: 50%;
-  width: 8.5%;
-  height: 3.4%;
-  translate: -50% 0;
-  border-radius: 0 0 6px 6px;
-  background: radial-gradient(circle at 50% 42%, #1c2340 0 9%, #0d1020 10% 16%, #07070c 18%);
-  z-index: 3;
+  top: 0;
+  left: 0;
+  width: 1400px;
+  height: 1031px;
+  transform-origin: 0 0;
+  transform: scale(var(--lap-s, 0.35));
+}
+
+.laptop-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 60px 50px rgba(0,0,0,0.45));
 }
 
 .laptop-screen {
-  position: relative;
-  aspect-ratio: 1280 / 690;   /* the screen recordings' own ratio */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1280px;
+  height: 800px;
   overflow: hidden;
-  border-radius: 3px;
+  border-radius: 8px;
   background: #05060d;
+  transform-origin: 0 0;
+  transform: matrix3d(0.683338033, -0.0295808079, 0, 0.000100990377, 0.108322357, 0.758774744, 0, -3.62409398e-06, 0, 0, 1, 0, 31, 74, 0, 1);
+  backface-visibility: hidden;
 }
 
-.laptop-screen::after {     /* glass glare */
+/* slim browser bar: the recordings are wider than the screen, so the bar
+   takes the difference instead of cropping the sites' logos */
+.laptop-bar {
+  height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 20px;
+  direction: ltr;
+  background: #1b1d33;
+}
+
+.laptop-bar i {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.22);
+}
+
+.laptop-url {
+  width: 42%;
+  height: 24px;
+  margin: 0 auto;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.08);
+}
+
+.laptop-view {
+  position: absolute;
+  top: 46px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* glass: a soft diagonal reflection plus a faint sheen at the top edge */
+.laptop-screen::after {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 3;
   pointer-events: none;
-  background: linear-gradient(118deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.03) 30%, rgba(255,255,255,0) 31%);
-}
-
-/* the deck: a thin aluminium wedge, wider than the lid */
-.laptop-base {
-  position: relative;
-  width: 118%;
-  margin-left: -9%;
-  height: clamp(9px, 0.95vw, 14px);
-  border-radius: 1px 1px 18px 18px / 1px 1px 100% 100%;
-  background: linear-gradient(180deg, #a7aabd 0%, #686b82 16%, #34374d 55%, #17182b 100%);
-  box-shadow: 0 16px 24px -12px rgba(0,0,0,0.65);
-}
-
-.laptop-base::before {      /* thumb notch */
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 13%;
-  height: 42%;
-  translate: -50% 0;
-  border-radius: 0 0 9px 9px;
-  background: linear-gradient(180deg, #2a2c40, #4a4d63);
+  background:
+    linear-gradient(112deg, rgba(255,255,255,0.13) 0%, rgba(255,255,255,0.05) 34%, rgba(255,255,255,0) 34.2%, rgba(255,255,255,0) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 30%);
 }
 
 /* the podium: one color (brand cyan) played through tones */
 .podium {
   position: relative;
-  width: 62%;
-  margin-top: -2px;
+  width: 58%;
+  margin-top: -4.5%;          /* the laptop's front edge rests on the top face */
+  translate: 6% 0;            /* under the laptop's visual center, not its box */
   display: flex;
   flex-direction: column;
 }
@@ -2101,8 +2124,7 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: 50% 0;
+  object-fit: fill;
   opacity: 0;
   transition: opacity 0.4s ease;
 }
@@ -2118,6 +2140,8 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
   object-fit: cover;
   object-position: 50% 0;
 }
+
+.laptop-view .work-poster { object-fit: fill; }
 
 /* placeholder project visual (until real screens arrive) */
 .work-shot {

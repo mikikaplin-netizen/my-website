@@ -1038,6 +1038,14 @@ document.addEventListener('touchstart', () => {}, { passive: true });
   const stand = document.querySelector('.work-stand');
   let current = '0', inView = false;
 
+  // the laptop photo is laid out at its own 1400px; scale it to the column
+  const laptop = document.querySelector('.laptop');
+  if (laptop) {
+    new ResizeObserver(() => {
+      laptop.style.setProperty('--lap-s', (laptop.clientWidth / 1400).toFixed(5));
+    }).observe(laptop);
+  }
+
   function syncVideos() {
     items.forEach(it => {
       const v = it.querySelector('video[data-src]');

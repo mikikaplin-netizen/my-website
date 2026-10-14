@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=42" />
+  <link rel="stylesheet" href="style.css?v=43" />
 </head>
 <body>
 
@@ -19,9 +19,9 @@
   <nav class="navbar" id="navbar">
     <div class="nav-container">
       <ul class="nav-links">
+        <li><a href="#portfolio">פרויקטים</a></li>
         <li><a href="#about">אודות</a></li>
         <li><a href="#services">שירותים</a></li>
-        <li><a href="#portfolio">פרויקטים</a></li>
         <li><a href="#contact" class="nav-cta">בואו נדבר</a></li>
       </ul>
       <button class="nav-toggle" id="navToggle" aria-label="תפריט">
@@ -201,6 +201,10 @@
           <div class="work-preview-item" data-work="2"><div class="work-shot" style="--hue:160; --sat:60%"><span class="work-shot-mark">WST</span></div></div>
           <div class="work-preview-item" data-work="3"><div class="work-shot" style="--hue:35; --sat:70%"><span class="work-shot-mark">א</span></div></div>
         </div>
+      </div>
+      <!-- future inner page listing every project -->
+      <div class="work-more">
+        <a href="projects.html" class="btn btn-ghost">לכל הפרויקטים</a>
       </div>
     </div>
   </section>
@@ -521,13 +525,12 @@
   </section>
 
   <!-- WAVE MARQUEE -->
-  <section class="wave" aria-label="אין הזדמנות שנייה לרושם ראשוני">
+  <section class="wave" aria-label="אין שני לרושם ראשוני">
     <div class="wave-sticky">
       <p class="wave-track" aria-hidden="true">
         <span class="wave-word">אין</span>
-        <span class="wave-word">הזדמנות</span>
         <span class="wave-tile wave-tile--photo"><img src="images/miki-hero.png" alt="" /></span>
-        <span class="wave-word">שנייה</span>
+        <span class="wave-word">שני</span>
         <span class="wave-tile wave-tile--cyan">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg>
         </span>
@@ -660,7 +663,13 @@
        behind <main>): full-screen wave, Michael's logo huge in one color
        blended into it, and the contact form + footer bar on top. -->
   <footer class="site-end">
-    <img class="site-end-waves" src="images/webp/footer-waves.webp" alt="" aria-hidden="true" loading="lazy" />
+    <!-- the wave in motion: a seamless 6s loop rendered from Michael's wave
+         image (blur baked into the frames); plays only while on screen -->
+    <video class="site-end-waves" muted loop playsinline preload="none"
+           poster="images/webp/footer-waves-poster.webp" aria-hidden="true">
+      <source src="images/video/footer-waves.webm" type="video/webm" />
+      <source src="images/video/footer-waves.mp4" type="video/mp4" />
+    </video>
     <div class="site-end-logo" aria-hidden="true"></div>
     <!-- CONTACT -->
     <section class="contact section" aria-label="צור קשר">
@@ -715,7 +724,10 @@
         <div class="footer-inner">
           <img src="images/logo-full.svg" alt="מיכאל קאפלין" class="footer-logo" />
           <p class="footer-copy">© 2026 כל הזכויות שמורות</p>
-          <a href="https://mkaplin.com" class="footer-link">mkaplin.com</a>
+          <div class="footer-legal">
+            <button type="button" class="footer-text-btn" data-doc="accessibility">הצהרת נגישות</button>
+            <button type="button" class="footer-text-btn" data-doc="privacy">הצהרת פרטיות</button>
+          </div>
         </div>
       </div>
     </div>
@@ -726,6 +738,10 @@
        the drop behind the active item slides between sections -->
   <nav class="tabbar" id="tabbar" aria-label="ניווט">
     <span class="tabbar-drop" aria-hidden="true"></span>
+    <a href="#portfolio">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/></svg>
+      <span>פרויקטים</span>
+    </a>
     <a href="#about">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.3-3.6 4.1-5.4 7.5-5.4s6.2 1.8 7.5 5.4"/></svg>
       <span>אודות</span>
@@ -733,10 +749,6 @@
     <a href="#services">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 20.5 8 12 12.5 3.5 8z"/><path d="m3.5 12 8.5 4.5 8.5-4.5"/><path d="m3.5 16 8.5 4.5 8.5-4.5"/></svg>
       <span>שירותים</span>
-    </a>
-    <a href="#portfolio">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/></svg>
-      <span>פרויקטים</span>
     </a>
     <a href="#contact" class="tabbar-cta">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.8 7.8 0 0 1-11.3 7L4 20l1.4-4.3A7.8 7.8 0 1 1 20 11.5z"/></svg>
@@ -779,6 +791,6 @@
     </button>
   </div>
 
-  <script src="script.js?v=42"></script>
+  <script src="script.js?v=43"></script>
 </body>
 </html>

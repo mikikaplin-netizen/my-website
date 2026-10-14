@@ -218,6 +218,51 @@ window.addEventListener('scroll', () => {
 })();
 
 // ===========================
+// NAVBAR — HOVER BUBBLE
+// ===========================
+// One pill behind the nav items. Entering an item springs it to that item's
+// box (Apple spring: damping 1, response 0.3s, real frame time, re-targets
+// from its live position); leaving the menu fades it out where it is.
+// Coming back after it faded, it appears on the item instead of sliding in
+// from the old one. Mouse/trackpad only.
+(function () {
+  const list = document.querySelector('.nav-links');
+  if (!list || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  const pill = document.createElement('span');
+  pill.className = 'nav-pill';
+  pill.setAttribute('aria-hidden', 'true');
+  list.prepend(pill);
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const RESPONSE = 0.3, K = Math.pow(2 * Math.PI / RESPONSE, 2), C = 4 * Math.PI / RESPONSE;
+  let x = 0, w = 0, vx = 0, vw = 0, tx = 0, tw = 0, raf = 0, last = 0, shown = false;
+
+  const paint = () => {
+    pill.style.transform = `translateX(${x.toFixed(2)}px)`;
+    pill.style.width = `${w.toFixed(2)}px`;
+  };
+  const step = now => {
+    const dt = Math.min((now - last) / 1000, 1 / 30); last = now;
+    vx += (K * (tx - x) - C * vx) * dt; x += vx * dt;
+    vw += (K * (tw - w) - C * vw) * dt; w += vw * dt;
+    paint();
+    if (Math.abs(tx - x) + Math.abs(tw - w) > 0.3 || Math.abs(vx) + Math.abs(vw) > 4) raf = requestAnimationFrame(step);
+    else { x = tx; w = tw; vx = vw = 0; paint(); raf = 0; }
+  };
+  const goTo = a => {
+    const lr = list.getBoundingClientRect(), r = a.getBoundingClientRect();
+    tx = r.left - lr.left; tw = r.width;
+    pill.style.top = `${r.top - lr.top}px`;
+    pill.style.height = `${r.height}px`;
+    if (!shown || reduce) { x = tx; w = tw; vx = vw = 0; paint(); }
+    else if (!raf) { last = performance.now(); raf = requestAnimationFrame(step); }
+    shown = true;
+    pill.classList.add('is-on');
+  };
+  list.querySelectorAll('a').forEach(a => a.addEventListener('pointerenter', () => goTo(a)));
+  list.addEventListener('pointerleave', () => { pill.classList.remove('is-on'); shown = false; });
+})();
+
+// ===========================
 // MOBILE NAV TOGGLE
 // ===========================
 const navToggle = document.getElementById('navToggle');
@@ -1176,9 +1221,10 @@ document.addEventListener('touchstart', () => {}, { passive: true });
   // px of travel per px scrolled — slower on phones, where the line is
   // short relative to scroll distance and would otherwise fly past
   const travelSpeed = () => (window.innerWidth < 768 ? 0.45 : 0.9);
-  // Pinned-scroll timeline (q = 0 → 1 while the section is stuck):
-  //   0.08 → 0.92  the line travels across the pinned cyan screen
-  const TRAVEL_START = 0.08, TRAVEL_END = 0.92;
+  // Timeline u = 0 → 1 from the moment the section's top enters the screen
+  // until it unpins; the line is already a quarter of the way in at u = 0,
+  // so there is never an empty screen before the words arrive.
+  const LEAD = 0.25;                       // share of the screen filled at u = 0
   let vw = 0, vh = 0, trackW = 0, amp = 0, ticking = false;
 
   const clamp01 = v => Math.max(0, Math.min(1, v));
@@ -1191,19 +1237,17 @@ document.addEventListener('touchstart', () => {}, { passive: true });
     items.forEach(it => { it.cx = it.el.offsetLeft + it.el.offsetWidth / 2; });
     // wave chars sit inside .wave-word, whose offsetParent is still the
     // (absolutely positioned) track, so offsetLeft is track-relative
-    const travelScroll = (trackW + vw) / travelSpeed();
-    const pinRange = travelScroll / (TRAVEL_END - TRAVEL_START);
-    section.style.height = `${pinRange + vh}px`;
+    // u runs over exactly the section's height of scroll (entry + pin)
+    const travelScroll = (trackW + vw * (1 - LEAD)) / travelSpeed();
+    section.style.height = `${Math.max(vh * 1.2, travelScroll)}px`;
     update();
   }
 
   function update() {
     ticking = false;
     const r = section.getBoundingClientRect();
-    const q = clamp01(-r.top / (r.height - vh));
-
-    const p = clamp01((q - TRAVEL_START) / (TRAVEL_END - TRAVEL_START));
-    const x = -trackW + p * (trackW + vw);
+    const u = clamp01((vh - r.top) / r.height);
+    const x = -trackW + vw * LEAD + u * (trackW + vw * (1 - LEAD));
     track.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0)`;
 
     const k = (Math.PI * 2 * WAVES_PER_SCREEN) / vw;
@@ -1277,6 +1321,26 @@ document.addEventListener('touchstart', () => {}, { passive: true });
   fit();
   window.addEventListener('resize', fit);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+})();
+
+// The footer's wave video plays only while the footer is showing (and
+// never under reduced motion, where its poster frame stays).
+(function () {
+  const v = document.querySelector('.site-end-waves');
+  if (!v || typeof v.play !== 'function') return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // the curtain footer is always "on screen" behind the page, so watch the
+  // page's bottom edge instead: the footer shows once it rises above the fold
+  const page = document.querySelector('main.page');
+  let playing = false, ticking = false;
+  const check = () => {
+    ticking = false;
+    const shown = !page || page.getBoundingClientRect().bottom < window.innerHeight + 200;
+    if (shown && !playing) { playing = true; v.preload = 'auto'; v.play().catch(() => { playing = false; }); }
+    else if (!shown && playing) { playing = false; v.pause(); }
+  };
+  window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(check); } }, { passive: true });
+  check();
 })();
 
 // ===========================

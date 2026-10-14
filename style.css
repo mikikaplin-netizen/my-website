@@ -400,11 +400,34 @@ p, blockquote, li, summary, .work-desc, .faq-sub { text-wrap: pretty; }
 }
 
 .nav-links {
+  position: relative;
   display: flex;
   list-style: none;
   gap: 4px;
   align-items: center;
 }
+
+.nav-links li { position: relative; z-index: 1; }
+
+/* one shared hover bubble that glides between items (after Aceternity's
+   navbar): springs to the hovered item's box, fades in place when the
+   pointer leaves the menu ("NAVBAR — HOVER BUBBLE" in script.js) */
+.nav-pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 0;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.1);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  will-change: transform, width;
+}
+
+.nav-pill.is-on { opacity: 1; }
 
 .nav-links a {
   /* every nav item shares the CTA's pill shape and box, so the hover
@@ -421,10 +444,7 @@ p, blockquote, li, summary, .work-desc, .faq-sub { text-wrap: pretty; }
 .nav-links a.is-active { color: #fff; }
 
 @media (hover: hover) and (pointer: fine) {
-  .nav-links a:not(.nav-cta):hover {
-    color: var(--bg);
-    background: var(--accent);
-  }
+  .nav-links a:not(.nav-cta):hover { color: #fff; }
 }
 
 .nav-links a:focus-visible {
@@ -565,18 +585,10 @@ html.theme-light {
 html.theme-light .about,
 html.theme-light .portfolio { background-color: transparent; }
 
-/* brand-only accents on grey: navy text, brand-cyan marker underneath */
+/* brand-only accents on grey: plain brand navy (no marker; Michael removed it) */
 html.theme-light .text-accent,
 html.theme-light .hero-highlight,
-html.theme-light .hero-name {
-  color: var(--ink);
-  background-image: linear-gradient(rgba(100,193,210,0.65), rgba(100,193,210,0.65));
-  background-repeat: no-repeat;
-  background-size: 100% 0.22em;
-  background-position: 0 88%;
-  -webkit-box-decoration-break: clone;
-          box-decoration-break: clone;
-}
+html.theme-light .hero-name { color: var(--ink); }
 
 html.theme-light .section-label,
 html.theme-light .process-title,
@@ -796,7 +808,7 @@ html.theme-light .navbar::after {
   padding: 12vh 0;
   overflow: hidden;
   /* light "break" band before contact */
-  background: var(--accent);   /* brand cyan band */
+  background: var(--bg);       /* brand navy band */
 }
 
 .wave-track {
@@ -810,7 +822,7 @@ html.theme-light .navbar::after {
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.01em;
-  color: var(--ink);             /* brand navy on the cyan band */
+  color: #ffffff;                /* white on the navy band */
 }
 
 .wave-word { white-space: nowrap; }
@@ -835,7 +847,7 @@ html.theme-light .navbar::after {
 }
 
 .wave-tile--cyan {
-  background: var(--bg);          /* navy tile: a cyan one would vanish on the cyan band */
+  background: var(--accent);
   box-shadow: 0 10px 30px rgba(16,16,36,0.18);
 }
 
@@ -844,7 +856,6 @@ html.theme-light .navbar::after {
   height: 52%;
   fill: var(--bg);
 }
-.wave-tile--cyan svg { fill: var(--accent); }
 
 .wave-tile--photo img {
   width: 100%;
@@ -859,13 +870,13 @@ html.theme-light .navbar::after {
   background: transparent;
 }
 
-/* the pinned screen is solid brand cyan, edge to edge (no opening circle) */
+/* the pinned screen is solid brand navy, edge to edge (no opening circle) */
 .wave--on .wave-sticky {
   position: sticky;
   top: 0;
   height: 100vh;
   overflow: hidden;
-  background: var(--accent);
+  background: var(--bg);
 }
 
 .wave--on .wave-track {
@@ -1893,7 +1904,7 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
   gap: clamp(16px, 2vw, 32px);
   /* text stays in the right ~55%, leaving the left side for the
      floating preview */
-  padding: clamp(26px, 3vw, 40px) 5vw clamp(26px, 3vw, 40px) 45vw;
+  padding: clamp(14px, 1.6vw, 22px) 5vw clamp(14px, 1.6vw, 22px) 45vw;
   color: var(--text);
   transition: background 0.4s ease;
 }
@@ -1941,6 +1952,12 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
 }
 
 .work-link:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
+
+.work-more {
+  display: flex;
+  justify-content: flex-start;   /* RTL: under the names, on the right */
+  padding-top: clamp(28px, 4vw, 48px);
+}
 
 /* floating preview — top/rotation driven by script.js (--y, --tilt) */
 .work-preview {
@@ -2606,17 +2623,15 @@ main.page {
   object-fit: cover;
   object-position: 50% 60%;
   opacity: 0.9;
-  /* same treatment as the process windows' waves (13.7px blur on a 560px
-     window ≈ 2.4% of its width): soft enough that the source's aliased
-     edges disappear at full-screen size */
-  filter: blur(28px);
-  transform: scale(1.12);     /* push the blurred outer edge off screen */
+  /* the video's frames already carry the blur (same softness as the
+     process windows' waves), so no live CSS blur on a playing video */
+  transform: scale(1.12);     /* push the soft outer edge off screen */
   pointer-events: none;
 }
 
 /* Michael's logo, huge, in one color, blended into the wave: the lowest
-   layer, edge to edge along the bottom, with all the content above it.
-   A soft band of light sweeps through the letters on a loop. */
+   layer, edge to edge along the bottom, with all the content above it;
+   kept quiet so it reads as texture, not a headline. */
 .site-end-logo {
   position: absolute;
   z-index: -1;
@@ -2629,34 +2644,27 @@ main.page {
   -webkit-mask: url(images/logo-full.svg) center bottom / 100% auto no-repeat;
           mask: url(images/logo-full.svg) center bottom / 100% auto no-repeat;
   mix-blend-mode: soft-light;
-  opacity: 0.95;
+  opacity: 0.4;
   pointer-events: none;
 }
 
-.site-end-logo::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  width: 60%;
-  background: linear-gradient(100deg, transparent 0%, rgba(255,255,255,0.9) 50%, transparent 100%);
-  transform: translateX(-120%);
-  animation: logoSweep 7s cubic-bezier(0.77, 0, 0.175, 1) infinite;
-}
-
-@keyframes logoSweep {
-  0%   { transform: translateX(-120%); }
-  55%  { transform: translateX(260%); }
-  100% { transform: translateX(260%); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .site-end-logo::before { animation: none; display: none; }
-}
 
 /* compact contact block: no photo, smaller fields, the form narrower */
-.site-end .contact { padding-bottom: clamp(56px, 12vw, 200px); }
+.site-end .contact {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: clamp(40px, 6vh, 72px);
+}
+.site-end .contact > .container { width: 100%; }
+.site-end .contact-info .section-title {
+  font-size: clamp(2.8rem, 6.2vw, 6rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+}
 @media (min-width: 901px) {
-  .site-end .contact-wrapper { grid-template-columns: 1fr minmax(0, 520px); gap: clamp(40px, 6vw, 96px); align-items: end; }
+  .site-end .contact-wrapper { grid-template-columns: 1fr minmax(0, 520px); gap: clamp(40px, 6vw, 96px); align-items: center; }
 }
 .site-end .form-group { margin-bottom: 20px; }
 .site-end .form-group input,
@@ -2686,6 +2694,30 @@ main.page {
 .footer-logo {
   height: 30px;
   width: auto;
+}
+
+/* legal links: real buttons (they will open the statements) that read as
+   plain text, underlined on hover/focus */
+.footer-legal { display: flex; gap: 22px; }
+
+.footer-text-btn {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.footer-text-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+@media (hover: hover) and (pointer: fine) {
+  .footer-text-btn:hover { color: #fff; text-decoration-color: currentColor; }
 }
 
 .footer-copy {
@@ -2761,6 +2793,7 @@ main.page {
 
 @media (max-width: 768px) {
   .nav-toggle { display: none !important; }
+  .nav-pill { display: none; }
 
   body { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
 

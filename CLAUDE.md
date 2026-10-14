@@ -49,12 +49,16 @@ other blocks.
 it) scrolls over `footer.site-end`, which is `position: sticky; bottom: 0` behind it (`.is-curtain`,
 only when the footer fits the screen; on phones the long form makes it taller, so it just flows).
 The page's bottom corners are rounded (`clip-path: inset(0 round …)`) and `.page-lip` (a sibling,
-since the clip would cut a box-shadow) casts a soft shadow on the footer. The footer: the wave
-(`images/webp/footer-waves.webp`, 1600px RGBA <100KB from Michael's PNG) blurred 28px like the process
-windows' waves (so the source's aliasing never shows), Michael's logo huge in one color
-(`.site-end-logo`: accent fill masked by `logo-full.svg`, `mix-blend-mode: soft-light`) as the lowest
-layer, edge to edge along the bottom, with a light band sweeping through it on a 7s loop; above it
-the compact contact block (no photo; Michael removed it) and the footer bar.
+since the clip would cut a box-shadow) casts a soft shadow on the footer. The footer: the wave as a
+looping video (`images/video/footer-waves.webm|mp4`, ~40–50KB, a seamless 6s loop rendered from
+Michael's wave PNG by sine-displacement warping, blur baked into the frames so there's no live CSS
+blur; poster `images/webp/footer-waves-poster.webp`). It plays only while the page's bottom edge is
+above the fold (the sticky footer is always geometrically "on screen", so IntersectionObserver
+can't be used) and never under reduced motion. Michael's logo huge in one color (`.site-end-logo`:
+accent fill masked by `logo-full.svg`, soft-light, opacity 0.4, no animation; Michael disliked the
+light sweep) is the lowest layer, edge to edge along the bottom; above it the vertically centered
+contact block (title at the big-title size, no photo) and the footer bar, whose "הצהרת נגישות" /
+"הצהרת פרטיות" are `<button>`s styled as plain text (statements not written yet).
 `#contact` is an empty `.page-end` marker at the end of `<main>`; scrolling to it slides the page
 off the footer. JS that looks for page sections must query `main.page > section`.
 
@@ -66,7 +70,7 @@ grey `--paper: #DCDEE2` over the dot field (0.6s) and page text flips to navy vi
 `--text-muted` / `--border`, so the tail of the previous section stays readable mid-switch. Dark
 surfaces (navbar, process windows, testimonial cards, work preview, buttons, WhatsApp) re-pin the
 dark variables. **Brand colors only** (Michael rejected added teal/green): on grey, accents are brand
-navy with a brand-cyan marker underline; cyan/green are never text on grey (1.8:1). Any new section
+navy (no marker underline; Michael removed it); cyan/green are never text on grey (1.8:1). Any new section
 text color must use `var(--fg)` / `var(--text)`, not `#fff`.
 
 **Section openings**: no section numbering (Michael removed it). Projects and process use
@@ -112,14 +116,16 @@ so they render above it. Section backgrounds use semi-transparent colors
 - Wave marquee (`.wave`, "WAVE MARQUEE — SCROLL-DRIVEN" in `script.js`): the section is pinned
   (`position: sticky`) while one giant line travels across it, mirrored for Hebrew (sentence start
   enters first, moving left → right); each letter/tile rides a sine wave fixed in screen space.
-  The section's height is set in JS from the track width. The pinned screen is solid brand cyan
-  edge to edge (no opening white circle; Michael removed it) with brand-navy text and navy tiles.
-  Without JS / under reduced motion it renders as static centered text on the cyan band.
+  Copy: "אין שני לרושם ראשוני". The section's height is set in JS from the track width; travel
+  starts the moment the section enters the screen with a quarter of the line already in view (no
+  empty screen). The pinned screen is solid brand navy edge to edge (Michael rejected cyan and the
+  opening white circle) with white text, cyan/green tiles. No JS / reduced motion = static text.
 - `.edge-blur` — fixed progressive backdrop blur along the bottom of the viewport (height via
   `--edge-blur-h`, 8vh), stacked masked layers with doubling blur.
 - Motion: magnetic `.btn`/`.nav-cta` (uses the standalone `translate` property so it doesn't
   clash with hover `transform`), hero photo parallax.
-- Portfolio (`.work`, "PORTFOLIO — HOVER-REVEAL LIST"): full-bleed rows split by a fixed hairline in brand blue at 50%;
+- Portfolio (`.work`, "PORTFOLIO — HOVER-REVEAL LIST"): compact full-bleed rows split by a fixed hairline in brand blue at 50%,
+  followed by a "לכל הפרויקטים" `.btn-ghost` (`.work-more`) linking to the future `projects.html`;
   name in brand blue at 50% (`data-text` copy in white wipes in from the right when active, nothing in the
   row moves), description always shown, field/year; no numbers or icons. Hovering a row activates it; on desktop a
   `.work-preview` floats on the left, eased toward the cursor's height with a velocity tilt,
@@ -145,6 +151,11 @@ to the page edges/down, logo scaled), so the condense runs on the compositor wit
 "NAVBAR SCROLL" measures the old wide layout via `.nav-measure` on load/resize/fonts-ready and sets
 `--nav-logo-dx/dy/s` and `--nav-links-dx/dy` on `.nav-container`. Easing tokens: `--ease-out`
 (cubic-bezier(0.23, 1, 0.32, 1)) for entrances/reveals, `--ease-fluid` for sheets/morphs.
+
+**Navbar hover bubble** ("NAVBAR — HOVER BUBBLE", after Aceternity's navbar): one `.nav-pill` behind
+the items springs (Apple spring, damping 1, response 0.3s) to the hovered item's box and fades in
+place when the pointer leaves; it reappears on the item (no slide) after fading. Mouse only. Menu
+(and tab bar) order follows the page: פרויקטים, אודות, שירותים, בואו נדבר.
 
 **Navbar items** all share the CTA's pill box (`border-radius: 999px`, same padding, 1px
 transparent border) so the hover background matches "בואו נדבר" exactly.

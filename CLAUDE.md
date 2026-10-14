@@ -28,7 +28,12 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
   or top-level block per feature (see below)
 - `fonts/` — self-hosted Polin (Hebrew) `.ttf` files (Light/Regular/Bold, uploaded by Michael),
   `@font-face` with weight ranges in `style.css`
-  (Google Sans was removed on purpose — don't reintroduce it)
+  (Google Sans was removed on purpose — don't reintroduce it); Anomalia (`fonts/anomalia-{light,regular,bold}-aaa.woff2`, uploaded by Michael,
+  bold preloaded) for every title and subtitle via `--font-display`: hero, section titles, statement,
+  wave line, project names, process step titles, about intro. Running text stays Polin (`--font`).
+  Sizes are unified (Michael): every `.section-title` uses `--title-size`, every subtitle
+  (`.work-name`, `.process-title`, `.about-intro`) uses `--subtitle-size`; the hero, statement and
+  wave line keep their own display sizes
 - `images/` — logo SVGs (`logo-full.svg`, `logo-icon.svg`) and the hero photo (`miki-hero.png`)
 - Hero live portrait (`.hero-photo` wraps the `<img class="hero-photo-img">` + `<video class="hero-live">`,
   "HERO — LIVE PORTRAIT" in `script.js`): a 3s AI clip of the same photo blinking once

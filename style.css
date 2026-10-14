@@ -25,6 +25,28 @@
   font-style: normal;
   font-display: swap;
 }
+/* Anomalia (uploaded by Michael): every title and subtitle; running text stays Polin */
+@font-face {
+  font-family: 'Anomalia';
+  src: url('fonts/anomalia-light-aaa.woff2') format('woff2');
+  font-weight: 100 349;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Anomalia';
+  src: url('fonts/anomalia-regular-aaa.woff2') format('woff2');
+  font-weight: 350 599;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Anomalia';
+  src: url('fonts/anomalia-bold-aaa.woff2') format('woff2');
+  font-weight: 600 1000;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* ===========================
    ROOT & RESET
@@ -60,6 +82,10 @@
   --fg-dim: rgba(255,255,255,0.18);
   --danger: #ff6b6b;        /* form errors only */
   --font: 'Polin', 'Arial Hebrew', Arial, sans-serif;
+  --font-display: 'Anomalia', 'Polin', 'Arial Hebrew', Arial, sans-serif;
+  /* one size for every section title, one for every subtitle (Michael) */
+  --title-size: clamp(2.6rem, 5vw, 4.75rem);
+  --subtitle-size: clamp(1.6rem, 2.6vw, 2.5rem);
   --shadow: 0 8px 48px rgba(0,0,0,0.5);
   --glow: 0 0 80px rgba(100,193,210,0.12);
 }
@@ -145,6 +171,10 @@ button, .btn, .nav-cta, .wa-launcher, .wa-cta, .process-steps button {
 /* never leave a single word alone on the last line: balanced headings,
    "pretty" paragraphs (falls back to normal wrapping where unsupported) */
 h1, h2, h3, .section-title, .process-title, .hero-title, .work-name { text-wrap: balance; }
+
+/* titles and subtitles in Anomalia; running text keeps Polin (--font) */
+h1, h2, h3, .hero-title, .section-title, .process-title, .work-name,
+.about-intro, .statement-text, .wave-track { font-family: var(--font-display); }
 p, blockquote, li, summary, .work-desc, .faq-sub { text-wrap: pretty; }
 
 .section-header {
@@ -178,7 +208,7 @@ p, blockquote, li, summary, .work-desc, .faq-sub { text-wrap: pretty; }
 .section-header--edit .section-title {
   grid-area: title;
   margin: 0;
-  font-size: clamp(2.8rem, 6.2vw, 6rem);
+  font-size: var(--title-size);
   line-height: 1.02;
   letter-spacing: -0.025em;   /* display size: tighter tracking */
 }
@@ -200,7 +230,7 @@ p, blockquote, li, summary, .work-desc, .faq-sub { text-wrap: pretty; }
 }
 
 .section-title {
-  font-size: clamp(2.2rem, 4.5vh, 4rem);
+  font-size: var(--title-size);
   font-weight: 900;
   line-height: 1.2;
   letter-spacing: -0.01em;
@@ -790,7 +820,7 @@ html.theme-light .navbar::after {
 }
 
 .statement-text {
-  font-family: var(--font);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: clamp(1.6rem, 3.4vw, 2.8rem);
   line-height: 1.6;
@@ -968,7 +998,7 @@ html.theme-light .navbar::after {
 }
 
 .about-intro {
-  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  font-size: var(--subtitle-size);
   font-weight: 300;
   line-height: 1.45;
   color: var(--text);
@@ -1073,10 +1103,10 @@ html.theme-light .navbar::after {
 }
 
 .process-title {
-  font-family: var(--font);
+  font-family: var(--font-display);
   /* Polin Light, larger — thin display weight per Michael */
   font-weight: 300;
-  font-size: clamp(2.1rem, 3.3vw, 3rem);
+  font-size: var(--subtitle-size);
   letter-spacing: 0.01em;
   color: var(--accent);
   line-height: 1.12;
@@ -1210,7 +1240,7 @@ html.theme-light .navbar::after {
   .process-steps-holder { grid-template-columns: 1fr; align-items: start; }
   .process-steps-col { justify-content: center; }
   .is-stacked .process-num { font-size: 1.2rem; }
-  .is-stacked .process-title { font-size: 1.7rem; margin-bottom: 8px; }
+  .is-stacked .process-title { font-size: var(--subtitle-size); margin-bottom: 8px; }
   .is-stacked .process-body { font-size: 1rem; line-height: 1.5; }
 }
 
@@ -1810,7 +1840,7 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
 }
 
 .magnet-heading .section-title {
-  font-size: clamp(2.6rem, 5.6vw, 6.2rem);
+  font-size: var(--title-size);
   line-height: 1.05;
   letter-spacing: -0.015em;
 }
@@ -1939,7 +1969,7 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
 
 .work-name {
   position: relative;
-  font-size: clamp(1.8rem, 3vw, 3rem);
+  font-size: var(--subtitle-size);
   font-weight: 300;
   line-height: 1.1;
   color: rgba(100,193,210,0.5);   /* brand blue, half opacity */
@@ -2831,7 +2861,7 @@ main.page {
 }
 .site-end .contact > .container { width: 100%; }
 .site-end .contact-info .section-title {
-  font-size: clamp(2.8rem, 6.2vw, 6rem);
+  font-size: var(--title-size);
   line-height: 1.02;
   letter-spacing: -0.025em;
 }
@@ -3456,7 +3486,7 @@ main.page {
   .magnet-heading { max-width: 96%; }
 
   .magnet-heading .section-title {
-    font-size: 2.3rem;
+    font-size: var(--title-size);
     line-height: 1.1;
   }
 

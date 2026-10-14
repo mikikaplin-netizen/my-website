@@ -57,7 +57,7 @@ above the fold (the sticky footer is always geometrically "on screen", so Inters
 can't be used) and never under reduced motion. Michael's logo huge in one color (`.site-end-logo`:
 accent fill masked by `logo-full.svg`, soft-light, opacity 0.4, no animation; Michael disliked the
 light sweep) is the lowest layer, edge to edge along the bottom; above it the vertically centered
-contact block (title at the big-title size, no photo) and the footer bar, whose "הצהרת נגישות" /
+contact block (title at the big-title size, "הרושם הראשון מתחיל בהודעה." closing the hero's first-impression line; no photo) and the footer bar, whose "הצהרת נגישות" /
 "הצהרת פרטיות" are `<button>`s styled as plain text (statements not written yet).
 `#contact` is an empty `.page-end` marker at the end of `<main>`; scrolling to it slides the page
 off the footer. JS that looks for page sections must query `main.page > section`.
@@ -124,14 +124,19 @@ so they render above it. Section backgrounds use semi-transparent colors
   `--edge-blur-h`, 8vh), stacked masked layers with doubling blur.
 - Motion: magnetic `.btn`/`.nav-cta` (uses the standalone `translate` property so it doesn't
   clash with hover `transform`), hero photo parallax.
-- Portfolio (`.work`, "PORTFOLIO — HOVER-REVEAL LIST"): compact full-bleed rows split by a fixed hairline in brand blue at 50%,
-  followed by a "לכל הפרויקטים" `.btn-ghost` (`.work-more`) linking to the future `projects.html`;
-  name in brand blue at 50% (`data-text` copy in white wipes in from the right when active, nothing in the
-  row moves), description always shown, field/year; no numbers or icons. Hovering a row activates it; on desktop a
-  `.work-preview` floats on the left, eased toward the cursor's height with a velocity tilt,
-  wiping between projects. Touch screens activate the mid-viewport row and show each row's
-  `.work-thumb` inline. Visuals are gradient placeholders until Michael's screen recordings
-  arrive (`images/portfolio/`).
+- Portfolio (`.work`, "PORTFOLIO — HOVER-REVEAL LIST + LAPTOP STAND"): 6 projects (שמעוני, תמר בניאל,
+  ישראל זיסקינד, לשכת הטוענים הרבניים, WST, אלתר ספרים) in compact full-bleed rows split by a fixed
+  hairline in brand blue at 50%, followed by a "לכל הפרויקטים" `.btn-ghost` (`.work-more`) linking to
+  the future `projects.html`; name in brand blue at 50% (`data-text` copy in white wipes in from the
+  right when active, nothing in the row moves), description always shown, field/year; no numbers or
+  icons. On desktop `.work-stand` holds a still laptop (`.laptop`) on a tall narrow podium in tones of
+  brand cyan (Michael's idea), sticky in the left column; hovering a row cross-fades the laptop screen
+  to that project. Projects with a screen recording have `<video data-src="images/portfolio/NAME">`
+  (JS adds `.webm`/`.mp4` sources on first activation, plays only the active one while the section is
+  on screen, never under reduced motion; `.has-video` fades it in over the gradient placeholder).
+  Michael's raw recordings (.mov, 100-150MB) are in his Google Drive; ship web-size encodes
+  (~1280px, muted, h264 faststart + vp9) as `images/portfolio/{shimony,tamar-baniel,ziskind}.{webm,mp4}`.
+  Touch screens hide the stand, activate the mid-viewport row and show each row's `.work-thumb` inline.
 
 **Mobile tab bar** (`#tabbar`, ≤768px only — replaces the hamburger, which is hidden there): a
 fixed liquid-glass pill at the bottom (backdrop blur + saturate, specular sheen `::before`, fading

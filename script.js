@@ -1022,29 +1022,64 @@ document.addEventListener('touchstart', () => {}, { passive: true });
 })();
 
 // ===========================
-// PORTFOLIO — HOVER-REVEAL LIST
+// PORTFOLIO — HOVER-REVEAL LIST + LAPTOP STAND
 // ===========================
-// Hovering (or keyboard-focusing) a project row makes it active (accent
-// underline + description). On desktop a preview floats on the left and
-// follows the cursor's height on a spring (Apple damping/response model):
-// it carries momentum, overshoots a touch when the cursor stops, and its tilt
-// comes from its own velocity, so it leans into the direction it travels.
+// Hovering (or keyboard-focusing) a project row makes it active. On desktop
+// a laptop stands still on a podium on the left and its screen cross-fades
+// to the active project; a project with a screen recording plays it there
+// (lazy-loaded on first activation, only while the section is on screen,
+// never under reduced motion). Touch screens activate the mid-viewport row.
 (function () {
   const work = document.querySelector('.work');
   const rows = document.querySelectorAll('.work-row');
   const items = document.querySelectorAll('.work-preview-item');
-  const preview = document.querySelector('.work-preview');
   if (!work || !rows.length) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const stand = document.querySelector('.work-stand');
+  let current = '0', inView = false;
+
+  function syncVideos() {
+    items.forEach(it => {
+      const v = it.querySelector('video[data-src]');
+      if (!v) return;
+      const on = it.dataset.work === current && inView && !reduce &&
+        stand && getComputedStyle(stand).display !== 'none';
+      if (on) {
+        if (!v.dataset.loaded) {
+          v.dataset.loaded = '1';
+          ['webm', 'mp4'].forEach(ext => {
+            const s = document.createElement('source');
+            s.src = v.dataset.src + '.' + ext;
+            s.type = 'video/' + ext;
+            v.appendChild(s);
+          });
+          v.addEventListener('playing', () => it.classList.add('has-video'));
+          v.load();
+        }
+        const p = v.play();
+        if (p && p.catch) p.catch(() => {});
+      } else if (!v.paused) {
+        v.pause();
+      }
+    });
+  }
 
   function activate(i) {
+    current = i;
     rows.forEach(r => r.classList.toggle('is-active', r.dataset.work === i));
     items.forEach(it => it.classList.toggle('is-active', it.dataset.work === i));
+    syncVideos();
   }
 
   rows.forEach(row => {
     row.addEventListener('mouseenter', () => activate(row.dataset.work));
     row.addEventListener('focusin', () => activate(row.dataset.work));
   });
+
+  new IntersectionObserver(entries => {
+    inView = entries[0].isIntersecting;
+    syncVideos();
+  }).observe(work);
 
   // touch screens have no hover: the row crossing the middle of the
   // viewport becomes active instead
@@ -1053,72 +1088,7 @@ document.addEventListener('touchstart', () => {}, { passive: true });
       entries.forEach(e => { if (e.isIntersecting) activate(e.target.dataset.work); });
     }, { rootMargin: '-45% 0px -45% 0px' });
     rows.forEach(r => io.observe(r));
-    return;
   }
-
-  if (!preview) return;
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const RESPONSE = 0.5;   // seconds
-  const DAMPING = 0.72;   // under-damped: the cursor's motion is the momentum
-  const K = Math.pow(2 * Math.PI / RESPONSE, 2);
-  const C = 4 * Math.PI * DAMPING / RESPONSE;
-  let targetY = 0, y = 0, vy = 0, running = false, last = 0;
-
-  function place(clientY) {
-    const r = work.getBoundingClientRect();
-    const h = preview.offsetHeight;
-    targetY = Math.max(0, Math.min(r.height - h, clientY - r.top - h / 2));
-  }
-
-  function tick(now) {
-    const dt = Math.min((now - last) / 1000, 1 / 30);
-    last = now;
-    if (reduce) {
-      y = targetY; vy = 0;
-    } else {
-      vy += (K * (targetY - y) - C * vy) * dt;
-      y += vy * dt;
-    }
-    const tilt = Math.max(-9, Math.min(9, vy * 0.008));
-    preview.style.setProperty('--y', y.toFixed(1) + 'px');
-    preview.style.setProperty('--tilt', tilt.toFixed(2) + 'deg');
-    if (Math.abs(targetY - y) > 0.3 || Math.abs(vy) > 2) requestAnimationFrame(tick);
-    else {
-      y = targetY; vy = 0;
-      preview.style.setProperty('--y', y.toFixed(1) + 'px');
-      preview.style.setProperty('--tilt', '0deg');
-      running = false;
-    }
-  }
-
-  function kick() {
-    if (running) return;
-    running = true;
-    last = performance.now();
-    requestAnimationFrame(tick);
-  }
-
-  const list = work.querySelector('.work-list');
-  list.addEventListener('mouseenter', (e) => {
-    place(e.clientY);
-    if (!work.classList.contains('is-hovering')) {
-      y = targetY; vy = 0; // appear where the cursor is, then follow
-      preview.style.setProperty('--y', y + 'px');
-    }
-    work.classList.add('is-hovering');
-  });
-  list.addEventListener('mousemove', (e) => { place(e.clientY); kick(); });
-  list.addEventListener('mouseleave', () => work.classList.remove('is-hovering'));
-
-  // keyboard: show the preview beside the focused row
-  rows.forEach(row => row.addEventListener('focusin', () => {
-    const rr = row.getBoundingClientRect();
-    place(rr.top + rr.height / 2); kick();
-    work.classList.add('is-hovering');
-  }));
-  list.addEventListener('focusout', (e) => {
-    if (!list.contains(e.relatedTarget)) work.classList.remove('is-hovering');
-  });
 })();
 
 // ===========================

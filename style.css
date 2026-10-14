@@ -1996,7 +1996,7 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
   top: 0;
   bottom: 0;
   left: calc(50% - 50vw + 5vw);
-  width: min(34vw, 520px);
+  width: min(37vw, 580px);
   pointer-events: none;
   z-index: 2;
 }
@@ -2009,52 +2009,103 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
   align-items: center;
 }
 
-.laptop { width: 100%; position: relative; z-index: 1; }
+/* a realistic silver laptop (Magnific stock render, images/webp/laptop.webp,
+   1400x1031, turned toward the list). The art is laid out at its own px in
+   .laptop-art and scaled to the column by script.js (--lap-s); the screen is
+   a 1280x800 box mapped onto the photo's screen corners with matrix3d
+   (corners tl 31,74 / tr 802,32 / br 881,571 / bl 118,683). */
+.laptop {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 1400 / 1031;
+}
 
-.laptop-lid {
-  padding: 2.2% 2.2% 3.2%;
-  border-radius: 18px 18px 6px 6px;
-  background: linear-gradient(180deg, #1c1e3a, #0d0e1c);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.09), inset 0 1px 0 rgba(255,255,255,0.14),
-              0 30px 60px -30px rgba(0,0,0,0.7);
+.laptop-art {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1400px;
+  height: 1031px;
+  transform-origin: 0 0;
+  transform: scale(var(--lap-s, 0.35));
+}
+
+.laptop-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 60px 50px rgba(0,0,0,0.45));
 }
 
 .laptop-screen {
-  position: relative;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  border-radius: 4px;
-  background: #05060d;
-}
-
-/* the hinge + thin base, slightly wider than the lid */
-.laptop-base {
-  position: relative;
-  width: 114%;
-  margin-left: -7%;
-  height: clamp(10px, 1.05vw, 16px);
-  border-radius: 2px 2px 16px 16px / 2px 2px 100% 100%;
-  background: linear-gradient(180deg, #4a4e74 0%, #262947 45%, #14162e 100%);
-  box-shadow: 0 14px 22px -10px rgba(0,0,0,0.6);
-}
-
-.laptop-base::before {      /* thumb notch */
-  content: '';
   position: absolute;
   top: 0;
-  left: 50%;
-  width: 14%;
-  height: 40%;
-  translate: -50% 0;
-  border-radius: 0 0 8px 8px;
-  background: rgba(0,0,0,0.35);
+  left: 0;
+  width: 1280px;
+  height: 800px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #05060d;
+  transform-origin: 0 0;
+  transform: matrix3d(0.683338033, -0.0295808079, 0, 0.000100990377, 0.108322357, 0.758774744, 0, -3.62409398e-06, 0, 0, 1, 0, 31, 74, 0, 1);
+  backface-visibility: hidden;
+}
+
+/* slim browser bar: the recordings are wider than the screen, so the bar
+   takes the difference instead of cropping the sites' logos */
+.laptop-bar {
+  height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 20px;
+  direction: ltr;
+  background: #1b1d33;
+}
+
+.laptop-bar i {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.22);
+}
+
+.laptop-url {
+  width: 42%;
+  height: 24px;
+  margin: 0 auto;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.08);
+}
+
+.laptop-view {
+  position: absolute;
+  top: 46px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* glass: a soft diagonal reflection plus a faint sheen at the top edge */
+.laptop-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    linear-gradient(112deg, rgba(255,255,255,0.13) 0%, rgba(255,255,255,0.05) 34%, rgba(255,255,255,0) 34.2%, rgba(255,255,255,0) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 30%);
 }
 
 /* the podium: one color (brand cyan) played through tones */
 .podium {
   position: relative;
-  width: 62%;
-  margin-top: -2px;
+  width: 58%;
+  margin-top: -4.5%;          /* the laptop's front edge rests on the top face */
+  translate: 6% 0;            /* under the laptop's visual center, not its box */
   display: flex;
   flex-direction: column;
 }
@@ -2098,13 +2149,24 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: 50% 0;
+  object-fit: fill;
   opacity: 0;
   transition: opacity 0.4s ease;
 }
 
 .work-preview-item.has-video video { opacity: 1; }
+
+/* first frame of a project's recording (laptop screen + mobile thumb) */
+.work-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0;
+}
+
+.laptop-view .work-poster { object-fit: fill; }
 
 /* placeholder project visual (until real screens arrive) */
 .work-shot {
@@ -3429,7 +3491,8 @@ main.page {
   .work-stand { display: none; }
   .work-thumb {
     display: block;
-    aspect-ratio: 16 / 10;
+    position: relative;
+    aspect-ratio: 1280 / 690;
     border-radius: var(--radius);
     overflow: hidden;
   }

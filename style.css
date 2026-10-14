@@ -1813,6 +1813,316 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
 }
 
 /* ===========================
+   CRAFT — WHAT A SITE IS MADE OF
+=========================== */
+/* A brand board: one card per layer of the work, each showing the craft
+   itself. Light zone; cards are solid navy while the page is dark and turn
+   white with navy text on the grey page (like the testimonial cards). */
+.craft-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(14px, 1.4vw, 20px);
+}
+
+.craft-card {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 2vw, 28px);
+  border-radius: 24px;
+  background: #15172f;
+  transition: background-color 0.6s ease, box-shadow 0.6s ease;
+}
+
+.craft-card--wide { grid-column: span 2; }
+
+html.theme-light .craft-card {
+  background: #fff;
+  box-shadow: 0 1px 0 rgba(16,16,36,0.04), 0 24px 48px -32px rgba(16,16,36,0.35);
+}
+
+.craft-visual {
+  position: relative;
+  height: 150px;
+  margin-bottom: 22px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.04);
+  display: grid;
+  place-items: center;
+  transition: background-color 0.6s ease;
+}
+
+html.theme-light .craft-visual { background: #F1F2F5; }
+
+.craft-title {
+  margin: 0 0 8px;
+  font-size: clamp(1.35rem, 1.7vw, 1.6rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--fg);
+}
+
+.craft-text {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+/* differentiation: one green dot among the grey */
+.craft-v-diff {
+  display: flex;
+  gap: clamp(10px, 1.4vw, 18px);
+  justify-content: center;
+  align-items: center;
+}
+
+.craft-v-diff span {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(127,130,150,0.45);
+}
+
+.craft-v-diff span.is-you {
+  width: 30px;
+  height: 30px;
+  background: var(--accent-2);
+  box-shadow: 0 0 0 8px rgba(28,211,28,0.15), 0 0 34px rgba(28,211,28,0.55);
+}
+
+/* voice: two speech bubbles */
+.craft-v-voice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 22px;
+}
+
+.craft-bubble {
+  padding: 9px 16px;
+  border-radius: 16px 16px 16px 4px;
+  background: var(--accent);
+  color: #101024;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+}
+
+.craft-bubble--alt {
+  align-self: flex-end;
+  border-radius: 16px 16px 4px 16px;
+  background: #101024;
+  color: #fff;
+}
+
+/* type: the display font big, both families named */
+.craft-v-type {
+  grid-template-columns: auto auto;
+  gap: 18px;
+  align-items: center;
+}
+
+.craft-type-big {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 5.2rem;
+  line-height: 1;
+  color: var(--fg);
+}
+
+.craft-type-meta {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.craft-type-meta b { color: var(--fg); font-weight: 600; }
+
+/* color: the brand palette as tall swatches */
+.craft-v-color {
+  display: flex;
+  padding: 0;
+  place-items: stretch;
+}
+
+.craft-v-color span {
+  flex: 1;
+  position: relative;
+  background: var(--c);
+}
+
+.craft-v-color i {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-style: normal;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.85);
+  direction: ltr;
+}
+
+.craft-v-color span:nth-child(2) i,
+.craft-v-color span:nth-child(3) i { color: rgba(16,16,36,0.75); }
+
+/* copy: the generic line struck out, the sharp one in its place */
+.craft-v-copy {
+  align-content: center;
+  justify-items: start;
+  gap: 8px;
+  padding: 0 clamp(20px, 3vw, 40px);
+  text-align: right;
+}
+
+.craft-v-copy s {
+  font-size: 1rem;
+  color: var(--text-muted);
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+}
+
+.craft-copy-new {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+  line-height: 1.1;
+  color: var(--fg);
+}
+
+/* icons: a small hand-drawn set in one line weight */
+.craft-v-icons {
+  grid-template-columns: repeat(3, 34px);
+  gap: 18px 26px;
+  align-content: center;
+  justify-content: center;
+}
+
+.craft-v-icons svg {
+  width: 34px;
+  height: 34px;
+  fill: none;
+  stroke: var(--fg);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.craft-v-icons svg:nth-child(2) { stroke: var(--accent); }
+
+/* retouch: the same product, flat on one side, finished on the other */
+.craft-v-retouch { display: block; }
+
+.craft-v-retouch img {
+  position: absolute;
+  top: 7%;
+  left: 50%;
+  width: auto;
+  height: 132%;
+  translate: -50% 0;
+  filter: grayscale(1) contrast(0.5) brightness(1.18) blur(1.2px);
+  opacity: 0.8;
+}
+
+.craft-retouch-after {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 0 0 50%);
+}
+
+.craft-retouch-after img {
+  filter: drop-shadow(0 18px 18px rgba(16,16,36,0.35)) saturate(1.1) contrast(1.05);
+  opacity: 1;
+}
+
+.craft-retouch-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: var(--accent);
+}
+
+.craft-tag {
+  position: absolute;
+  top: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: rgba(16,16,36,0.75);
+  color: #fff;
+}
+
+.craft-tag--before { left: 12px; }
+.craft-tag--after { right: 12px; background: var(--accent); color: #101024; }
+
+/* motion: a live button with the site's spinning border, and a cursor */
+.craft-fake-btn {
+  position: relative;
+  padding: 14px 30px;
+  border-radius: 999px;
+  background: #101024;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.craft-fake-btn::before {     /* the site's spinning ring, always on here */
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(from var(--btn-angle), transparent 0deg, var(--accent) 60deg, var(--accent-2) 110deg, transparent 170deg, transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: btnBorderSpin 2.8s linear infinite;
+}
+
+.craft-cursor {
+  position: absolute;
+  top: 56%;
+  left: 58%;
+  width: 26px;
+  height: 26px;
+  fill: #fff;
+  stroke: #101024;
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+  animation: craftCursor 2.8s var(--ease-out) infinite;
+}
+
+@keyframes craftCursor {
+  0%, 100% { translate: 28px 22px; }
+  45%, 70% { translate: 0 0; }
+}
+
+@media (max-width: 1100px) {
+  .craft-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .craft-grid { grid-template-columns: 1fr; }
+  .craft-card--wide { grid-column: auto; }
+  .craft-visual { height: 132px; }
+  .craft-v-diff { gap: 10px; }
+  .craft-v-diff span:nth-child(-n+3),
+  .craft-v-diff span:nth-last-child(-n+3) { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .craft-fake-btn::before, .craft-cursor { animation: none; }
+}
+
+/* ===========================
    MAGNET FIELD
 =========================== */
 .magnet-field {

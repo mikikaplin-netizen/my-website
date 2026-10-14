@@ -291,7 +291,7 @@ document.addEventListener('keydown', (e) => {
 // REVEAL ON SCROLL
 // ===========================
 const revealEls = document.querySelectorAll(
-  '.process-row, .work-row, .about-grid, .contact-wrapper, .section-header, .clients-marquee, .faq-chat'
+  '.process-row, .work-row, .about-grid, .contact-wrapper, .section-header, .clients-marquee, .faq-chat, .craft-card'
 );
 
 revealEls.forEach(el => el.classList.add('reveal'));
@@ -1165,6 +1165,39 @@ document.addEventListener('touchstart', () => {}, { passive: true });
     if (active) requestAnimationFrame(tick);
     else running = false;
   }
+})();
+
+// ===========================
+// HERO — MOBILE TITLE FIT
+// ===========================
+// On phones the hero title fills half the screen height (Michael). How the
+// words wrap depends on the width, so the size is searched, not fixed:
+// binary search for the font size whose wrapped height is closest to 50% of
+// the viewport. Re-fits on width changes only (the URL bar changes height).
+(function () {
+  const title = document.querySelector('.hero-title');
+  if (!title) return;
+  const mq = window.matchMedia('(max-width: 768px)');
+  let lastW = 0;
+
+  function fit() {
+    if (!mq.matches) { title.style.fontSize = ''; lastW = 0; return; }
+    const w = window.innerWidth;
+    if (w === lastW) return;
+    lastW = w;
+    const target = window.innerHeight * 0.5;
+    let lo = 28, hi = 140;
+    for (let k = 0; k < 14; k++) {
+      const mid = (lo + hi) / 2;
+      title.style.fontSize = mid + 'px';
+      if (title.getBoundingClientRect().height > target) hi = mid; else lo = mid;
+    }
+    title.style.fontSize = lo.toFixed(1) + 'px';
+  }
+
+  fit();
+  window.addEventListener('resize', fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { lastW = 0; fit(); });
 })();
 
 // ===========================

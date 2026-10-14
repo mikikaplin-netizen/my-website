@@ -51,7 +51,7 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
 ## Architecture / how the page is wired together
 
 **Sections are independent and stack in document order** inside `index.html`: navbar → hero →
-statement → clients → portfolio → about → process → magnet → wave → testimonials → faq, all inside
+statement → clients → portfolio → about → process → craft → magnet → wave → testimonials → faq, all inside
 `<main class="page">`, then `<footer class="site-end">` (contact form + footer bar), plus the tab bar,
 edge blur and WhatsApp widget appended at the end of `<body>`. There's no JS component system — each section's behavior is a self-contained
 block in `script.js` that queries its own DOM by id/class and no-ops if the element isn't present
@@ -71,7 +71,7 @@ above the fold (the sticky footer is always geometrically "on screen", so Inters
 can't be used) and never under reduced motion. Michael's logo huge in one color (`.site-end-logo`:
 accent fill masked by `logo-full.svg`, soft-light, opacity 0.4, no animation; Michael disliked the
 light sweep) is the lowest layer, edge to edge along the bottom; above it the vertically centered
-contact block (title at the big-title size, "הרושם הראשון מתחיל בהודעה." closing the hero's first-impression line; no photo) and the footer bar, whose "הצהרת נגישות" /
+contact block (title at the big-title size, "בואו ניתן לעסק שלך את הרושם שמגיע לו." with the sub "השאירו פרטים ואחזור אליכם לשיחת היכרות קצרה. את כל השאר, מהאסטרטגיה ועד הפיקסל האחרון, אני לוקח על עצמי." Michael wants it to empower the visitor and never hand them homework: he does the work, not them; no photo) and the footer bar, whose "הצהרת נגישות" /
 "הצהרת פרטיות" are `<button>`s styled as plain text (statements not written yet).
 `#contact` is an empty `.page-end` marker at the end of `<main>`; scrolling to it slides the page
 off the footer. JS that looks for page sections must query `main.page > section`.
@@ -253,6 +253,15 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
   bubbles (no-JS fallback); "FAQ — CHAT" turns questions into suggestion chips that play out visitor
   bubble (right, cyan) → typing dots → Michael's answer (left, in a `.faq-row` with his round avatar
   at the bubble's outer bottom corner); the first exchange auto-plays when first seen.
+- Craft (`#craft`, "CRAFT — WHAT A SITE IS MADE OF", light zone, between process and magnet): "כל פיקסל,
+  בכוונה." Michael's message that a site is many layers he hand-crafts down to the pixel. A bento
+  brand-board of 8 `.craft-card`s (4 cols → 2 at ≤1100px → 1 at ≤640px), each visual demonstrates
+  its craft: בידול (one green dot among grey), שפה וקול (bubbles), טיפוגרפיה (Anomalia/Polin),
+  צבע (brand swatches), כתיבה (generic line struck out → "אין שני לרושם ראשוני."), איקונים
+  (hand-drawn SVG set), ליטוש תמונות ומוצרים (laptop before/after split), תנועה ופרטים קטנים (the
+  site's spinning-ring button + cursor). Cards: navy in dark, white on grey.
+- Hero title on phones (≤768px) is fitted by JS ("HERO — MOBILE TITLE FIT") to half the screen height
+  (binary search on font size, since wrapping depends on width; re-fits on width change only).
 - About photo (`.about-photo`, the transparent `miki-hero.png` cut-out) has no panel, radius or shadow: Michael asked to remove its background; it stands straight on the page (hidden on phones).
 - About opens with "קוראים לי מיכאל קאפלין, ואני מעצב ובונה אתרים עם אופי." (`.about-intro`); no badge
   on the photo (the +30 lives in the numbers band).

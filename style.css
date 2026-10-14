@@ -2076,14 +2076,21 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
 /* the podium: one color (brand cyan) played through tones */
 .podium {
   position: relative;
-  width: 58%;
-  /* the podium's top edge hides behind the laptop: measured from the photo,
-     the laptop's lowest outline over the podium's width is at y 895 of 1031,
-     so the top goes up 151px of the 1400px art (10.8% of the width) */
-  margin-top: -10.8%;
-  translate: 6% 0;            /* under the laptop's visual center, not its box */
+  width: 54%;
+  /* centered under the laptop; its top edge hides behind the laptop:
+     measured from the photo, the laptop's lowest outline over the column's
+     width is at y 883 of 1031, so the top goes up 163px of the 1400px art
+     (11.6% of the width) */
+  margin-top: -11.6%;
   display: flex;
   flex-direction: column;
+}
+
+/* both faces fade into the floor instead of ending in a hard cut */
+.podium-front,
+.podium-side {
+  -webkit-mask-image: linear-gradient(180deg, #000 68%, transparent 100%);
+          mask-image: linear-gradient(180deg, #000 68%, transparent 100%);
 }
 
 .podium-top {
@@ -2094,23 +2101,26 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
 }
 
 .podium-front {
-  height: clamp(240px, 40vh, 420px);
+  position: relative;
+  height: clamp(260px, 44vh, 460px);
   background:
-    linear-gradient(90deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 22%, rgba(255,255,255,0) 70%, rgba(0,0,0,0.22) 100%),
-    linear-gradient(180deg, #64C1D2 0%, #4fa7b8 55%, #3b8b9b 100%);
-  box-shadow: inset 0 -30px 40px -20px rgba(0,0,0,0.25);
+    linear-gradient(90deg, rgba(255,255,255,0.28) 0, rgba(255,255,255,0.1) 3px, rgba(255,255,255,0) 18%, rgba(255,255,255,0) 72%, rgba(0,0,0,0.12) 100%),
+    linear-gradient(180deg, #5cb6c7 0%, #4fa7b8 45%, #3d8d9d 100%);
 }
 
-.podium::after {            /* contact shadow of the laptop on the top face */
-  content: '';
+/* the column's left side: the laptop is seen a little from the left (its
+   ports show), so the column shows its side too, darker, receding up-left */
+.podium-side {
   position: absolute;
-  top: -6px;
-  left: -18%;
-  right: -18%;
-  height: 20px;
-  background: radial-gradient(50% 50% at 50% 50%, rgba(0,0,0,0.35), transparent 70%);
-  z-index: 0;
+  top: 0;
+  right: 100%;
+  width: 20%;
+  height: clamp(260px, 44vh, 460px);
+  transform-origin: 100% 0;
+  transform: skewY(28deg);
+  background: linear-gradient(180deg, #3c8a99 0%, #2f7584 50%, #255f6c 100%);
 }
+
 
 .work-preview-item {
   position: absolute;

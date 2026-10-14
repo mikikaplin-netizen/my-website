@@ -2028,36 +2028,9 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
   backface-visibility: hidden;
 }
 
-/* slim browser bar: the recordings are wider than the screen, so the bar
-   takes the difference instead of cropping the sites' logos */
-.laptop-bar {
-  height: 46px;
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 0 20px;
-  direction: ltr;
-  background: #1b1d33;
-}
-
-.laptop-bar i {
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.22);
-}
-
-.laptop-url {
-  width: 42%;
-  height: 24px;
-  margin: 0 auto;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.08);
-}
-
 .laptop-view {
   position: absolute;
-  top: 46px;
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
@@ -2079,7 +2052,7 @@ html.theme-light .cl-track img { filter: brightness(0.4); opacity: 0.75; }
 .podium {
   position: relative;
   width: 58%;
-  margin-top: -4.5%;          /* the laptop's front edge rests on the top face */
+  margin-top: calc(-4.5% - 2vh); /* the laptop sits into the top face, hiding its edge */
   translate: 6% 0;            /* under the laptop's visual center, not its box */
   display: flex;
   flex-direction: column;

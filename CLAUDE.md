@@ -125,7 +125,7 @@ so they render above it. Section backgrounds use semi-transparent colors
 - Motion: magnetic `.btn`/`.nav-cta` (uses the standalone `translate` property so it doesn't
   clash with hover `transform`), hero photo parallax.
 - Portfolio (`.work`, "PORTFOLIO — HOVER-REVEAL LIST + LAPTOP STAND"): 5 projects (שמעוני, תמר בניאל,
-  ישראל זיסקינד, לשכת הטוענים הרבניים, WST; Michael dropped אלתר ספרים) in compact full-bleed rows split by a fixed
+  ישראל זיסקינד, לשכת הטוענים הרבניים, אלימנט; Michael dropped אלתר ספרים and, for now, WST) in compact full-bleed rows split by a fixed
   hairline in brand blue at 50%, followed by a "לכל הפרויקטים" `.btn-ghost` (`.work-more`) linking to
   the future `projects.html`; name in brand blue at 50% (`data-text` copy in white wipes in from the
   right when active, nothing in the row moves), description always shown, field/year; no numbers or
@@ -134,7 +134,7 @@ so they render above it. Section backgrounds use semi-transparent colors
   to that project. Projects with a screen recording have `<video data-src="images/portfolio/NAME">`
   (JS adds `NAME.mp4` then `NAME.webm` sources on first activation, plays only the active one while the section is
   on screen, never under reduced motion; `.has-video` fades it in over the gradient placeholder).
-  Recordings: `images/portfolio/{shimony,tamar-baniel,ziskind}.mp4` (1280×690 = the recordings' own
+  Recordings (all 5 projects): `images/portfolio/{shimony,tamar-baniel,ziskind,lishkatoanim,element}.mp4` (1280×690 = the recordings' own
   ratio, which the laptop screen matches; 30fps, h264 crf 30, faststart, no audio, 1.3–2MB; a VP9 `.webm` fallback only
   loads where H.264 can't play, e.g. Playwright's Chromium) + `NAME-poster.webp` (`.work-poster`, shown in the laptop and the mobile thumb).
   Michael's raw .mov files (2878×1552, 60fps) live in his Google Drive folder; their openings are
@@ -142,10 +142,9 @@ so they render above it. Section backgrounds use semi-transparent colors
   the reload's headline entrance). The laptop is a realistic silver render from Magnific stock
   ("3D Silver Laptop with Blank Screen", PSD subject layer → `images/webp/laptop.webp`, 1400×1031 alpha),
   turned toward the list (Michael's ask: it "looks at the list"). `.laptop-art` is laid out at the
-  photo's px and scaled by JS (`--lap-s`); `.laptop-screen` (1280×800: slim `.laptop-bar` browser bar
-  + `.laptop-view`) is mapped onto the photo's screen corners with a fixed `matrix3d` (homography; redo
-  it if the image changes). Recordings fill the view (`object-fit: fill`, a slight squeeze instead of
-  cropping the sites' edge logos); a soft diagonal glare sits on the glass.
+  photo's px and scaled by JS (`--lap-s`); `.laptop-screen` (1280×800 `.laptop-view`, no browser bar: Michael removed it) is mapped onto the photo's screen corners with a fixed `matrix3d` (homography; redo
+  it if the image changes). Recordings fill the view (`object-fit: fill`, a squeeze instead of
+  cropping the sites' edge logos); the podium is pulled up 2vh under the laptop so its top edge hides; a soft diagonal glare sits on the glass.
   Touch screens hide the stand, activate the mid-viewport row and show each row's `.work-thumb` inline.
 
 **Mobile tab bar** (`#tabbar`, ≤768px only — replaces the hamburger, which is hidden there): a

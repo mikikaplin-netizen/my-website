@@ -3926,20 +3926,17 @@ main.page {
   .magnet-dominant-title { font-size: 1.15rem; }
   .magnet-dominant-sub { font-size: 0.75rem; }
 
-  /* mobile: plain stacked rows, each with its own inline visual */
-  .work-stand { display: none; }
-  .work-thumb {
-    display: block;
-    position: relative;
-    aspect-ratio: 1280 / 690;
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-  .work-row { display: flex; flex-direction: column; }
-  .work-thumb { order: -1; }
-  .work-link { grid-template-columns: minmax(0, 1fr); padding: 20px 5vw 28px; }
+  /* mobile: the laptop stays beside the list, like on desktop (Michael):
+     rows keep to the right half, the stand sits sticky on the left and
+     bleeds a little off the edge so the laptop stays big; the row crossing
+     the middle of the screen is the active one (script.js) */
+  .work-link { grid-template-columns: minmax(0, 1fr); padding: 22px 5vw 22px 47vw; }
   .work-meta { display: none; }
-  .work-thumb { margin: 28px 5vw 0; }
+  .work-desc { font-size: 0.84rem; line-height: 1.5; }
+  .portfolio { overflow-x: clip; }   /* the bleed must not scroll sideways (RTL) */
+  .work-stand { left: calc(50% - 50vw - 9vw); width: 58vw; }
+  .stand-sticky { top: calc(50svh - 24vw); }
+  .podium-front, .podium-side { height: 30vh; }
 
   .contact-wrapper {
     grid-template-columns: 1fr;

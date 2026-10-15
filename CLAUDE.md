@@ -164,7 +164,10 @@ so they render above it. Section backgrounds use semi-transparent colors
   photo's px and scaled by JS (`--lap-s`); `.laptop-screen` (1280×800 `.laptop-view`, no browser bar: Michael removed it) is mapped onto the photo's screen corners with a fixed `matrix3d` (homography; redo
   it if the image changes). Recordings fill the view (`object-fit: fill`, a squeeze instead of
   cropping the sites' edge logos); the podium is centered under the laptop (Michael: it wasn't centered) and has no visible top face: it is pulled up 11.6% of the width so its top edge sits behind the laptop's lowest outline (measured from the photo's alpha), so the laptop rests on it, not floating. Depth comes from a darker left side face (`.podium-side`, skewY 28deg, matching the laptop's view from the left) and both faces fade into the floor (mask); without them it read as a flat strip; a soft diagonal glare sits on the glass.
-  Touch screens hide the stand, activate the mid-viewport row and show each row's `.work-thumb` inline.
+  Phones/tablets (≤900px) keep the stand too (Michael): rows hold the right half (desc smaller, no
+  meta), the sticky laptop + podium sit on the left bleeding 9vw off the edge (`.portfolio { overflow-x:
+  clip }` so RTL can't scroll sideways); touch screens activate the mid-viewport row. `.work-thumb` is
+  no longer shown anywhere.
 
 **Mobile tab bar** (`#tabbar`, ≤768px only — replaces the hamburger, which is hidden there): a
 fixed liquid-glass pill at the bottom (backdrop blur + saturate, specular sheen `::before`, fading

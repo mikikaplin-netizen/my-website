@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>מעבדה: תצוגת פרויקטים בתלת מימד</title>
+<style>
+@font-face { font-family: 'Polin'; src: url('../fonts/Polin-Regular.ttf') format('truetype'); font-weight: 100 599; font-display: swap; }
+@font-face { font-family: 'Polin'; src: url('../fonts/Polin-Bold.ttf') format('truetype'); font-weight: 600 1000; font-display: swap; }
+@font-face { font-family: 'Anomalia'; src: url('../fonts/anomalia-light-aaa.woff2') format('woff2'); font-weight: 100 349; font-display: swap; }
+@font-face { font-family: 'Anomalia'; src: url('../fonts/anomalia-bold-aaa.woff2') format('woff2'); font-weight: 600 1000; font-display: swap; }
+:root {
+  --bg: #101024; --bg-2: #15172f; --accent: #64C1D2; --accent-2: #1CD31C;
+  --fg: #fff; --muted: rgba(255,255,255,0.62);
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+}
+* { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: "Polin", Arial, sans-serif; }
+h1, h2, h3 { font-family: 'Anomalia', 'Polin', sans-serif; margin: 0; text-wrap: balance; }
+.intro { padding: 12vh 6vw 6vh; max-width: 1100px; }
+.intro h1 { font-size: clamp(2.4rem, 5vw, 4.4rem); line-height: 1.05; }
+.intro p { color: var(--muted); font-size: 1.1rem; line-height: 1.7; max-width: 60ch; }
+.demo { position: relative; overflow-x: clip; padding: 10vh 6vw; border-top: 1px solid rgba(100,193,210,0.18); }
+.demo-head { display: flex; gap: 24px; align-items: baseline; justify-content: space-between; flex-wrap: wrap; margin-bottom: 5vh; }
+.demo-head h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+.demo-head h2 span { color: var(--accent); font-family: 'Polin'; font-size: 0.5em; font-weight: 600; letter-spacing: 0.1em; margin-inline-start: 12px; vertical-align: middle; }
+.demo-head p { color: var(--muted); max-width: 46ch; margin: 0; line-height: 1.6; }
+.stage { display: grid; grid-template-columns: minmax(220px, 0.8fr) 2fr; gap: 4vw; align-items: center; min-height: 520px; }
+.names { list-style: none; margin: 0; padding: 0; position: relative; z-index: 20; }
+.names li { font-family: 'Anomalia', 'Polin'; font-weight: 300; font-size: clamp(1.4rem, 2.2vw, 2rem); padding: 10px 0; color: rgba(100,193,210,0.5); cursor: pointer; border-bottom: 1px solid rgba(100,193,210,0.18); transition: color .3s; }
+.names li.on { color: #fff; }
+.scene { position: relative; height: 520px; perspective: 1600px; }
+.screen { position: absolute; width: 480px; aspect-ratio: 1280/690; border-radius: 12px; overflow: hidden; background: #05060d center/cover no-repeat;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 40px 80px -30px rgba(0,0,0,0.8); transform-style: preserve-3d; }
+.screen video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; opacity: 0; transition: opacity .4s; }
+.screen.playing video { opacity: 1; }
+.screen::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255,255,255,0.12), rgba(255,255,255,0) 35%); pointer-events: none; }
+@media (max-width: 860px) { .stage { grid-template-columns: 1fr; } .scene { height: 380px; } .screen { width: 300px; } }
+
+/* A: stacked deck */
+.sA .screen { top: 50%; left: 50%; margin: -130px 0 0 -240px; transition: transform .9s var(--ease), filter .9s var(--ease), opacity .9s; }
+
+/* B: ring */
+.sB .ring { position: absolute; top: 50%; left: 50%; width: 0; height: 0; transform-style: preserve-3d; transition: transform 1.2s var(--ease); }
+.sB .screen { width: 360px; margin: -97px 0 0 -180px; backface-visibility: hidden; }
+
+/* C: coverflow */
+.sC { clip-path: inset(-60px 0); }
+.sC .screen { top: 50%; left: 50%; margin: -130px 0 0 -240px; transition: transform .8s var(--ease), filter .8s; }
+
+/* D: rises with scroll */
+.sD { height: 260vh; padding: 0; }
+.sD .pin { position: sticky; top: 0; height: 100vh; display: grid; place-items: center; perspective: 1400px; overflow: hidden; }
+.sD .demo-head { position: absolute; top: 8vh; right: 6vw; left: 6vw; }
+.sD .screen { position: relative; width: min(900px, 80vw); transform-origin: 50% 100%; }
+.sD .floor { position: absolute; bottom: 18vh; width: 70vw; height: 30px; border-radius: 50%; background: radial-gradient(closest-side, rgba(100,193,210,0.35), transparent); filter: blur(10px); }
+
+/* E: depth layers tilt to the cursor */
+.sE.scene { display: grid; place-items: center; }
+.sE .rig { position: relative; width: 520px; aspect-ratio: 1280/690; transform-style: preserve-3d; }
+.sE .rig .screen { position: absolute; inset: 0; width: 100%; }
+.sE .chip { position: absolute; padding: 12px 18px; border-radius: 14px; background: rgba(21,23,47,0.85); backdrop-filter: blur(10px); box-shadow: 0 20px 40px -20px #000, inset 0 0 0 1px rgba(255,255,255,0.1); font-size: .9rem; white-space: nowrap; }
+.sE .chip b { display: block; font-family: 'Anomalia'; font-size: 1.2rem; }
+.sE .phone { position: absolute; width: 120px; aspect-ratio: 9/19; border-radius: 22px; border: 5px solid #0b0c18; background: #05060d center/cover no-repeat; box-shadow: 0 30px 50px -20px #000; }
+.sE .blob { position: absolute; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, var(--accent), transparent 70%); filter: blur(20px); opacity: .55; }
+
+/* F: isometric wall */
+.sF.scene { overflow: hidden; clip-path: inset(0 round 24px); perspective: none; border-radius: 24px; background: radial-gradient(ellipse at center, #1a1d3d, var(--bg) 70%); }
+.sF .plane { position: absolute; top: 50%; left: 50%; width: 1400px; transform: translate(-50%, -50%) rotateX(55deg) rotateZ(-38deg); transform-style: preserve-3d; }
+.sF .rows { display: grid; gap: 26px; animation: drift 40s linear infinite; }
+.sF .row { display: flex; gap: 26px; }
+.sF .row:nth-child(2) { translate: -180px 0; }
+.sF .screen { position: relative; flex: none; width: 300px; transition: transform .6s var(--ease), box-shadow .6s; }
+.sF .screen.lift { transform: translateZ(70px); box-shadow: 0 0 0 2px var(--accent), 0 60px 60px -20px rgba(0,0,0,.9); }
+@keyframes drift { from { translate: 0 0; } to { translate: 0 -50%; } }
+
+@media (prefers-reduced-motion: reduce) { .sF .rows { animation: none; } }
+</style>
+</head>
+<body>
+
+<header class="intro">
+  <h1>שש דרכים להציג פרויקט, בתלת מימד ובתנועה.</h1>
+  <p>כל דוגמה כאן חיה, עם הפרויקטים האמיתיים שלך. עברו עם העכבר על שמות הפרויקטים (או לחצו בנייד). זה דף מעבדה בלבד, הוא לא מקושר מהאתר.</p>
+</header>
+
+<section class="demo" id="A">
+  <div class="demo-head"><h2>ערימת מסכים <span>A</span></h2><p>כל הפרויקטים עומדים בערימה מוטה בעומק. הפרויקט שנבחר נשלף החוצה וקדימה, והשאר נסוגים לאחור.</p></div>
+  <div class="stage"><ul class="names"></ul><div class="scene sA"></div></div>
+</section>
+
+<section class="demo" id="B">
+  <div class="demo-head"><h2>טבעת מסתובבת <span>B</span></h2><p>המסכים מסודרים על טבעת בחלל. היא מסתובבת לאט מעצמה, ובבחירת פרויקט מגיעה אליו ועוצרת.</p></div>
+  <div class="stage"><ul class="names"></ul><div class="scene sB"><div class="ring"></div></div></div>
+</section>
+
+<section class="demo" id="C">
+  <div class="demo-head"><h2>קאבר-פלואו <span>C</span></h2><p>שורת מסכים: הנבחר ישר ומולך, והשכנים מסתובבים הצידה בזווית. מוכר מעולם המוזיקה של אפל.</p></div>
+  <div class="stage"><ul class="names"></ul><div class="scene sC"></div></div>
+</section>
+
+<section class="demo sD" id="D">
+  <div class="pin">
+    <div class="demo-head"><h2>מסך שקם בגלילה <span>D</span></h2><p>המסך שוכב על הרצפה, ובגלילה הוא מתרומם עד שהוא עומד מולך, ואז הסרטון מתחיל.</p></div>
+    <div class="floor"></div>
+    <div class="screen" data-i="1"></div>
+  </div>
+</section>
+
+<section class="demo" id="E">
+  <div class="demo-head"><h2>שכבות בעומק <span>E</span></h2><p>המסך, גרסת הנייד וכרטיסי מידע מרחפים בשכבות עומק שונות. כל הסצנה נוטה לכיוון העכבר, והשכבות זזות כל אחת בקצב שלה.</p></div>
+  <div class="stage"><ul class="names"></ul><div class="scene sE"><div class="rig"></div></div></div>
+</section>
+
+<section class="demo" id="F">
+  <div class="demo-head"><h2>קיר איזומטרי <span>F</span></h2><p>כל העבודות פרושות על משטח באלכסון שזורם לאט. הפרויקט שנבחר מתרומם מהקיר עם מסגרת תכלת.</p></div>
+  <div class="stage"><ul class="names"></ul><div class="scene sF"><div class="plane"><div class="rows"></div></div></div></div>
+</section>
+
+<script>
+const P = [
+  { name: 'משרד שמעוני', slug: 'shimony', field: 'משפטים' },
+  { name: 'תמר בניאל', slug: 'tamar-baniel', field: 'עיצוב פנים' },
+  { name: 'עו"ד ישראל זיסקינד', slug: 'ziskind', field: 'משרד עורך דין' },
+  { name: 'לשכת הטוענים הרבניים', slug: 'lishkatoanim', field: 'מוסדות מקצועיים' },
+  { name: 'אלימנט', slug: 'element', field: 'גבס ודקורציה' },
+];
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const poster = s => `../images/portfolio/${s}-poster.webp`;
+
+function makeScreen(p, withVideo) {
+  const d = document.createElement('div');
+  d.className = 'screen';
+  d.style.backgroundImage = `url(${poster(p.slug)})`;
+  if (withVideo && !reduce) {
+    const v = document.createElement('video');
+    v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'none';
+    v.dataset.src = `../images/portfolio/${p.slug}`;
+    v.addEventListener('playing', () => d.classList.add('playing'));
+    d.appendChild(v);
+  }
+  return d;
+}
+function play(screen, on) {
+  const v = screen.querySelector('video'); if (!v) return;
+  if (on) { if (!v.src) v.src = v.dataset.src + '.mp4'; v.play().catch(() => {}); }
+  else { v.pause(); screen.classList.remove('playing'); }
+}
+function names(section, onPick) {
+  const ul = section.querySelector('.names'); if (!ul) return () => {};
+  P.forEach((p, i) => {
+    const li = document.createElement('li'); li.textContent = p.name;
+    li.addEventListener('mouseenter', () => onPick(i));
+    li.addEventListener('click', () => onPick(i));
+    ul.appendChild(li);
+  });
+  return i => ul.querySelectorAll('li').forEach((li, k) => li.classList.toggle('on', k === i));
+}
+
+// A: stacked deck
+(() => {
+  const sec = document.getElementById('A'), scene = sec.querySelector('.scene');
+  const screens = P.map(p => { const s = makeScreen(p, true); scene.appendChild(s); return s; });
+  const mark = names(sec, pick);
+  function pick(cur) {
+    mark(cur);
+    screens.forEach((s, i) => {
+      const k = (i - cur + P.length) % P.length;          // 0 = picked
+      if (k === 0) s.style.transform = 'translate3d(18%, 6%, 140px) rotateY(14deg) rotateX(3deg)';
+      else s.style.transform = `translate3d(${-6 - k * 16}%, ${-k * 7}%, ${-k * 110}px) rotateY(28deg) rotateX(6deg)`;
+      s.style.filter = k ? `brightness(${1 - k * 0.14}) blur(${k * 0.4}px)` : 'none';
+      s.style.zIndex = 10 - k;
+      play(s, k === 0);
+    });
+  }
+  pick(0);
+})();
+
+// B: ring
+(() => {
+  const sec = document.getElementById('B'), ring = sec.querySelector('.ring');
+  const R = 420, step = 360 / P.length;
+  P.forEach((p, i) => { const s = makeScreen(p, false); s.style.transform = `rotateY(${i * step}deg) translateZ(${R}px)`; ring.appendChild(s); });
+  let angle = 0, auto = !reduce, timer;
+  const mark = names(sec, i => { auto = false; clearTimeout(timer); go(i); timer = setTimeout(() => auto = !reduce, 6000); });
+  function go(i) { mark(i); const target = -i * step; let d = ((target - angle) % 360 + 540) % 360 - 180; angle += d; ring.style.transform = `translateZ(-${R}px) rotateX(-6deg) rotateY(${angle}deg)`; }
+  go(0);
+  let i = 0; setInterval(() => { if (auto) go(i = (i + 1) % P.length); }, 3200);
+})();
+
+// C: coverflow
+(() => {
+  const sec = document.getElementById('C'), scene = sec.querySelector('.scene');
+  const screens = P.map(p => { const s = makeScreen(p, true); scene.appendChild(s); return s; });
+  const mark = names(sec, pick);
+  function pick(cur) {
+    mark(cur);
+    screens.forEach((s, i) => {
+      const d = i - cur;
+      const x = d === 0 ? 0 : Math.sign(d) * (42 + Math.abs(d) * 14);
+      s.style.transform = d === 0 ? 'translateZ(80px)' : `translateX(${-x}%) translateZ(${-Math.abs(d) * 120}px) rotateY(${d > 0 ? 55 : -55}deg)`;
+      s.style.zIndex = 10 - Math.abs(d);
+      s.style.filter = d ? 'brightness(.6)' : 'none';
+      play(s, d === 0);
+    });
+  }
+  pick(2);
+})();
+
+// D: rises with scroll
+(() => {
+  const sec = document.getElementById('D'), s0 = sec.querySelector('.screen');
+  const s = makeScreen(P[1], true); s0.replaceWith(s); s.style.width = 'min(900px, 80vw)'; s.style.position = 'relative'; s.style.transformOrigin = '50% 100%';
+  function frame() {
+    const r = sec.getBoundingClientRect();
+    const t = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight) * 1.4));
+    const e = 1 - Math.pow(1 - t, 3);
+    s.style.transform = `translateY(${(1 - e) * 18}vh) rotateX(${(1 - e) * 72}deg) scale(${0.82 + e * 0.18})`;
+    play(s, t > 0.95);
+  }
+  addEventListener('scroll', frame, { passive: true }); frame();
+})();
+
+// E: depth layers + cursor tilt (spring)
+(() => {
+  const sec = document.getElementById('E'), rig = sec.querySelector('.rig'), scene = sec.querySelector('.scene');
+  const layer = (el, z, css) => { el.style.cssText += css; el.dataset.z = z; el.style.transform = `translateZ(${z}px)`; rig.appendChild(el); return el; };
+  const blob = layer(Object.assign(document.createElement('div'), { className: 'blob' }), -120, 'top:-30%;left:-20%;');
+  const scr = layer(makeScreen(P[0], true), 0, '');
+  const phone = layer(Object.assign(document.createElement('div'), { className: 'phone' }), 90, 'bottom:-18%;left:-8%;');
+  const chip1 = layer(Object.assign(document.createElement('div'), { className: 'chip' }), 140, 'top:-10%;right:-10%;');
+  const chip2 = layer(Object.assign(document.createElement('div'), { className: 'chip' }), 60, 'bottom:6%;right:-14%;');
+  const mark = names(sec, pick);
+  function pick(i) {
+    mark(i);
+    scr.style.backgroundImage = `url(${poster(P[i].slug)})`;
+    const v = scr.querySelector('video'); if (v) { v.pause(); v.removeAttribute('src'); v.dataset.src = `../images/portfolio/${P[i].slug}`; scr.classList.remove('playing'); play(scr, true); }
+    phone.style.backgroundImage = `url(${poster(P[i].slug)})`;
+    chip1.innerHTML = `<b>${P[i].name}</b>${P[i].field}`;
+    chip2.innerHTML = `<b>100%</b>מותאם לנייד`;
+  }
+  pick(0);
+  let tx = 0, ty = 0, x = 0, y = 0, vx = 0, vy = 0, last = performance.now();
+  scene.addEventListener('mousemove', e => { const r = scene.getBoundingClientRect(); tx = ((e.clientX - r.left) / r.width - .5) * 2; ty = ((e.clientY - r.top) / r.height - .5) * 2; });
+  scene.addEventListener('mouseleave', () => { tx = ty = 0; });
+  const K = Math.pow(2 * Math.PI / 0.6, 2), C = 4 * Math.PI * 0.8 / 0.6;
+  (function tick(now) {
+    const dt = Math.min((now - last) / 1000, 1 / 30); last = now;
+    const ix = reduce ? 0 : tx, iy = reduce ? 0 : ty;
+    vx += (K * (ix - x) - C * vx) * dt; x += vx * dt; vy += (K * (iy - y) - C * vy) * dt; y += vy * dt;
+    const idle = reduce ? 0 : Math.sin(now / 2200) * 0.15;
+    rig.style.transform = `rotateY(${(x + idle) * 14}deg) rotateX(${-y * 10 + 6}deg)`;
+    requestAnimationFrame(tick);
+  })(last);
+})();
+
+// F: isometric wall
+(() => {
+  const sec = document.getElementById('F'), rows = sec.querySelector('.rows');
+  const all = [];
+  for (let r = 0; r < 8; r++) {
+    const row = document.createElement('div'); row.className = 'row';
+    for (let c = 0; c < 5; c++) { const p = P[(c + r * 2) % P.length]; const s = makeScreen(p, false); s.dataset.i = (c + r * 2) % P.length; row.appendChild(s); all.push(s); }
+    rows.appendChild(row);
+  }
+  const mark = names(sec, i => { mark(i); all.forEach(s => s.classList.toggle('lift', +s.dataset.i === i)); });
+  mark(0); all.forEach(s => s.classList.toggle('lift', +s.dataset.i === 0));
+})();
+</script>
+</body>
+</html>

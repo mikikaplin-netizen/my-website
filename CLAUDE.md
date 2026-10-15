@@ -44,6 +44,9 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
   Plays once, holds its last frame (= first) for a random 1.5–4.5s, replays (a blink every ~4.5–7.5s, no rhythm);
   desktop only (photo hidden ≤900px), never under reduced motion, paused off screen, fades in over the img.
   The parallax/tilt transforms target the `.hero-photo` wrapper so both layers move together.
+- `lab/projects-3d.html` — unlinked, noindex lab page with six live 3D/motion directions for
+  showing projects (stacked deck, ring, coverflow, rises-with-scroll, depth layers + cursor tilt,
+  isometric wall), built on the real posters/recordings, for Michael to pick from
 - `serve.py` — the only "tooling" in the repo
 - `index.html` links `style.css?v=N` / `script.js?v=N` — bump `N` whenever either file changes,
   otherwise browsers/GitHub Pages can pair a new `index.html` with a stale cached stylesheet

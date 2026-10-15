@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>מעבדה: כפתורים</title>
+<style>
+@font-face { font-family: 'Polin'; src: url('../fonts/Polin-Regular.ttf') format('truetype'); font-weight: 100 599; font-display: swap; }
+@font-face { font-family: 'Polin'; src: url('../fonts/Polin-Bold.ttf') format('truetype'); font-weight: 600 1000; font-display: swap; }
+@font-face { font-family: 'Anomalia'; src: url('../fonts/anomalia-bold-aaa.woff2') format('woff2'); font-weight: 600 1000; font-display: swap; }
+@property --a { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+:root { --bg: #101024; --navy: #101024; --accent: #64C1D2; --accent-2: #1CD31C; --paper: #DCDEE2; --ease: cubic-bezier(0.23, 1, 0.32, 1); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: #fff; font-family: 'Polin', Arial, sans-serif; }
+.intro { padding: 10vh 6vw 5vh; }
+.intro h1 { font-family: 'Anomalia'; font-size: clamp(2rem, 4vw, 3.6rem); margin: 0 0 12px; }
+.intro p { color: rgba(255,255,255,.62); max-width: 62ch; line-height: 1.7; margin: 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 560px), 1fr)); gap: 18px; padding: 0 6vw 12vh; }
+.card { border-radius: 22px; overflow: hidden; border: 1px solid rgba(255,255,255,.08); }
+.card h2 { font-family: 'Anomalia'; font-size: 1.5rem; margin: 0; }
+.card h2 span { color: var(--accent); font-family: 'Polin'; font-size: .8rem; margin-inline-start: 8px; }
+.card p { margin: 6px 0 0; color: rgba(255,255,255,.6); font-size: .92rem; line-height: 1.6; }
+.head { padding: 22px 26px; background: #15172f; }
+.demo { display: grid; grid-template-columns: 1fr 1fr; }
+.demo > div { display: flex; gap: 14px; align-items: center; justify-content: center; flex-wrap: wrap; padding: 42px 18px; }
+.dark { background: var(--navy); }
+.light { background: var(--paper); }
+button { font: inherit; border: 0; cursor: pointer; }
+.b { position: relative; display: inline-flex; align-items: center; gap: 10px; font-weight: 600; font-size: 1rem; padding: 15px 28px; border-radius: 999px; isolation: isolate; -webkit-tap-highlight-color: transparent; }
+.b:active { scale: .97; }
+.pri { background: var(--accent-2); color: var(--navy); }
+.sec { background: transparent; color: #fff; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.3); }
+.light .sec { color: var(--navy); box-shadow: inset 0 0 0 1.5px rgba(16,16,36,.3); }
+
+/* 1 fill sweep */
+.s1 { overflow: hidden; transition: color .45s var(--ease); }
+.s1::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--navy); transform: scaleX(0); transform-origin: 100% 50%; transition: transform .55s var(--ease); border-radius: inherit; }
+.s1.pri:hover { color: #fff; } .s1.pri:hover::before { transform: scaleX(1); }
+.s1.sec::before { background: var(--accent); } .s1.sec:hover { color: var(--navy); } .s1.sec:hover::before { transform: scaleX(1); }
+
+/* 2 arrow chip */
+.s2 { padding: 8px 8px 8px 24px; padding-inline-start: 24px; padding-inline-end: 8px; }
+.s2 .chip { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: var(--navy); color: var(--accent-2); overflow: hidden; transition: width .5s var(--ease); }
+.s2.sec .chip { background: var(--accent); color: var(--navy); }
+.s2 .chip svg { width: 18px; height: 18px; transition: transform .5s var(--ease); }
+.s2:hover .chip svg { transform: translateX(-4px) rotate(-45deg); }
+.s2:hover .chip { width: 52px; }
+
+/* 3 cursor glow */
+.s3 { background: #1b1d36; color: #fff; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+.s3::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(140px circle at var(--x, 50%) var(--y, 50%), rgba(28,211,28,.55), transparent 60%); opacity: 0; transition: opacity .3s; }
+.s3:hover::before { opacity: 1; }
+.light .s3 { background: var(--navy); }
+
+/* 4 text roll */
+.s4 .roll { display: inline-block; overflow: hidden; height: 1.3em; line-height: 1.3em; }
+.s4 .roll i { display: block; font-style: normal; transition: transform .5s var(--ease); text-shadow: 0 1.3em 0 currentColor; }
+.s4:hover .roll i { transform: translateY(-1.3em); }
+
+/* 5 liquid glass */
+.s5 { color: #fff; background: rgba(255,255,255,.08); backdrop-filter: blur(14px) saturate(160%); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), inset 0 0 0 1px rgba(255,255,255,.14), 0 10px 30px -10px rgba(0,0,0,.6); overflow: hidden; }
+.s5::after { content: ''; position: absolute; inset: 0; background: radial-gradient(90px circle at var(--x, 30%) 0%, rgba(255,255,255,.35), transparent 70%); pointer-events: none; }
+.light .s5 { color: var(--navy); background: rgba(255,255,255,.45); }
+.glassbg { background: radial-gradient(circle at 30% 40%, rgba(100,193,210,.6), transparent 40%), radial-gradient(circle at 70% 70%, rgba(28,211,28,.45), transparent 40%), var(--navy) !important; }
+.glassbg.light { background: radial-gradient(circle at 30% 40%, rgba(100,193,210,.7), transparent 40%), radial-gradient(circle at 70% 70%, rgba(28,211,28,.5), transparent 40%), var(--paper) !important; }
+
+/* 6 always-on spinning brand ring */
+.s6 { background: var(--navy); color: #fff; }
+.s6::before { content: ''; position: absolute; inset: -2px; z-index: -2; border-radius: inherit; background: conic-gradient(from var(--a), var(--accent-2), var(--accent), var(--navy) 50%, var(--accent-2)); animation: rot 3.2s linear infinite; }
+.s6::after { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--navy); }
+.s6:hover::before { animation-duration: 1.2s; filter: drop-shadow(0 0 8px rgba(28,211,28,.6)); }
+@keyframes rot { to { --a: 360deg; } }
+
+/* 7 long arrow link */
+.s7 { background: none; color: #fff; padding: 10px 0; border-radius: 0; font-family: 'Anomalia'; font-size: 1.25rem; }
+.light .s7 { color: var(--navy); }
+.s7 .line { position: relative; width: 36px; height: 2px; background: var(--accent-2); transition: width .5s var(--ease); }
+.light .s7 .line { background: var(--navy); }
+.s7 .line::after { content: ''; position: absolute; left: -1px; top: -4px; width: 9px; height: 9px; border-left: 2px solid; border-bottom: 2px solid; transform: rotate(45deg); color: var(--accent-2); }
+.light .s7 .line::after { color: var(--navy); }
+.s7:hover .line { width: 72px; }
+
+/* 8 tactile 3D */
+.s8 { background: var(--accent-2); color: var(--navy); box-shadow: 0 6px 0 #0f8f0f, 0 14px 24px -8px rgba(0,0,0,.5); transition: transform .12s, box-shadow .12s; }
+.s8.sec { background: var(--accent); box-shadow: 0 6px 0 #3b8b9b, 0 14px 24px -8px rgba(0,0,0,.5); }
+.s8:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #0f8f0f, 0 18px 28px -8px rgba(0,0,0,.5); }
+.s8.sec:hover { box-shadow: 0 8px 0 #3b8b9b, 0 18px 28px -8px rgba(0,0,0,.5); }
+.s8:active { scale: 1; transform: translateY(5px); box-shadow: 0 1px 0 #0f8f0f, 0 4px 8px -4px rgba(0,0,0,.5); }
+
+/* 9 magnetic split */
+.s9 { background: var(--accent-2); color: var(--navy); transition: translate .25s var(--ease); }
+.s9 span { transition: translate .25s var(--ease); display: inline-block; }
+
+/* variant fixes */
+.light .s3, .light .s6 { color: #fff; }
+.s7.sec, .light .s7.sec { box-shadow: none; }
+.s9.sec { background: transparent; color: #fff; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.3); }
+.light .s9.sec { color: var(--navy); box-shadow: inset 0 0 0 1.5px rgba(16,16,36,.3); }
+@media (max-width: 600px) { .demo { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { *, *::before { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="intro">
+  <h1>כפתורים: תשעה כיוונים.</h1>
+  <p>כל כפתור מוצג בגרסה ראשית ומשנית, על הרקע הכהה ועל האפור של האתר. עברו עם העכבר ולחצו, כדי להרגיש את התגובה. בחר אחד או שילוב, ואחליף בכל האתר.</p>
+</header>
+<main class="grid" id="grid"></main>
+<script>
+const arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
+const D = [
+  ['s1', 'מילוי שזורם', 'צבע ממלא את הכפתור בכיוון הקריאה וההקשה מתהפכת. נקי ומוכר, מרגיש סופר מלוטש.', t => t],
+  ['s2', 'שבב חץ', 'עיגול עם חץ בתוך הכפתור שמתרחב ומסתובב במעבר עכבר. המגמה הכי חמה באתרי סטודיו.', t => `${t}<span class="chip">${arrow}</span>`],
+  ['s3', 'זוהר שעוקב אחרי העכבר', 'הילה ירוקה רכה שזזה בתוך הכפתור בדיוק איפה שהעכבר נמצא. מרגיש "חי".', t => t],
+  ['s4', 'גלגול טקסט', 'המילים מתגלגלות למעלה ומתחלפות בעצמן, באותה שפה כמו שמות הפרויקטים באתר.', t => `<span class="roll"><i>${t}</i></span>`],
+  ['s5', 'זכוכית נוזלית', 'כפתור שקוף עם טשטוש ונצנוץ שזז עם העכבר, בסגנון אפל. הכי טוב מעל תמונה או צבע.', t => t],
+  ['s6', 'טבעת מותג מסתובבת', 'המסגרת המסתובבת של האתר, אבל תמיד דולקת בירוק ותכלת, ומאיצה במעבר עכבר.', t => t],
+  ['s7', 'קישור עם חץ ארוך', 'בלי צורה בכלל: טקסט באנומליה וחץ שמתארך. אלגנטי ושקט, מתאים כקריאה משנית.', t => `${t}<span class="line"></span>`],
+  ['s8', 'כפתור מוחשי', 'כפתור "פיזי" עם עובי, שנלחץ פנימה בהקשה. כיפי וברור, מעולה בנייד.', t => t],
+  ['s9', 'מגנטי', 'הכפתור נמשך לעבר העכבר והטקסט נמשך עוד קצת, שתי שכבות בעומק. הרחבה של מה שיש עכשיו.', t => `<span>${t}</span>`],
+];
+const grid = document.getElementById('grid');
+D.forEach(([cls, name, desc, wrap], i) => {
+  const glass = cls === 's5';
+  const pair = theme => `<div class="${theme}${glass ? ' glassbg' : ''}"><button class="b ${cls} ${cls === 's7' || cls === 's3' || cls === 's5' || cls === 's6' ? '' : 'pri'}">${wrap('בואו נדבר')}</button><button class="b ${cls} sec">${wrap('הפרויקטים שלי')}</button></div>`;
+  grid.insertAdjacentHTML('beforeend', `<article class="card"><div class="head"><h2>${name}<span>${i + 1}</span></h2><p>${desc}</p></div><div class="demo">${pair('dark')}${pair('light')}</div></article>`);
+});
+// cursor-driven variables (3, 5) and magnetic (9)
+document.querySelectorAll('.s3, .s5').forEach(b => b.addEventListener('pointermove', e => { const r = b.getBoundingClientRect(); b.style.setProperty('--x', (e.clientX - r.left) + 'px'); b.style.setProperty('--y', (e.clientY - r.top) + 'px'); }));
+document.querySelectorAll('.s9').forEach(b => {
+  b.addEventListener('pointermove', e => { const r = b.getBoundingClientRect(); const x = e.clientX - r.left - r.width / 2, y = e.clientY - r.top - r.height / 2; b.style.translate = `${x * .25}px ${y * .35}px`; b.firstChild.style.translate = `${x * .15}px ${y * .2}px`; });
+  b.addEventListener('pointerleave', () => { b.style.translate = ''; b.firstChild.style.translate = ''; });
+});
+</script>
+</body>
+</html>

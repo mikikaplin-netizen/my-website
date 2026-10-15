@@ -46,7 +46,11 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
   The parallax/tilt transforms target the `.hero-photo` wrapper so both layers move together.
 - `lab/projects-3d.html` — unlinked, noindex lab page with six live 3D/motion directions for
   showing projects (stacked deck, ring, coverflow, rises-with-scroll, depth layers + cursor tilt,
-  isometric wall), built on the real posters/recordings, for Michael to pick from
+  isometric wall), built on the real posters/recordings, for Michael to pick from; `lab/hero-3d.html` — five
+  ideas for projects moving around Michael's hero photo (orbit, floating depth + cursor parallax, halo fan,
+  tilted flowing wall, cards dealt on scroll); `lab/buttons.html` — nine button directions (fill sweep,
+  arrow chip, cursor glow, text roll, liquid glass, always-on brand ring, long-arrow link, tactile 3D,
+  magnetic), each primary + secondary on navy and on the grey page
 - `serve.py` — the only "tooling" in the repo
 - `index.html` links `style.css?v=N` / `script.js?v=N` — bump `N` whenever either file changes,
   otherwise browsers/GitHub Pages can pair a new `index.html` with a stale cached stylesheet

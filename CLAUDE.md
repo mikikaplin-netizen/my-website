@@ -54,7 +54,11 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
   and is replaced, turns from up to forward while the pill fills, flies across leaving a green trail;
   each primary + secondary on navy and on the grey page; `lab/hero-loop.html` — five always-on looping
   hero ideas with an intro burst (galaxy orbit, tunnel, gyroscope rings, big wheel, flip board),
-  subtler 6px corners (Michael: no scroll-driven motion, wow from the first second)
+  subtler 6px corners and depth blur on far screens (Michael: no scroll-driven motion, wow from the
+  first second); `lab/hero-ar.html` — Michael's "AR/VR digital studio" concept: a holographic hand
+  swipes every ~4s, the chosen site opens big as a semi-transparent scanlined hologram (playing its
+  recording, HUD label 0X/05 + name), the rest recede blurred by distance; A = wheel behind him,
+  B = deep-space row pushed aside one by one
 - `serve.py` — the only "tooling" in the repo
 - `index.html` links `style.css?v=N` / `script.js?v=N` — bump `N` whenever either file changes,
   otherwise browsers/GitHub Pages can pair a new `index.html` with a stale cached stylesheet
@@ -142,7 +146,7 @@ so they render above it. Section backgrounds use semi-transparent colors
 - Wave marquee (`.wave`, "WAVE MARQUEE — SCROLL-DRIVEN" in `script.js`): the section is pinned
   (`position: sticky`) while one giant line travels across it, mirrored for Hebrew (sentence start
   enters first, moving left → right); each letter/tile rides a sine wave fixed in screen space.
-  Copy: "אין שני לרושם ראשוני"; between the words (no photo tile: Michael removed it) three `.wave-tile--shots`
+  Copy: "אין שני לרושם ראשוני"; between the words (no photo tile: Michael removed it) two `.wave-tile--shots` (Michael: two, not three)
   (rounded crops of beautiful areas from client sites, `images/wave/shot-1..9.webp` taken from the
   portfolio recordings) each switch through three shots with a quick rhythmic wipe every 1.2s
   (no zoom: Michael said it made the sites look cropped; radius 0.06em so nothing is cut).
@@ -293,6 +297,8 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
   each card has a very gentle idle loop (ping on the green dot, floating bubbles, type guides drawing,
   swatches taking turns to widen, strike-through redrawn then the new line rising, icons lighting in
   turn, the before/after split sliding); all off under reduced motion.
+- Hero copy is vertically centered in the screen (`.hero-inner` min-height = viewport minus the
+  100px navbar padding, `.hero-text { align-self: center }`); the photo stays on the bottom edge.
 - Hero copy (Michael wanted it business-minded, not "בלתי נשכח"): "האתר שלך הוא / הרושם הראשון. / בואו
   נהפוך אותו / ליתרון שלך." (Michael's pick) + "אני בונה לעסקים אתרים שמייצרים אמון, מבדלים אותם מהמתחרים והופכים גולשים
   לפניות של לקוחות." `.hero-highlight` never wraps ("הרושם הראשון." on one line) and "נהפוך&nbsp;אותו" is

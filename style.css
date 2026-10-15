@@ -673,10 +673,15 @@ html.theme-light .navbar::after {
   grid-template-columns: 1fr auto;
   gap: 48px;
   align-items: end;
+  /* the hero container already pads 100px for the navbar */
+  min-height: calc(100vh - 100px);
+  min-height: calc(100svh - 100px);
 }
 
 .hero-text {
-  padding-bottom: 9vh;
+  /* the copy sits in the vertical middle of the screen (Michael); the
+     photo keeps standing on the bottom edge */
+  align-self: center;
 }
 
 .hero-eyebrow {

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>מעבדה: אולפן AR</title>
+<style>
+@font-face { font-family: 'Polin'; src: url('../fonts/Polin-Regular.ttf') format('truetype'); font-weight: 100 599; font-display: swap; }
+@font-face { font-family: 'Anomalia'; src: url('../fonts/anomalia-bold-aaa.woff2') format('woff2'); font-weight: 600 1000; font-display: swap; }
+:root { --bg: #101024; --accent: #64C1D2; --accent-2: #1CD31C; --ease: cubic-bezier(0.23, 1, 0.32, 1); --fluid: cubic-bezier(0.65, 0, 0.35, 1); }
+* { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+body { margin: 0; background: var(--bg); color: #fff; font-family: 'Polin', Arial, sans-serif; }
+.intro { padding: 10vh 6vw 4vh; }
+.intro h1 { font-family: 'Anomalia'; font-size: clamp(2rem, 4vw, 3.6rem); margin: 0 0 12px; }
+.intro p { color: rgba(255,255,255,.62); max-width: 66ch; line-height: 1.7; margin: 0; }
+.hero { position: relative; height: 100vh; min-height: 680px; display: grid; grid-template-columns: 0.9fr 1.3fr; align-items: center; padding: 0 5vw; border-top: 1px solid rgba(100,193,210,.18); overflow: clip;
+  background: radial-gradient(ellipse 60% 70% at 30% 60%, rgba(100,193,210,.10), transparent 70%), var(--bg); }
+.tag { position: absolute; top: 28px; right: 5vw; z-index: 40; font-size: .8rem; color: var(--accent-2); font-weight: 600; }
+.tag b { font-family: 'Anomalia'; font-size: 1.6rem; color: #fff; margin-inline-start: 10px; }
+.copy { position: relative; z-index: 30; }
+.copy h2 { font-family: 'Anomalia'; font-size: clamp(2.2rem, 4.2vw, 4.2rem); line-height: 1; margin: 0; }
+.copy h2 em { font-style: normal; color: var(--accent-2); }
+.copy p { color: rgba(255,255,255,.62); max-width: 40ch; line-height: 1.7; margin-top: 22px; }
+.stage { position: relative; height: 100%; }
+.me { position: absolute; bottom: 0; right: 4%; width: min(400px, 30vw); z-index: 10; pointer-events: none;
+  -webkit-mask: linear-gradient(#000 82%, transparent); mask: linear-gradient(#000 82%, transparent); }
+/* cyan rim light on Michael, as if lit by the hologram */
+.me-glow { position: absolute; bottom: 0; right: 4%; width: min(400px, 30vw); aspect-ratio: 3/4; z-index: 9; background: radial-gradient(ellipse 40% 50% at 10% 40%, rgba(100,193,210,.35), transparent 70%); filter: blur(30px); }
+
+/* hologram screen */
+.holo { position: absolute; aspect-ratio: 1.6; border-radius: 6px; overflow: hidden; background: #05060d center/cover no-repeat;
+  box-shadow: 0 0 0 1px rgba(100,193,210,.55), 0 0 40px rgba(100,193,210,.35), 0 40px 80px -30px rgba(0,0,0,.9); }
+.holo video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; }
+.holo::before { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: repeating-linear-gradient(180deg, rgba(100,193,210,.07) 0 1px, transparent 1px 4px), linear-gradient(120deg, rgba(255,255,255,.14), transparent 40%); }
+.holo::after { content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(180deg, transparent 40%, rgba(100,193,210,.18) 50%, transparent 60%); background-size: 100% 300%; animation: scan 3.5s linear infinite; }
+@keyframes scan { from { background-position: 0 100%; } to { background-position: 0 -200%; } }
+
+/* HUD */
+.hud { position: absolute; z-index: 25; pointer-events: none; font-size: .72rem; letter-spacing: .14em; color: var(--accent); }
+.hud b { display: block; font-family: 'Anomalia'; font-size: 1.3rem; letter-spacing: 0; color: #fff; margin-top: 2px; }
+.ring { position: absolute; z-index: 4; border-radius: 50%; border: 1px solid rgba(100,193,210,.35); pointer-events: none; }
+.ring::before { content: ''; position: absolute; inset: 10px; border-radius: 50%; border: 1px dashed rgba(100,193,210,.25); animation: spin 30s linear infinite; }
+@keyframes spin { to { rotate: 360deg; } }
+
+/* the hand */
+.hand { position: absolute; left: 0; top: 0; opacity: 0; z-index: 26; width: 92px; height: 92px; color: var(--accent); filter: drop-shadow(0 0 10px rgba(100,193,210,.9)); pointer-events: none; }
+.hand svg { width: 100%; height: 100%; fill: rgba(100,193,210,.12); stroke: currentColor; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+.trail { position: absolute; left: 0; top: 0; z-index: 24; height: 2px; border-radius: 2px; background: linear-gradient(90deg, transparent, var(--accent)); opacity: 0; pointer-events: none; filter: drop-shadow(0 0 6px var(--accent)); }
+
+/* A: wheel */
+.wheel-shot { position: absolute; left: 0; top: 0; width: 190px; aspect-ratio: 1.6; border-radius: 5px; background: #05060d center/cover no-repeat; box-shadow: 0 0 0 1px rgba(100,193,210,.3), 0 20px 40px -20px #000; will-change: transform, filter; }
+
+/* B: depth stack */
+.deck .card { position: absolute; aspect-ratio: 1.6; border-radius: 6px; background: #05060d center/cover no-repeat; box-shadow: 0 0 0 1px rgba(100,193,210,.4), 0 0 30px rgba(100,193,210,.2); transition: transform 1s var(--fluid), filter 1s var(--fluid), opacity 1s var(--fluid); will-change: transform, filter; }
+
+@media (max-width: 860px) { .hero { grid-template-columns: 1fr; grid-template-rows: auto 1fr; padding-top: 10vh; } .me, .me-glow { width: 58vw; } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="intro">
+  <h1>האולפן הדיגיטלי שלך: אתה מציג, המסכים מקשיבים.</h1>
+  <p>הקונספט: אתה עומד באולפן של מציאות רבודה, כמו עם משקפי VR. תנועה של היד מעבירה בין האתרים שבנית. המסך הנבחר מוצג בגדול כהולוגרמה חצי שקופה, והשאר נסוגים לאחור, מטושטשים לפי המרחק. הכל רץ לבד בלופ מהשנייה הראשונה. דף מעבדה, לא מקושר.</p>
+</header>
+
+<section class="hero" id="A"><span class="tag">A<b>גלגל הולוגרמה</b></span>
+  <div class="copy"><h2>האתר שלך הוא<br /><em>הרושם הראשון.</em></h2><p>גלגל של מסכים מסתובב מאחוריך, הרחוקים מטושטשים ושקופים. כל כמה שניות היד מחליקה, הגלגל זז צעד, והאתר הבא נשלף ממנו ונפתח בגדול כהולוגרמה עם הסרטון שלו.</p></div>
+  <div class="stage">
+    <div class="me-glow"></div><img class="me" src="../images/miki-hero.png" alt="" />
+  </div>
+</section>
+
+<section class="hero" id="B"><span class="tag">B<b>חלל עמוק</b></span>
+  <div class="copy"><h2>האתר שלך הוא<br /><em>הרושם הראשון.</em></h2><p>המסכים עומדים בשורה אל עומק החלל, כל אחד רחוק ומטושטש יותר. תנועת יד דוחפת את המסך הקדמי הצידה והוא נעלם, וכל השורה מתקרבת צעד, עד שהבא בתור נעשה חד וגדול.</p></div>
+  <div class="stage deck">
+    <div class="me-glow"></div><img class="me" src="../images/miki-hero.png" alt="" />
+  </div>
+</section>
+
+<script>
+const P = [
+  { s: 'shimony', n: 'משרד שמעוני' }, { s: 'tamar-baniel', n: 'תמר בניאל' }, { s: 'ziskind', n: 'עו"ד ישראל זיסקינד' },
+  { s: 'lishkatoanim', n: 'לשכת הטוענים הרבניים' }, { s: 'element', n: 'סילימנט' }];
+const poster = p => `../images/portfolio/${p.s}-poster.webp`;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const HAND = '<svg viewBox="0 0 24 24"><path d="M18 11V6a2 2 0 0 0-4 0"/><path d="M14 10V4a2 2 0 0 0-4 0v2"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-6-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>';
+const el = (cls, parent, html) => { const d = document.createElement('div'); d.className = cls; if (html) d.innerHTML = html; parent.appendChild(d); return d; };
+const pad = n => String(n).padStart(2, '0');
+
+function holoScreen(stage) {
+  const h = el('holo', stage); const v = document.createElement('video'); v.muted = true; v.loop = true; v.playsInline = true; h.appendChild(v); return h;
+}
+function setHolo(h, p) { h.style.backgroundImage = `url(${poster(p)})`; const v = h.querySelector('video'); if (reduce) return;
+  v.src = `../images/portfolio/${p.s}.mp4`; v.onerror = () => { v.src = `../images/portfolio/${p.s}.webm`; }; v.play().catch(() => {}); }
+function hudFor(stage, x, y) { const d = el('hud', stage); d.style.left = x; d.style.top = y; return d; }
+
+// gesture: the hand sweeps across, a trail follows
+function swipe(hand, trail, from, to, ms = 900) {
+  if (reduce) return;
+  hand.animate([{ transform: `translate(${from[0]}px, ${from[1]}px) rotate(-8deg)`, opacity: 0 }, { opacity: 1, offset: .15 },
+    { transform: `translate(${to[0]}px, ${to[1]}px) rotate(10deg)`, opacity: 1, offset: .8 }, { transform: `translate(${to[0]}px, ${to[1]}px) rotate(10deg)`, opacity: 0 }],
+    { duration: ms, easing: 'cubic-bezier(0.65,0,0.35,1)', fill: 'forwards' });
+  trail.style.left = Math.min(from[0], to[0]) + 46 + 'px'; trail.style.top = from[1] + 46 + 'px'; trail.style.width = Math.abs(to[0] - from[0]) + 'px';
+  trail.animate([{ opacity: 0, transform: 'scaleX(0)', transformOrigin: to[0] < from[0] ? '100% 50%' : '0 50%' }, { opacity: .9, transform: 'scaleX(1)', offset: .7 }, { opacity: 0, transform: 'scaleX(1)' }], { duration: ms, easing: 'ease-out' });
+}
+
+// ===== A: hologram wheel =====
+(() => {
+  const sec = document.getElementById('A'), st = sec.querySelector('.stage');
+  const n = 10, shots = [];
+  for (let i = 0; i < n; i++) { const s = el('wheel-shot', st); s.style.backgroundImage = `url(${poster(P[i % P.length])})`; shots.push(s); }
+  const holo = holoScreen(st); const ring = el('ring', st);
+  const hud = hudFor(st, '6%', '4%'); const hand = el('hand', st, HAND); const trail = el('trail', st);
+  let cur = 0, angle = 0, target = 0;
+  const layout = () => {
+    const W = st.clientWidth, H = st.clientHeight;
+    const hw = Math.min(W * 0.6, 560);
+    Object.assign(holo.style, { width: hw + 'px', left: W * 0.04 + 'px', top: H * 0.2 + 'px', zIndex: 20 });
+    Object.assign(ring.style, { width: hw * 1.25 + 'px', height: hw * 1.25 + 'px', left: W * 0.04 - hw * 0.125 + 'px', top: H * 0.2 + hw / 3.2 - hw * 0.625 + 'px' });
+  };
+  layout(); addEventListener('resize', layout);
+  const show = i => {
+    setHolo(holo, P[i]);
+    holo.animate([{ transform: 'perspective(1200px) rotateY(-24deg) translateX(30%) scale(.4)', opacity: 0, filter: 'blur(8px)' },
+      { transform: 'perspective(1200px) rotateY(8deg) scale(1)', opacity: .92, filter: 'blur(0)' }], { duration: reduce ? 0 : 900, easing: 'cubic-bezier(0.23,1,0.32,1)', fill: 'forwards' });
+    hud.innerHTML = `פרויקט ${pad(i + 1)} / ${pad(P.length)}<b>${P[i].n}</b>`;
+  };
+  show(0);
+  // wheel physics: ellipse behind Michael, depth → scale, blur, opacity
+  (function tick() {
+    angle += (target - angle) * 0.06 + (reduce ? 0 : 0.0015);
+    target += reduce ? 0 : 0.0015;
+    const W = st.clientWidth, H = st.clientHeight, cx = W * 0.5, cy = H * 0.36, R = W * 0.46;
+    shots.forEach((s, i) => {
+      const a = angle + i * Math.PI * 2 / n, z = Math.cos(a);            // 1 near, -1 far
+      const x = cx + Math.sin(a) * R, y = cy - z * H * 0.06 + Math.sin(a) * H * 0.08;
+      const sc = 0.55 + 0.35 * (z + 1) / 2;
+      s.style.transform = `translate(${x - 95}px, ${y - 59}px) scale(${sc}) rotateY(${Math.sin(a) * 30}deg)`;
+      s.style.filter = `blur(${(1 - (z + 1) / 2) * 7 + 0.6}px) brightness(${0.55 + 0.35 * (z + 1) / 2})`;
+      s.style.opacity = 0.25 + 0.55 * (z + 1) / 2;
+      s.style.zIndex = z > 0.6 ? 12 : 5;
+    });
+    requestAnimationFrame(tick);
+  })();
+  setInterval(() => {
+    if (reduce) return;
+    const W = st.clientWidth, H = st.clientHeight;
+    swipe(hand, trail, [W * 0.66, H * 0.62], [W * 0.18, H * 0.5]);
+    setTimeout(() => {
+      holo.animate([{ opacity: .92, transform: 'perspective(1200px) rotateY(8deg) scale(1)', filter: 'blur(0)' }, { opacity: 0, transform: 'perspective(1200px) rotateY(40deg) translateX(-40%) scale(.6)', filter: 'blur(10px)' }], { duration: 380, easing: 'ease-in', fill: 'forwards' })
+        .onfinish = () => { cur = (cur + 1) % P.length; show(cur); };
+      target += Math.PI * 2 / n;
+    }, 420);
+  }, 4200);
+})();
+
+// ===== B: deep space stack =====
+(() => {
+  const sec = document.getElementById('B'), st = sec.querySelector('.stage');
+  const cards = P.map(p => { const c = el('card', st); c.style.backgroundImage = `url(${poster(p)})`; return c; });
+  const holo = holoScreen(st); holo.style.opacity = 0; holo.style.transition = 'opacity .5s';
+  const hud = hudFor(st, '6%', '4%'); const hand = el('hand', st, HAND); const trail = el('trail', st);
+  let front = 0;
+  const place = (instant) => {
+    const W = st.clientWidth, H = st.clientHeight, w = Math.min(W * 0.62, 580);
+    cards.forEach((c, i) => {
+      const k = (i - front + P.length) % P.length;           // 0 front … 4 deepest
+      c.style.width = w + 'px'; c.style.left = W * 0.2 + 'px'; c.style.top = H * 0.13 + 'px';
+      if (instant) c.style.transition = 'none';
+      c.style.transform = `perspective(1400px) translate3d(${-k * 24}%, ${k * 3}%, ${-k * 240}px) rotateY(10deg)`;
+      c.style.filter = `blur(${k * 2.6}px) brightness(${1 - k * 0.15})`;
+      c.style.opacity = k ? 0.85 - k * 0.14 : 1;
+      c.style.zIndex = 20 - k;
+      if (instant) { c.offsetWidth; c.style.transition = ''; }
+    });
+    Object.assign(holo.style, { width: w + 'px', left: W * 0.2 + 'px', top: H * 0.13 + 'px', zIndex: 21, transform: 'perspective(1400px) rotateY(10deg)' });
+    hud.innerHTML = `פרויקט ${pad(front + 1)} / ${pad(P.length)}<b>${P[front].n}</b>`;
+    setHolo(holo, P[front]); holo.style.opacity = reduce ? 0 : .95;
+  };
+  place(true); addEventListener('resize', () => place(true));
+  setInterval(() => {
+    if (reduce) return;
+    const W = st.clientWidth, H = st.clientHeight;
+    swipe(hand, trail, [W * 0.66, H * 0.56], [W * 0.1, H * 0.46], 800);
+    setTimeout(() => {
+      holo.style.opacity = 0;
+      const c = cards[front];
+      c.style.transform = 'perspective(1400px) translate3d(-90%, 10%, 120px) rotateY(-30deg)';
+      c.style.opacity = 0; c.style.filter = 'blur(12px)';
+      setTimeout(() => { front = (front + 1) % P.length; place(false); }, 450);
+    }, 380);
+  }, 4000);
+})();
+</script>
+</body>
+</html>

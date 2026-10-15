@@ -189,44 +189,28 @@ p, blockquote, li, summary, .work-desc, .faq-sub { text-wrap: pretty; }
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--accent-2);
-  margin-bottom: 14px;
+  margin-bottom: 6px;
 }
 
-/* asymmetric editorial opening (projects, process): oversized title on
-   the right, the subtitle on the left at the title's baseline */
-.section-header--edit {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(200px, 30ch);
-  grid-template-areas: "label label" "title sub";
-  align-items: end;
-  column-gap: clamp(32px, 6vw, 96px);
-  text-align: right;
-}
+/* editorial opening (projects, process, craft): label, oversized title and
+   sub stacked on the right. Michael: the label sits right on the title, the
+   sub follows at about double that gap (Anomalia has tall built-in leading,
+   so the title's line box is tightened instead of adding margins) */
+.section-header--edit { text-align: right; }
 
-.section-header--edit .section-label { grid-area: label; justify-self: start; }
+.section-header--edit .section-label { display: block; margin-bottom: 2px; }
 
 .section-header--edit .section-title {
-  grid-area: title;
   margin: 0;
   font-size: var(--title-size);
-  line-height: 1.02;
+  line-height: 0.98;
   letter-spacing: -0.025em;   /* display size: tighter tracking */
 }
 
 .section-header--edit .section-sub {
-  grid-area: sub;
-  margin: 0;
-  max-width: 30ch;
-  padding-bottom: 0.5em;
+  margin: 26px 0 0;
+  max-width: 52ch;
   text-align: right;
-}
-
-@media (max-width: 900px) {
-  .section-header--edit {
-    grid-template-columns: 1fr;
-    grid-template-areas: "label" "title" "sub";
-    row-gap: 18px;
-  }
 }
 
 .section-title {
@@ -706,6 +690,9 @@ html.theme-light .navbar::after {
   animation: fadeUp 0.7s ease forwards 0.2s;
 }
 
+/* "הרושם הראשון." always reads as one line (Michael) */
+.hero-highlight { white-space: nowrap; }
+
 .hero-title {
   font-size: clamp(3.4rem, 9vh, 7.5rem);
   font-weight: 900;
@@ -922,6 +909,47 @@ html.theme-light .navbar::after {
   fill: var(--bg);
 }
 
+/* screenshot tiles: rounded crops of beautiful areas from client sites
+   (frames of the portfolio recordings), each cycling through three with a
+   soft cross-fade and a slow push-in */
+.wave-tile--shots {
+  position: relative;
+  width: 1.5em;
+  height: 0.94em;
+  border-radius: 0.12em;
+  background: var(--bg-3);
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.08), 0 18px 40px rgba(0,0,0,0.35);
+}
+
+.wave-tile--shots img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+}
+
+.wave-tile--shots img:first-child { opacity: 1; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .wave-tile--shots img {
+    opacity: 0;
+    animation: waveShot 7.2s ease-in-out infinite;
+    animation-delay: var(--d, 0s);
+  }
+  .wave-tile--shots img:nth-child(2) { animation-delay: calc(var(--d, 0s) + 2.4s); }
+  .wave-tile--shots img:nth-child(3) { animation-delay: calc(var(--d, 0s) + 4.8s); }
+}
+
+@keyframes waveShot {
+  /* the next shot is fully in (33→39%) before this one leaves (39→45%),
+     so a tile is never half-transparent */
+  0% { opacity: 0; transform: scale(1.08); }
+  6%, 39% { opacity: 1; }
+  45%, 100% { opacity: 0; transform: scale(1); }
+}
+
 .wave-tile--photo img {
   width: 100%;
   height: 100%;
@@ -1039,6 +1067,7 @@ html.theme-light .navbar::after {
 .stat {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;   /* numbers share one line even when a label wraps */
   gap: 6px;
   padding: 28px 32px 0;
   border-inline-start: 1px solid var(--border);
@@ -1055,6 +1084,7 @@ html.theme-light .navbar::after {
 
 .stat-num {
   margin: 0;
+  font-family: var(--font-display);
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;   /* dir=ltr: hug the right edge like the label */
@@ -1100,7 +1130,7 @@ html.theme-light .navbar::after {
 }
 
 .process-num {
-  font-family: var(--font);
+  font-family: var(--font-display);
   font-weight: 300;
   font-size: 1.75rem;
   letter-spacing: 0.04em;
@@ -3032,8 +3062,8 @@ html.theme-light .faq-chip:not([disabled]) { color: var(--ink); border-color: va
    columns and repeats them so a column never runs out. */
 .tm-layout {
   display: grid;
-  grid-template-columns: minmax(220px, 0.65fr) 2.35fr;
-  gap: 56px;
+  grid-template-columns: minmax(200px, 0.5fr) 3fr;
+  gap: 48px;
   align-items: center;
 }
 
@@ -3433,7 +3463,7 @@ main.page {
     bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     z-index: 150;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     padding: 6px;
     border-radius: 30px;
     background: rgba(255,255,255,0.09);
@@ -3565,6 +3595,42 @@ main.page {
   .tabbar a { transition: opacity 0.2s ease; }
   .tabbar.is-hidden { translate: none; scale: none; filter: none; }
   .tabbar a.is-pressed { transform: none; }
+}
+
+/* footer socials: outlined round icons, accent on hover */
+.contact-social {
+  list-style: none;
+  display: flex;
+  gap: 12px;
+  margin: 22px 0 0;
+  padding: 0;
+}
+
+.contact-social a {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: var(--fg);
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease, translate 0.3s var(--ease-out);
+}
+
+.contact-social svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.contact-social svg .fill { fill: currentColor; stroke: none; }
+
+@media (hover: hover) and (pointer: fine) {
+  .contact-social a:hover { color: var(--accent); border-color: var(--accent); background: rgba(100,193,210,0.08); translate: 0 -2px; }
 }
 
 /* ===========================

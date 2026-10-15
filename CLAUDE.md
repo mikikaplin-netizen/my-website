@@ -90,9 +90,10 @@ dark variables. **Brand colors only** (Michael rejected added teal/green): on gr
 navy (no marker underline; Michael removed it); cyan/green are never text on grey (1.8:1). Any new section
 text color must use `var(--fg)` / `var(--text)`, not `#fff`.
 
-**Section openings**: no section numbering (Michael removed it). Projects and process use
-`.section-header--edit` (oversized right-aligned title, subtitle on the left at its baseline; Michael
-likes this); testimonials/FAQ have side titles, magnet stays centered. Don't reintroduce one centered
+**Section openings**: no section numbering (Michael removed it). Projects, process and craft use
+`.section-header--edit`: label, oversized title and sub stacked on the right; the label sits right on
+the title (2px, title line-height 0.98 since Anomalia has tall built-in leading) and the sub follows
+at about double that gap (26px) (Michael: not three separate blocks); testimonials/FAQ have side titles, magnet stays centered. Don't reintroduce one centered
 label/title/sub template for every section.
 
 **Design tokens live in `:root` in `style.css`** (`--bg`, `--bg-2`, `--bg-3`, `--accent`,
@@ -133,7 +134,11 @@ so they render above it. Section backgrounds use semi-transparent colors
 - Wave marquee (`.wave`, "WAVE MARQUEE — SCROLL-DRIVEN" in `script.js`): the section is pinned
   (`position: sticky`) while one giant line travels across it, mirrored for Hebrew (sentence start
   enters first, moving left → right); each letter/tile rides a sine wave fixed in screen space.
-  Copy: "אין שני לרושם ראשוני". The section's height is set in JS from the track width; travel
+  Copy: "אין שני לרושם ראשוני"; between the words, besides Michael's photo tile, three `.wave-tile--shots`
+  (rounded crops of beautiful areas from client sites, `images/wave/shot-1..9.webp` taken from the
+  portfolio recordings) each cross-fade through three shots (Michael replaced the icon tiles).
+  Faster (1.4px travel per px scrolled, 0.7 on phones) and the travel ends with 40% of the screen still
+  covered by the line's tail (`TAIL`), so there is never an empty navy screen. The section's height is set in JS from the track width; travel
   starts the moment the section enters the screen with a quarter of the line already in view (no
   empty screen). The pinned screen is solid brand navy edge to edge (Michael rejected cyan and the
   opening white circle) with white text, cyan/green tiles; its bottom 28% is masked to transparent so
@@ -143,7 +148,7 @@ so they render above it. Section backgrounds use semi-transparent colors
 - Motion: magnetic `.btn`/`.nav-cta` (uses the standalone `translate` property so it doesn't
   clash with hover `transform`), hero photo parallax.
 - Portfolio (`.work`, "PORTFOLIO — HOVER-REVEAL LIST + LAPTOP STAND"): 5 projects (שמעוני, תמר בניאל,
-  ישראל זיסקינד, לשכת הטוענים הרבניים, אלימנט; Michael dropped אלתר ספרים and, for now, WST) in compact full-bleed rows split by a fixed
+  ישראל זיסקינד, לשכת הטוענים הרבניים, סילימנט (renamed from אלימנט; files stay `element.*`); Michael dropped אלתר ספרים and, for now, WST) in compact full-bleed rows split by a fixed
   hairline in brand blue at 50%, followed by a "לכל הפרויקטים" `.btn-ghost` (`.work-more`) linking to
   the future `projects.html`; name in brand blue at 50%; on hover/active a letter roll (Michael replaced the old white wipe):
   JS splits each name into `.wn-ch > .wn-in` letters, each rolls up 1.19em and its lit copy (a
@@ -171,7 +176,7 @@ so they render above it. Section backgrounds use semi-transparent colors
 
 **Mobile tab bar** (`#tabbar`, ≤768px only — replaces the hamburger, which is hidden there): a
 fixed liquid-glass pill at the bottom (backdrop blur + saturate, specular sheen `::before`, fading
-rim `::after`) with 4 icon+label links (אודות / שירותים / פרויקטים / בואו נדבר in accent). Refined with
+rim `::after`) with 5 icon+label links (פרויקטים / אודות / התהליך / שירותים / בואו נדבר in accent). Refined with
 the apple-design skill: an accent-tinted `.tabbar-drop` (not light glass on light glass) rides an
 Apple-style spring (damping ratio 1.0, response 0.35s, real frame time, interruptible from its live
 position/velocity) and stretches with its speed ("MOBILE TAB BAR — LIQUID DROP"). Feedback starts on
@@ -192,7 +197,7 @@ to the page edges/down, logo scaled), so the condense runs on the compositor wit
 the items springs (Apple spring, damping 1, response 0.3s) to the hovered item's box and fades in
 place when the pointer leaves; it reappears on the item (no slide) after fading. Mouse only. Menu
 order follows the page: פרויקטים, אודות, התהליך (#services, the process), שירותים (#craft), בואו נדבר
-(Michael added התהליך for a richer menu); the 4-item mobile tab bar keeps שירותים → #services.
+(Michael added התהליך for a richer menu); the mobile tab bar has the same 5 items (grid of 5).
 
 **Navbar items** all share the CTA's pill box (`border-radius: 999px`, same padding, 1px
 transparent border) so the hover background matches "בואו נדבר" exactly.
@@ -254,6 +259,11 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
   (lerp 0.08/frame) for a calm, elegant feel ("CLIENTS — SCROLL-LINKED ROWS"). Michael wants "many
   logos, gentle elegant motion on scroll" and is still deciding on the style; tried and dropped: a
   cell-swap wall (swaps went unnoticed) and auto-running marquee rows ("not special").
+- Numbers (about stats, process step numbers) are in Anomalia; each `.stat` is space-between so the
+  three numerals share one line even when a label wraps (phones).
+- Testimonials: 4 columns on desktop (≥940px wide area; 3/2/1 below), title column narrowed.
+- Footer socials (`.contact-social`, under the contact details): Instagram (mikikaplin), LinkedIn
+  (href still `#`, `data-todo="linkedin-url"`: waiting for Michael's URL), Facebook; outlined round icons.
 - About (`.about`) is full screen (`min-height: 100svh`): photo + story, then `.about-stats`, a
   full-width band of oversized thin numerals (+5 / +30 / 100%) split by hairlines; "ABOUT — COUNT-UP
   NUMBERS" counts them up once half in view (final values live in the markup).
@@ -273,8 +283,11 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
   each card has a very gentle idle loop (ping on the green dot, floating bubbles, type guides drawing,
   swatches taking turns to widen, strike-through redrawn then the new line rising, icons lighting in
   turn, the before/after split sliding); all off under reduced motion.
-- Hero title on phones (≤768px) is fitted by JS ("HERO — MOBILE TITLE FIT") to half the screen height
-  (binary search on font size, since wrapping depends on width; re-fits on width change only).
+- Hero copy (Michael wanted it business-minded, not "בלתי נשכח"): "האתר שלך הוא / הרושם הראשון. / בואו
+  נהפוך אותו / ללקוחות." + "אני בונה לעסקים אתרים שמייצרים אמון, מבדלים אותם מהמתחרים והופכים גולשים
+  לפניות של לקוחות." `.hero-highlight` never wraps ("הרושם הראשון." on one line) and "נהפוך&nbsp;אותו" is
+  glued. On phones (≤768px) JS ("HERO — MOBILE TITLE FIT") searches the largest size that stays within
+  half the screen height AND doesn't overflow the width (the no-wrap phrase usually sets the limit).
 - About photo (`.about-photo`, the transparent `miki-hero.png` cut-out) has no panel, radius or shadow: Michael asked to remove its background; it stands straight on the page (hidden on phones).
 - About opens with "קוראים לי מיכאל קאפלין, ואני מעצב ובונה אתרים עם אופי." (`.about-intro`); no badge
   on the photo (the +30 lives in the numbers band).

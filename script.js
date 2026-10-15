@@ -1216,7 +1216,8 @@ document.addEventListener('touchstart', () => {}, { passive: true });
     for (let k = 0; k < 14; k++) {
       const mid = (lo + hi) / 2;
       title.style.fontSize = mid + 'px';
-      if (title.getBoundingClientRect().height > target) hi = mid; else lo = mid;
+      // too big if it passes half the screen, or a no-wrap phrase overflows the width
+      if (title.getBoundingClientRect().height > target || title.scrollWidth > title.clientWidth + 1) hi = mid; else lo = mid;
     }
     title.style.fontSize = lo.toFixed(1) + 'px';
   }
@@ -1305,11 +1306,14 @@ document.addEventListener('touchstart', () => {}, { passive: true });
   const WAVES_PER_SCREEN = 0.75;
   // px of travel per px scrolled — slower on phones, where the line is
   // short relative to scroll distance and would otherwise fly past
-  const travelSpeed = () => (window.innerWidth < 768 ? 0.45 : 0.9);
+  const travelSpeed = () => (window.innerWidth < 768 ? 0.7 : 1.4);   // faster (Michael)
   // Timeline u = 0 → 1 from the moment the section's top enters the screen
   // until it unpins; the line is already a quarter of the way in at u = 0,
   // so there is never an empty screen before the words arrive.
   const LEAD = 0.25;                       // share of the screen filled at u = 0
+  // the line stops while its tail still covers part of the screen, so the
+  // pinned band never ends on an empty navy screen
+  const TAIL = 0.4;
   let vw = 0, vh = 0, trackW = 0, amp = 0, ticking = false;
 
   const clamp01 = v => Math.max(0, Math.min(1, v));
@@ -1323,7 +1327,7 @@ document.addEventListener('touchstart', () => {}, { passive: true });
     // wave chars sit inside .wave-word, whose offsetParent is still the
     // (absolutely positioned) track, so offsetLeft is track-relative
     // u runs over exactly the section's height of scroll (entry + pin)
-    const travelScroll = (trackW + vw * (1 - LEAD)) / travelSpeed();
+    const travelScroll = (trackW + vw * (1 - LEAD - TAIL)) / travelSpeed();
     section.style.height = `${Math.max(vh * 1.2, travelScroll)}px`;
     update();
   }
@@ -1332,7 +1336,7 @@ document.addEventListener('touchstart', () => {}, { passive: true });
     ticking = false;
     const r = section.getBoundingClientRect();
     const u = clamp01((vh - r.top) / r.height);
-    const x = -trackW + vw * LEAD + u * (trackW + vw * (1 - LEAD));
+    const x = -trackW + vw * LEAD + u * (trackW + vw * (1 - LEAD - TAIL));
     track.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0)`;
 
     const k = (Math.PI * 2 * WAVES_PER_SCREEN) / vw;
@@ -1731,12 +1735,12 @@ document.addEventListener('touchstart', () => {}, { passive: true });
 
   const cards = Array.from(wrap.querySelectorAll('.tm-card'));
   const PX_PER_SEC = 28;
-  const SPEED = [1, 0.8, 1.15];
+  const SPEED = [1, 0.8, 1.15, 0.92];
   let count = 0;
 
   const build = () => {
     const w = wrap.clientWidth;
-    const n = w >= 820 ? 3 : w >= 540 ? 2 : 1;
+    const n = w >= 940 ? 4 : w >= 700 ? 3 : w >= 500 ? 2 : 1;
     if (n === count) return;
     count = n;
     wrap.textContent = '';

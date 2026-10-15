@@ -2269,6 +2269,83 @@ html.theme-light .craft-visual { background: #F1F2F5; }
 }
 
 /* ===========================
+   PULL QUOTES (preview only: index.html?quotes)
+=========================== */
+/* short testimonial snippets placed through the page (one per section, always
+   in the same spot: under the section's sub), plus one full quote with a
+   headline between about and process. Hidden until approved: the inline
+   script adds html.show-quotes for ?quotes. One quiet style everywhere so it
+   reads as a pattern, not clutter. */
+.pq, .pq-feature { display: none; }
+html.show-quotes .pq { display: flex; }
+html.show-quotes .pq-feature { display: block; }
+
+.pq {
+  gap: 12px;
+  align-items: flex-start;
+  max-width: 440px;
+  margin: 28px 0 0;
+  padding: 0 0 0 0;
+  text-align: right;
+}
+
+.pq-av {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg-3);        /* same as the testimonial cards: light logos stay visible */
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.12);
+}
+
+.pq-body { display: flex; flex-direction: column; gap: 3px; }
+
+.pq-stars { font-size: 0.72rem; letter-spacing: 0.12em; color: var(--accent-2); line-height: 1; }
+html.theme-light .pq-stars { color: var(--fg); }
+
+.pq-text {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--fg);
+  text-wrap: pretty;
+}
+
+.pq figcaption { font-size: 0.8rem; color: var(--text-muted); }
+.pq figcaption b { font-weight: 600; color: var(--text); }
+
+/* the hero snippet sits under the buttons */
+.hero-text .pq { margin-top: 36px; }
+
+/* the featured quote: a calm full-width band with a headline takeaway */
+.pq-feature { padding: clamp(80px, 12vh, 140px) 0; text-align: center; position: relative; z-index: 1; }
+.pq-feature-head {
+  margin: 0 auto;
+  max-width: 18ch;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--subtitle-size);
+  line-height: 1.1;
+  color: var(--fg);
+  text-wrap: balance;
+}
+.pq-feature-text {
+  margin: 22px auto 0;
+  max-width: 58ch;
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+.pq-feature-by { margin: 18px 0 0; font-size: 0.9rem; color: var(--text-muted); }
+.pq-feature-by b { color: var(--text); font-weight: 600; }
+
+@media (max-width: 768px) {
+  .hero-text .pq { margin-inline: auto; text-align: right; }
+}
+
+/* ===========================
    MAGNET FIELD
 =========================== */
 .magnet-field {

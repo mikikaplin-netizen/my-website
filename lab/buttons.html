@@ -92,6 +92,40 @@ button { font: inherit; border: 0; cursor: pointer; }
 .s9 { background: var(--accent-2); color: var(--navy); transition: translate .25s var(--ease); }
 .s9 span { transition: translate .25s var(--ease); display: inline-block; }
 
+
+/* ===== logo arrow set (the green arrow from Michael's logo) ===== */
+.logo-arrow { width: 18px; height: 18px; fill: currentColor; flex: none; }
+/* L1: arrow launches up and a new one rises in its place */
+.l1 { padding-inline-end: 8px; }
+.l1 .chip { position: relative; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: var(--navy); color: var(--accent-2); overflow: hidden; }
+.l1.sec .chip { background: var(--accent-2); color: var(--navy); }
+.l1 .chip .logo-arrow { position: absolute; transition: transform .55s var(--ease); }
+.l1 .chip .logo-arrow + .logo-arrow { transform: translate(-60%, 160%); }
+.l1:hover .chip .logo-arrow:first-child { transform: translate(60%, -160%); }
+.l1:hover .chip .logo-arrow + .logo-arrow { transform: none; }
+/* L2: the arrow turns from "up" (the logo) to "forward" (left, RTL) and the pill fills */
+.l2 { overflow: hidden; transition: color .45s var(--ease); }
+.l2::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--navy); transform: scaleX(0); transform-origin: 100% 50%; transition: transform .55s var(--ease); }
+.l2 .logo-arrow { transition: transform .55s var(--ease); color: var(--navy); }
+.l2:hover { color: #fff; } .l2:hover::before { transform: scaleX(1); }
+.l2:hover .logo-arrow { transform: rotate(-58deg) translateX(-2px); color: var(--accent-2); }
+.l2.sec::before { background: var(--accent-2); } .l2.sec .logo-arrow { color: var(--accent-2); }
+.l2.sec:hover { color: var(--navy); } .l2.sec:hover .logo-arrow { color: var(--navy); }
+/* L3: the arrow flies across the button leaving a green trail behind it */
+.l3 { background: #1b1d36; color: #fff; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); padding-inline: 30px 30px; }
+.light .l3 { background: var(--navy); }
+.l3::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(270deg, rgba(28,211,28,0) 0%, rgba(28,211,28,.85) 100%); transform: scaleX(0); transform-origin: 100% 50%; }
+.l3 .fly { position: absolute; top: 50%; right: 8px; margin-top: -10px; color: var(--accent-2); opacity: 0; }
+.l3 .fly .logo-arrow { width: 20px; height: 20px; transform: rotate(-58deg); }
+.l3:hover::before { animation: trail .7s var(--ease) forwards; }
+.l3:hover .fly { animation: fly .7s var(--ease) forwards; }
+.l3:hover { color: var(--navy); transition: color .2s .35s; }
+@keyframes fly { 0% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(calc(-1 * var(--w, 180px))); } }
+@keyframes trail { to { transform: scaleX(1); } }
+.l3.sec { background: transparent; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.3); }
+.light .l3.sec { background: transparent; color: var(--navy); box-shadow: inset 0 0 0 1.5px rgba(16,16,36,.3); }
+.section-title-lab { padding: 0 6vw; margin: 4vh 0 16px; font-family: 'Anomalia'; font-size: 1.6rem; color: var(--accent-2); }
+
 /* variant fixes */
 .light .s3, .light .s6 { color: #fff; }
 .s7.sec, .light .s7.sec { box-shadow: none; }
@@ -103,9 +137,12 @@ button { font: inherit; border: 0; cursor: pointer; }
 </head>
 <body>
 <header class="intro">
-  <h1>כפתורים: תשעה כיוונים.</h1>
+  <h1>כפתורים: שנים עשר כיוונים.</h1>
   <p>כל כפתור מוצג בגרסה ראשית ומשנית, על הרקע הכהה ועל האפור של האתר. עברו עם העכבר ולחצו, כדי להרגיש את התגובה. בחר אחד או שילוב, ואחליף בכל האתר.</p>
 </header>
+<h2 class="section-title-lab">בהשראת החץ מהלוגו</h2>
+<main class="grid" id="logoGrid"></main>
+<h2 class="section-title-lab">כיוונים כלליים</h2>
 <main class="grid" id="grid"></main>
 <script>
 const arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
@@ -120,6 +157,20 @@ const D = [
   ['s8', 'כפתור מוחשי', 'כפתור "פיזי" עם עובי, שנלחץ פנימה בהקשה. כיפי וברור, מעולה בנייד.', t => t],
   ['s9', 'מגנטי', 'הכפתור נמשך לעבר העכבר והטקסט נמשך עוד קצת, שתי שכבות בעומק. הרחבה של מה שיש עכשיו.', t => `<span>${t}</span>`],
 ];
+
+const LOGO = '<svg class="logo-arrow" viewBox="12 3 76 94" aria-hidden="true"><path d="M66.9,6l-0.4-0.1L15.7,61.8l14.7,12.4l7-8l3.2,0.8L35,89.3l19.2,4.8l5.5-22.2l3.5,0.9l2.2,10.4l18.9-3.8L66.9,6z M53.4,56.4L44.2,54l6.7-6.7l6.7-6.7l2.5,9.1l2.5,9.1L53.4,56.4z"/></svg>';
+const L = [
+  ['l1', 'החץ נוסק', 'בתוך עיגול יושב החץ מהלוגו. במעבר עכבר הוא ממריא החוצה, וחץ חדש עולה במקומו. תחושה של המראה, של "קדימה".', t => `${t}<span class="chip">${LOGO}${LOGO}</span>`],
+  ['l2', 'החץ פונה קדימה', 'במנוחה החץ מצביע למעלה, כמו בלוגו. במעבר עכבר הוא מסתובב לכיוון הקריאה, והכפתור מתמלא בצבע.', t => `${t}${LOGO}`],
+  ['l3', 'החץ חוצה את הכפתור', 'במעבר עכבר החץ מהלוגו טס לרוחב הכפתור ומשאיר אחריו שובל ירוק שממלא אותו. הכי דרמטי מהשלושה.', t => `<span class="fly">${LOGO}</span>${t}`],
+];
+const lg = document.getElementById('logoGrid');
+L.forEach(([cls, name, desc, wrap], i) => {
+  const pair = theme => `<div class="${theme}"><button class="b ${cls} ${cls === 'l3' ? '' : 'pri'}">${wrap('בואו נדבר')}</button><button class="b ${cls} sec">${wrap('הפרויקטים שלי')}</button></div>`;
+  lg.insertAdjacentHTML('beforeend', `<article class="card"><div class="head"><h2>${name}<span>${['א','ב','ג'][i]}</span></h2><p>${desc}</p></div><div class="demo">${pair('dark')}${pair('light')}</div></article>`);
+});
+document.querySelectorAll('.l3').forEach(b => b.style.setProperty('--w', b.offsetWidth + 'px'));
+
 const grid = document.getElementById('grid');
 D.forEach(([cls, name, desc, wrap], i) => {
   const glass = cls === 's5';

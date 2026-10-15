@@ -50,7 +50,11 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
   ideas for projects moving around Michael's hero photo (orbit, floating depth + cursor parallax, halo fan,
   tilted flowing wall, cards dealt on scroll); `lab/buttons.html` — nine button directions (fill sweep,
   arrow chip, cursor glow, text roll, liquid glass, always-on brand ring, long-arrow link, tactile 3D,
-  magnetic), each primary + secondary on navy and on the grey page
+  magnetic) plus three built on the green arrow from Michael's logo (`logo-icon.svg`): launches up
+  and is replaced, turns from up to forward while the pill fills, flies across leaving a green trail;
+  each primary + secondary on navy and on the grey page; `lab/hero-loop.html` — five always-on looping
+  hero ideas with an intro burst (galaxy orbit, tunnel, gyroscope rings, big wheel, flip board),
+  subtler 6px corners (Michael: no scroll-driven motion, wow from the first second)
 - `serve.py` — the only "tooling" in the repo
 - `index.html` links `style.css?v=N` / `script.js?v=N` — bump `N` whenever either file changes,
   otherwise browsers/GitHub Pages can pair a new `index.html` with a stale cached stylesheet
@@ -138,9 +142,10 @@ so they render above it. Section backgrounds use semi-transparent colors
 - Wave marquee (`.wave`, "WAVE MARQUEE — SCROLL-DRIVEN" in `script.js`): the section is pinned
   (`position: sticky`) while one giant line travels across it, mirrored for Hebrew (sentence start
   enters first, moving left → right); each letter/tile rides a sine wave fixed in screen space.
-  Copy: "אין שני לרושם ראשוני"; between the words, besides Michael's photo tile, three `.wave-tile--shots`
+  Copy: "אין שני לרושם ראשוני"; between the words (no photo tile: Michael removed it) three `.wave-tile--shots`
   (rounded crops of beautiful areas from client sites, `images/wave/shot-1..9.webp` taken from the
-  portfolio recordings) each cross-fade through three shots (Michael replaced the icon tiles).
+  portfolio recordings) each switch through three shots with a quick rhythmic wipe every 1.2s
+  (no zoom: Michael said it made the sites look cropped; radius 0.06em so nothing is cut).
   Faster (1.4px travel per px scrolled, 0.7 on phones) and the travel ends with 40% of the screen still
   covered by the line's tail (`TAIL`), so there is never an empty navy screen. The section's height is set in JS from the track width; travel
   starts the moment the section enters the screen with a quarter of the line already in view (no
@@ -266,7 +271,8 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
 - Numbers (about stats, process step numbers) are in Anomalia; each `.stat` is space-between so the
   three numerals share one line even when a label wraps (phones).
 - Testimonials: 4 columns on desktop (≥940px wide area; 3/2/1 below), title column narrowed.
-- Footer socials (`.contact-social`, under the contact details): Instagram (mikikaplin), LinkedIn
+- Footer: no written email/site address and no "אחזור אליכם" note (Michael removed them); `.contact-social`
+  is a row of round icons: email (mailto), Instagram (mikikaplin), LinkedIn
   (href still `#`, `data-todo="linkedin-url"`: waiting for Michael's URL), Facebook; outlined round icons.
 - About (`.about`) is full screen (`min-height: 100svh`): photo + story, then `.about-stats`, a
   full-width band of oversized thin numerals (+5 / +30 / 100%) split by hairlines; "ABOUT — COUNT-UP
@@ -288,7 +294,7 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
   swatches taking turns to widen, strike-through redrawn then the new line rising, icons lighting in
   turn, the before/after split sliding); all off under reduced motion.
 - Hero copy (Michael wanted it business-minded, not "בלתי נשכח"): "האתר שלך הוא / הרושם הראשון. / בואו
-  נהפוך אותו / ללקוחות." + "אני בונה לעסקים אתרים שמייצרים אמון, מבדלים אותם מהמתחרים והופכים גולשים
+  נהפוך אותו / ליתרון שלך." (Michael's pick) + "אני בונה לעסקים אתרים שמייצרים אמון, מבדלים אותם מהמתחרים והופכים גולשים
   לפניות של לקוחות." `.hero-highlight` never wraps ("הרושם הראשון." on one line) and "נהפוך&nbsp;אותו" is
   glued. On phones (≤768px) JS ("HERO — MOBILE TITLE FIT") searches the largest size that stays within
   half the screen height AND doesn't overflow the width (the no-wrap phrase usually sets the limit).

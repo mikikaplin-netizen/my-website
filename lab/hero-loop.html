@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>מעבדה: הירו בלופ</title>
+<style>
+@font-face { font-family: 'Polin'; src: url('../fonts/Polin-Regular.ttf') format('truetype'); font-weight: 100 599; font-display: swap; }
+@font-face { font-family: 'Anomalia'; src: url('../fonts/anomalia-bold-aaa.woff2') format('woff2'); font-weight: 600 1000; font-display: swap; }
+:root { --bg: #101024; --accent: #64C1D2; --accent-2: #1CD31C; --ease: cubic-bezier(0.23, 1, 0.32, 1); }
+* { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+body { margin: 0; background: var(--bg); color: #fff; font-family: 'Polin', Arial, sans-serif; }
+.intro { padding: 10vh 6vw 4vh; }
+.intro h1 { font-family: 'Anomalia'; font-size: clamp(2rem, 4vw, 3.6rem); margin: 0 0 12px; }
+.intro p { color: rgba(255,255,255,.62); max-width: 64ch; line-height: 1.7; margin: 0; }
+.hero { position: relative; height: 100vh; min-height: 640px; display: grid; grid-template-columns: 1fr 1.1fr; align-items: center; padding: 0 6vw; border-top: 1px solid rgba(100,193,210,.18); overflow: clip; }
+.tag { position: absolute; top: 28px; right: 6vw; z-index: 30; font-size: .8rem; color: var(--accent-2); font-weight: 600; }
+.tag b { font-family: 'Anomalia'; font-size: 1.6rem; color: #fff; margin-inline-start: 10px; }
+.replay { position: absolute; top: 30px; left: 6vw; z-index: 30; font: inherit; font-size: .85rem; color: #fff; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); border-radius: 999px; padding: 8px 16px; cursor: pointer; }
+.copy { position: relative; z-index: 20; }
+.copy h2 { font-family: 'Anomalia'; font-size: clamp(2.2rem, 4.4vw, 4.4rem); line-height: 1; margin: 0; }
+.copy h2 em { font-style: normal; color: var(--accent-2); }
+.copy p { color: rgba(255,255,255,.62); max-width: 40ch; line-height: 1.7; margin-top: 22px; }
+.stage { position: relative; height: 100%; perspective: 1500px; }
+.me { position: absolute; bottom: 0; left: 50%; width: min(420px, 32vw); translate: -50% 0; z-index: 10; -webkit-mask: linear-gradient(#000 82%, transparent); mask: linear-gradient(#000 82%, transparent); pointer-events: none; }
+.shot { position: absolute; aspect-ratio: 1.6; border-radius: 6px; background: #05060d center/cover no-repeat; box-shadow: 0 0 0 1px rgba(255,255,255,.12), 0 26px 50px -22px rgba(0,0,0,.9); will-change: transform; }
+.shot::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(120deg, rgba(255,255,255,.12), transparent 40%); }
+@media (max-width: 860px) { .hero { grid-template-columns: 1fr; grid-template-rows: auto 1fr; padding-top: 12vh; } .me { width: 64vw; } }
+
+/* 3 gyroscope */
+.gyro { position: absolute; left: 50%; top: 46%; width: 0; height: 0; transform-style: preserve-3d; }
+.ring { position: absolute; transform-style: preserve-3d; }
+.ring .shot { width: 170px; margin: -53px 0 0 -85px; backface-visibility: hidden; }
+.r1 { animation: r1 22s linear infinite; } .r2 { animation: r2 28s linear infinite; }
+@keyframes r1 { from { transform: rotateX(68deg) rotateZ(0); } to { transform: rotateX(68deg) rotateZ(360deg); } }
+@keyframes r2 { from { transform: rotateY(24deg) rotateX(-62deg) rotateZ(0); } to { transform: rotateY(24deg) rotateX(-62deg) rotateZ(-360deg); } }
+.gyro.intro { animation: grow 1.4s var(--ease) both; }
+@keyframes grow { from { transform: scale(0.1); opacity: 0; } }
+
+/* 5 flip board */
+.board { position: absolute; inset: 6% -6% 8% -10%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; align-content: center; perspective: 1200px; -webkit-mask: radial-gradient(ellipse at 50% 50%, #000 45%, transparent 75%); mask: radial-gradient(ellipse at 50% 50%, #000 45%, transparent 75%); }
+.flip { position: relative; aspect-ratio: 1.6; transform-style: preserve-3d; transition: transform .8s var(--ease); }
+.flip .shot { position: absolute; inset: 0; width: 100%; backface-visibility: hidden; }
+.flip .shot.back { transform: rotateY(180deg); }
+.flip.on { transform: rotateY(180deg); }
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+</style>
+</head>
+<body>
+<header class="intro">
+  <h1>הירו בלופ: וואו מהשנייה הראשונה.</h1>
+  <p>חמישה רעיונות חדשים, כולם רצים לבד בלופ מרגע שנכנסים, בלי גלילה, עם כניסה דרמטית בהתחלה (כפתור "שוב" מפעיל אותה מחדש). הפינות עדינות יותר, כדי שלא יחתכו את האתרים. דף מעבדה, לא מקושר.</p>
+</header>
+
+<section class="hero" id="g1"><span class="tag">1<b>גלקסיה</b></span><button class="replay">שוב ↺</button>
+  <div class="copy"><h2>האתר שלך הוא<br /><em>הרושם הראשון.</em></h2><p>המסכים מתפוצצים החוצה מאחוריך ונכנסים למסלול אליפטי מוטה. הם תמיד פונים אליך, כך שכל אתר נשאר קריא, ובמסלול הם עוברים מלפניך ומאחוריך עם עומק וטשטוש.</p></div>
+  <div class="stage"><img class="me" src="../images/miki-hero.png" alt="" /></div>
+</section>
+
+<section class="hero" id="g2"><span class="tag">2<b>מנהרה</b></span><button class="replay">שוב ↺</button>
+  <div class="copy"><h2>האתר שלך הוא<br /><em>הרושם הראשון.</em></h2><p>המסכים טסים מעומק החלל אל הצופה, חולפים לצדדים שלך ונעלמים מאחורי המסך. תחושה של מהירות ושל הרבה עבודה, ואתה עומד יציב במרכז.</p></div>
+  <div class="stage"><img class="me" src="../images/miki-hero.png" alt="" /></div>
+</section>
+
+<section class="hero" id="g3"><span class="tag">3<b>גירוסקופ</b></span><button class="replay">שוב ↺</button>
+  <div class="copy"><h2>האתר שלך הוא<br /><em>הרושם הראשון.</em></h2><p>שתי טבעות של מסכים בזוויות שונות, מסתובבות זו נגד זו סביבך כמו גירוסקופ. בכניסה הן נפתחות מנקודה אחת.</p></div>
+  <div class="stage"><div class="gyro intro"><div class="ring r1"></div><div class="ring r2"></div></div><img class="me" src="../images/miki-hero.png" alt="" /></div>
+</section>
+
+<section class="hero" id="g4"><span class="tag">4<b>גלגל ענק</b></span><button class="replay">שוב ↺</button>
+  <div class="copy"><h2>האתר שלך הוא<br /><em>הרושם הראשון.</em></h2><p>מאחוריך מסתובב גלגל אנכי ענק של מסכים: עולים מאחורי הכתף, עוברים מעל הראש ויורדים בצד השני, בלי סוף.</p></div>
+  <div class="stage"><img class="me" src="../images/miki-hero.png" alt="" /></div>
+</section>
+
+<section class="hero" id="g5"><span class="tag">5<b>לוח מתהפך</b></span><button class="replay">שוב ↺</button>
+  <div class="copy"><h2>האתר שלך הוא<br /><em>הרושם הראשון.</em></h2><p>מאחוריך פסיפס של מסכים שמתהפכים בגלים, כמו לוח המראות בשדה תעופה, וחושפים כל פעם פרויקטים אחרים. בכניסה הלוח נבנה אריח אחר אריח.</p></div>
+  <div class="stage"><div class="board"></div><img class="me" src="../images/miki-hero.png" alt="" /></div>
+</section>
+
+<script>
+const SH = ['shimony-poster','tamar-baniel-poster','ziskind-poster','lishkatoanim-poster','element-poster'].map(s => `../images/portfolio/${s}.webp`)
+  .concat([1,2,3,4,5,6,7,8,9].map(n => `../images/wave/shot-${n}.webp`));
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const mk = (i, w) => { const d = document.createElement('div'); d.className = 'shot'; d.style.backgroundImage = `url(${SH[i % SH.length]})`; if (w) d.style.width = w + 'px'; return d; };
+const ease = t => 1 - Math.pow(1 - t, 3);
+const onScreen = el => { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; };
+
+// 1 galaxy: billboarded tilted ellipse orbit + burst intro
+(() => {
+  const sec = document.getElementById('g1'), st = sec.querySelector('.stage');
+  const n = 9, els = []; for (let i = 0; i < n; i++) { const e = mk(i, 190); e.style.left = '50%'; e.style.top = '64%'; e.style.margin = '-60px 0 0 -95px'; st.appendChild(e); els.push(e); }
+  let t0 = performance.now();
+  sec.querySelector('.replay').onclick = () => t0 = performance.now();
+  (function tick(now) {
+    if (onScreen(sec)) {
+      const el = (now - t0) / 1000, intro = reduce ? 1 : ease(Math.min(1, el / 1.6));
+      const W = st.clientWidth * 0.5, H = st.clientHeight * 0.13;
+      els.forEach((e, i) => {
+        const a = (i / n) * Math.PI * 2 + (reduce ? 0 : el * 0.28) - 0.4 * (1 - intro) * 6;
+        const z = Math.sin(a);                 // -1 back .. 1 front
+        const x = Math.cos(a) * W * intro, y = (z * H - 20 + Math.cos(a) * H * 0.35) * intro;
+        const s = (0.62 + 0.38 * (z + 1) / 2) * (0.3 + 0.7 * intro);
+        e.style.transform = `translate(${x}px, ${y}px) scale(${s}) rotate(${Math.cos(a) * -6}deg)`;
+        e.style.zIndex = z > 0.05 ? 12 : 5;
+        e.style.filter = `blur(${Math.max(0, -z) * 2.2}px) brightness(${0.7 + 0.3 * (z + 1) / 2})`;
+        e.style.opacity = Math.min(1, intro * 1.4);
+      });
+    }
+    requestAnimationFrame(tick);
+  })(t0);
+})();
+
+// 2 tunnel: shots fly from deep space toward the viewer, past both sides
+(() => {
+  const sec = document.getElementById('g2'), st = sec.querySelector('.stage');
+  const n = 14, lanes = [], els = [];
+  for (let i = 0; i < n; i++) { const e = mk(i, 220); e.style.left = '50%'; e.style.top = '45%'; e.style.margin = '-69px 0 0 -110px'; st.insertBefore(e, st.firstChild); els.push(e);
+    const side = i % 2 ? 1 : -1; lanes.push({ x: side * (0.55 + Math.random() * 0.5), y: (Math.random() - 0.5) * 0.9, off: i / n }); }
+  let t0 = performance.now(); sec.querySelector('.replay').onclick = () => t0 = performance.now();
+  (function tick(now) {
+    if (onScreen(sec)) {
+      const el = (now - t0) / 1000, W = st.clientWidth, H = st.clientHeight;
+      els.forEach((e, i) => {
+        const L = lanes[i]; let p = ((reduce ? 0.5 : el * 0.11) + L.off) % 1;   // 0 far → 1 passed
+        const intro = Math.min(1, el / 1.2); p = p * (reduce ? 1 : (0.35 + 0.65 * ease(intro)));
+        const persp = 1 / (1.15 - p);       // grows toward the viewer
+        const x = L.x * W * 0.42 * persp * 0.55, y = L.y * H * 0.35 * persp * 0.55;
+        e.style.transform = `translate(${x}px, ${y}px) scale(${0.21 * persp}) rotateY(${L.x * -22}deg)`;
+        e.style.opacity = p < 0.08 ? p / 0.08 : p > 0.9 ? (1 - p) / 0.1 : 1;
+        e.style.zIndex = p > 0.72 ? 14 : 4;
+        e.style.filter = `blur(${p < 0.3 ? (0.3 - p) * 8 : 0}px)`;
+      });
+    }
+    requestAnimationFrame(tick);
+  })(t0);
+})();
+
+// 3 gyroscope rings
+(() => {
+  const sec = document.getElementById('g3'), g = sec.querySelector('.gyro');
+  [['.r1', 8, 280], ['.r2', 7, 230]].forEach(([sel, n, R], k) => { const r = g.querySelector(sel);
+    for (let i = 0; i < n; i++) { const e = mk(i * 2 + k + 3); e.style.transform = `rotateZ(${i * 360 / n}deg) translateY(-${R}px) rotateX(-90deg)`; r.appendChild(e); } });
+  sec.querySelector('.replay').onclick = () => { g.classList.remove('intro'); void g.offsetWidth; g.classList.add('intro'); };
+})();
+
+// 4 big wheel behind (rotates in the screen plane, shots stay upright)
+(() => {
+  const sec = document.getElementById('g4'), st = sec.querySelector('.stage');
+  const n = 10, els = []; for (let i = 0; i < n; i++) { const e = mk(i + 4, 200); e.style.left = '50%'; e.style.top = '52%'; e.style.margin = '-62px 0 0 -100px'; st.insertBefore(e, st.firstChild); els.push(e); }
+  let t0 = performance.now(); sec.querySelector('.replay').onclick = () => t0 = performance.now();
+  (function tick(now) {
+    if (onScreen(sec)) {
+      const el = (now - t0) / 1000, intro = reduce ? 1 : ease(Math.min(1, el / 1.5));
+      const R = Math.min(st.clientWidth * 0.5, st.clientHeight * 0.5) * intro;
+      els.forEach((e, i) => {
+        const a = (i / n) * Math.PI * 2 + (reduce ? 0 : el * 0.22);
+        const x = Math.cos(a) * R * 1.15, y = Math.sin(a) * R * 0.9 - 30;
+        const front = y < -R * 0.2;            // over the head: the closest part of the wheel
+        e.style.transform = `translate(${x}px, ${y}px) scale(${(0.7 + 0.25 * Math.max(0, -Math.sin(a))) * (0.4 + 0.6 * intro)})`;
+        e.style.zIndex = 4; e.style.opacity = Math.min(1, intro * 1.5) * (y > R * 0.55 ? 0.35 : 1);
+      });
+    }
+    requestAnimationFrame(tick);
+  })(t0);
+})();
+
+// 5 flip board: built tile by tile, then flips in diagonal waves
+(() => {
+  const sec = document.getElementById('g5'), board = sec.querySelector('.board');
+  const tiles = [];
+  for (let i = 0; i < 16; i++) { const f = document.createElement('div'); f.className = 'flip';
+    const a = mk(i), b = mk(i + 7); b.classList.add('back'); f.append(a, b); board.appendChild(f); tiles.push(f); }
+  const build = () => tiles.forEach((t, i) => { t.style.opacity = 0; t.style.transform = 'rotateX(-90deg)';
+    setTimeout(() => { t.style.transition = 'transform .7s var(--ease), opacity .5s'; t.style.opacity = 1; t.style.transform = ''; }, 120 + ((i % 4) + Math.floor(i / 4)) * 90); });
+  build(); sec.querySelector('.replay').onclick = build;
+  let flipped = false;
+  setInterval(() => { if (reduce || !onScreen(sec)) return; flipped = !flipped;
+    tiles.forEach((t, i) => setTimeout(() => { t.style.transform = ''; t.classList.toggle('on', flipped); }, ((i % 4) + Math.floor(i / 4)) * 110)); }, 3200);
+})();
+</script>
+</body>
+</html>

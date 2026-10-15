@@ -915,8 +915,8 @@ html.theme-light .navbar::after {
 .wave-tile--shots {
   position: relative;
   width: 1.5em;
-  height: 0.94em;
-  border-radius: 0.12em;
+  height: 0.94em;              /* the shots' own 1.6 ratio: nothing is cropped */
+  border-radius: 0.06em;
   background: var(--bg-3);
   box-shadow: 0 0 0 2px rgba(255,255,255,0.08), 0 18px 40px rgba(0,0,0,0.35);
 }
@@ -927,27 +927,29 @@ html.theme-light .navbar::after {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0;
 }
 
-.wave-tile--shots img:first-child { opacity: 1; }
+.wave-tile--shots img + img { opacity: 0; }
 
+/* a quick, rhythmic wipe from project to project (no zoom: the sites stay
+   whole). Each shot wipes in over the last in 0.3s, holds, and is the top
+   layer while it is new (z-index steps down once the next one is in) */
 @media (prefers-reduced-motion: no-preference) {
-  .wave-tile--shots img {
-    opacity: 0;
-    animation: waveShot 7.2s ease-in-out infinite;
+  .wave-tile--shots img,
+  .wave-tile--shots img + img {
+    opacity: 1;
+    animation: waveShot 3.6s cubic-bezier(0.7, 0, 0.2, 1) infinite;
     animation-delay: var(--d, 0s);
   }
-  .wave-tile--shots img:nth-child(2) { animation-delay: calc(var(--d, 0s) + 2.4s); }
-  .wave-tile--shots img:nth-child(3) { animation-delay: calc(var(--d, 0s) + 4.8s); }
+  .wave-tile--shots img:nth-child(2) { animation-delay: calc(var(--d, 0s) + 1.2s); }
+  .wave-tile--shots img:nth-child(3) { animation-delay: calc(var(--d, 0s) + 2.4s); }
 }
 
 @keyframes waveShot {
-  /* the next shot is fully in (33→39%) before this one leaves (39→45%),
-     so a tile is never half-transparent */
-  0% { opacity: 0; transform: scale(1.08); }
-  6%, 39% { opacity: 1; }
-  45%, 100% { opacity: 0; transform: scale(1); }
+  0% { clip-path: inset(0 0 0 100%); z-index: 3; }
+  9% { clip-path: inset(0 0 0 0); }
+  33% { z-index: 3; }
+  34%, 100% { clip-path: inset(0 0 0 0); z-index: 1; }
 }
 
 .wave-tile--photo img {

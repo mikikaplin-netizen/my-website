@@ -185,7 +185,8 @@ to the page edges/down, logo scaled), so the condense runs on the compositor wit
 **Navbar hover bubble** ("NAVBAR — HOVER BUBBLE", after Aceternity's navbar): one `.nav-pill` behind
 the items springs (Apple spring, damping 1, response 0.3s) to the hovered item's box and fades in
 place when the pointer leaves; it reappears on the item (no slide) after fading. Mouse only. Menu
-(and tab bar) order follows the page: פרויקטים, אודות, שירותים, בואו נדבר.
+order follows the page: פרויקטים, אודות, התהליך (#services, the process), שירותים (#craft), בואו נדבר
+(Michael added התהליך for a richer menu); the 4-item mobile tab bar keeps שירותים → #services.
 
 **Navbar items** all share the CTA's pill box (`border-radius: 999px`, same padding, 1px
 transparent border) so the hover background matches "בואו נדבר" exactly.

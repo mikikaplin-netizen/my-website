@@ -1850,3 +1850,26 @@ document.addEventListener('touchstart', () => {}, { passive: true });
     slides[i].classList.add('is-on');
   }, 4500);
 })();
+
+// ===========================
+// HERO — SHOWCASE CAROUSEL (preview: ?hero2)
+// ===========================
+(function () {
+  const box = document.querySelector('.hero-showcase');
+  if (!box || !document.documentElement.classList.contains('show-hero2')) return;
+  const shots = box.querySelectorAll('.hs-shot');
+  const bars = box.querySelectorAll('.hs-bars i');
+  const name = box.querySelector('.hs-name');
+  const MS = 3600;
+  box.style.setProperty('--hs-ms', MS + 'ms');
+  let i = 0;
+  const show = k => {
+    shots.forEach((s, n) => s.classList.toggle('is-on', n === k));
+    bars.forEach((b, n) => { b.classList.toggle('done', n < k); b.classList.remove('on'); });
+    void bars[k].offsetWidth; bars[k].classList.add('on');
+    name.textContent = shots[k].dataset.name;
+  };
+  show(0);
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  setInterval(() => { if (document.hidden) return; i = (i + 1) % shots.length; show(i); }, MS);
+})();

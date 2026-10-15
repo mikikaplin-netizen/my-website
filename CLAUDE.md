@@ -280,6 +280,10 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
   `.pq-feature` (headline takeaway + full מיכאל זכאי quote) between about and process. Hidden unless the
   URL has `?quotes` (inline script in <head> adds `html.show-quotes`). To ship: drop the gate; to
   drop: delete the `.pq`/`.pq-feature` markup + "PULL QUOTES" CSS. Last commit before this: 8851375.
+- Hero showcase (PREVIEW ONLY, `?hero2`, gate in the same <head> script → `html.show-hero2`): a small
+  floating screen (`.hero-showcase`) over Michael's lower shoulder cycling the 5 project posters every
+  3.6s with story-style progress bars + project name ("HERO — SHOWCASE CAROUSEL"); on phones it also
+  shows Michael's photo under the copy (otherwise hidden ≤900px) with the screen beside him.
 - Numbers (about stats, process step numbers) are in Anomalia; each `.stat` is space-between so the
   three numerals share one line even when a label wraps (phones).
 - Testimonials: 4 columns on desktop (≥940px wide area; 3/2/1 below), title column narrowed.

@@ -1835,3 +1835,18 @@ document.addEventListener('touchstart', () => {}, { passive: true });
   window.addEventListener('scroll', kick, { passive: true });
   window.addEventListener('resize', () => { measure(); kick(); });
 })();
+
+// ===========================
+// HERO — QUOTE ROTATOR (preview: ?quotes)
+// ===========================
+(function () {
+  const slides = document.querySelectorAll('.pq-rotator .pq-slide');
+  if (slides.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let i = 0;
+  setInterval(() => {
+    if (document.hidden) return;
+    slides[i].classList.remove('is-on');
+    i = (i + 1) % slides.length;
+    slides[i].classList.add('is-on');
+  }, 4500);
+})();

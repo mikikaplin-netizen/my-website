@@ -2318,6 +2318,12 @@ html.theme-light .pq-stars { color: var(--fg); }
 /* the hero snippet sits under the buttons */
 .hero-text .pq { margin-top: 36px; }
 
+/* hero: a small rotator, one snippet at a time (fade + rise, every 4.5s) */
+.pq-rotator { flex-direction: column; gap: 8px; }
+.pq-track { display: grid; }
+.pq-slide { grid-area: 1 / 1; display: flex; gap: 12px; align-items: center; margin: 0; opacity: 0; translate: 0 8px; transition: opacity .6s var(--ease-out), translate .6s var(--ease-out); pointer-events: none; }
+.pq-slide.is-on { opacity: 1; translate: 0 0; pointer-events: auto; }
+
 /* the featured quote: a calm full-width band with a headline takeaway */
 .pq-feature { padding: clamp(80px, 12vh, 140px) 0; text-align: center; position: relative; z-index: 1; }
 .pq-feature-head {

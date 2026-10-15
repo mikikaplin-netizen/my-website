@@ -273,8 +273,10 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
   logos, gentle elegant motion on scroll" and is still deciding on the style; tried and dropped: a
   cell-swap wall (swaps went unnoticed) and auto-running marquee rows ("not special").
 - Pull quotes (PREVIEW ONLY, after Michael saw a TikTok on spreading testimonials through the page;
-  he worried it may look scattered): `.pq` snippets (avatar, stars, one line, name) under the hero
-  buttons and under the sub of portfolio / process / craft headers and the footer intro, plus
+  he worried it may look scattered): `.pq` snippets (avatar, stars, one line, name) under the sub of
+  portfolio / process / craft headers (footer one removed: too close to the testimonials), a hero
+  `.pq-rotator` under the buttons cycling 4 short snippets (fade + rise every 4.5s, "HERO — QUOTE
+  ROTATOR"), plus
   `.pq-feature` (headline takeaway + full מיכאל זכאי quote) between about and process. Hidden unless the
   URL has `?quotes` (inline script in <head> adds `html.show-quotes`). To ship: drop the gate; to
   drop: delete the `.pq`/`.pq-feature` markup + "PULL QUOTES" CSS. Last commit before this: 8851375.

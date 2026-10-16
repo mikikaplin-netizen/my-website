@@ -3201,8 +3201,8 @@ html.theme-light .faq-chip:not([disabled]) { color: var(--ink); border-color: va
    columns and repeats them so a column never runs out. */
 .tm-layout {
   display: grid;
-  grid-template-columns: minmax(200px, 0.5fr) 3fr;
-  gap: 48px;
+  grid-template-columns: minmax(220px, 0.65fr) 2.35fr;
+  gap: 56px;
   align-items: center;
 }
 
@@ -3232,6 +3232,7 @@ html.theme-light .faq-chip:not([disabled]) { color: var(--ink); border-color: va
 }
 
 @media (hover: hover) and (pointer: fine) { .tm-col:hover .tm-col-track { animation-play-state: paused; } }
+.tm-columns.is-paused .tm-col-track { animation-play-state: paused; }
 
 @keyframes tmRise {
   from { transform: translateY(0); }
@@ -3291,6 +3292,64 @@ html.theme-light .tm-card figcaption b { color: var(--ink); }
   line-height: 1.65;
   color: var(--text);
 }
+
+.tm-card blockquote strong {
+  font-weight: 700;
+  color: var(--fg);
+}
+
+/* desktop: a card opens big in a modal (the columns move, so a hover
+   zoom would chase the pointer); script.js "TESTIMONIALS — OPEN BIG" */
+@media (hover: hover) and (pointer: fine) {
+  .tm-columns.is-looping .tm-card { cursor: zoom-in; }
+}
+
+.tm-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(16,16,36,0.55);
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.tm-modal.is-open { opacity: 1; }
+
+.tm-modal .tm-card {
+  width: min(680px, 100%);
+  max-height: calc(100svh - 48px);
+  overflow: auto;
+  padding: 96px 48px 36px;
+  cursor: auto;
+  transform: translateY(16px) scale(0.94);
+  filter: blur(6px);
+  transition: transform 0.5s var(--ease-out), filter 0.4s var(--ease-out);
+}
+.tm-modal.is-open .tm-card { transform: none; filter: none; }
+.tm-modal .tm-card::before { font-size: 7.5rem; right: 44px; }
+.tm-modal .tm-card blockquote { font-size: 1.45rem; line-height: 1.6; text-wrap: pretty; }
+.tm-modal .tm-card:hover { background: inherit; }
+html.theme-light .tm-modal .tm-card { background: #ffffff; }
+
+.tm-modal-close {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.tm-modal-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .tm-card figcaption {
   display: flex;
@@ -3835,10 +3894,72 @@ main.page {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--bg);
+  /* a real notification dot: no dark ring, a thin light rim + soft shadow */
+  box-shadow: 0 0 0 1.5px rgba(255,255,255,0.9), 0 2px 6px rgba(0,0,0,0.25);
+  transform-origin: center;
 }
 
 .wa-launcher.opened .wa-badge { display: none; }
+
+/* with JS the badge waits (script.js "WHATSAPP — DELAYED NUDGE") and pops
+   in after some browsing or near the end of the page, with a peek bubble */
+.wa-launcher.is-waiting .wa-badge { transform: scale(0); opacity: 0; }
+.wa-launcher.is-nudged .wa-badge { animation: waBadgePop 0.6s var(--ease-out) both; }
+.wa-launcher.is-nudged { animation: waNudge 0.9s var(--ease-out) 0.15s; }
+
+@keyframes waBadgePop {
+  0%   { transform: scale(0); opacity: 0; }
+  55%  { transform: scale(1.25); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes waNudge {
+  0%, 100% { rotate: 0deg; }
+  20% { rotate: -12deg; }
+  40% { rotate: 10deg; }
+  60% { rotate: -6deg; }
+  80% { rotate: 3deg; }
+}
+
+.wa-peek {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 14px);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: max-content;
+  max-width: min(260px, calc(100vw - 48px));
+  padding: 12px 14px 12px 12px;
+  border: none;
+  border-radius: 16px 16px 4px 16px;
+  background: #ffffff;
+  color: #111b21;
+  font: inherit;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  text-align: right;
+  box-shadow: 0 12px 34px rgba(16,16,36,0.28);
+  cursor: pointer;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px) scale(0.9);
+  transform-origin: bottom right;
+  transition: opacity 0.25s ease, transform 0.45s var(--ease-out);
+}
+.wa-peek.is-on { opacity: 1; transform: none; pointer-events: auto; }
+.wa-peek b { display: block; font-size: 0.8rem; color: #128c7e; margin-bottom: 2px; }
+.wa-peek-x {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(17,27,33,0.08);
+  color: #54656f;
+  font-size: 0.9rem;
+  line-height: 1;
+}
 
 /* Panel — grows out of the launcher and returns into it along the same
    path (transform-origin on the launcher's corner), materializing with blur.
@@ -4238,6 +4359,10 @@ main.page {
   .btn:active,
   .nav-cta:active,
   .wa-launcher:active { transform: none; }
+  .wa-launcher.is-nudged,
+  .wa-launcher.is-nudged .wa-badge { animation: none; }
+  .wa-peek { transition: opacity 0.2s ease; transform: none; }
+  .tm-modal .tm-card { transform: none; filter: none; transition: none; }
 }
 
 /* Reduced transparency: frosted glass becomes a solid surface */

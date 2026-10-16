@@ -568,6 +568,58 @@ if (waLauncher && waPanel) {
     if (e.key === 'Escape' && isOpen()) closePanel();
   });
 
+  // --- delayed nudge ("WHATSAPP — DELAYED NUDGE") ---
+  // The red badge isn't there on arrival. After ~25s of browsing, or as soon
+  // as the testimonials / FAQ come into view (the end of the page), it pops
+  // in, the launcher gives a small shake and a peek bubble with Michael's
+  // greeting appears beside it (tap = open the chat, × = dismiss). Once per
+  // visit (sessionStorage); after that the badge just sits there.
+  (function () {
+    const KEY = 'wa-nudged';
+    let seen = false;
+    try { seen = sessionStorage.getItem(KEY) === '1'; } catch (_) { /* storage blocked */ }
+    if (seen) return;
+    waLauncher.classList.add('is-waiting');
+
+    const peek = document.createElement('button');
+    peek.type = 'button';
+    peek.className = 'wa-peek';
+    peek.innerHTML = '<span><b>מיכאל קאפלין</b>היי, איך אני יכול לעזור?</span><span class="wa-peek-x" aria-label="סגירה" role="button">×</span>';
+    waLauncher.before(peek);
+
+    const hidePeek = () => peek.classList.remove('is-on');
+    let fired = false, timer = 0, io = null, hideT = 0;
+    const fire = () => {
+      if (fired) return;
+      fired = true;
+      clearTimeout(timer);
+      if (io) io.disconnect();
+      try { sessionStorage.setItem(KEY, '1'); } catch (_) { /* storage blocked */ }
+      waLauncher.classList.remove('is-waiting');
+      if (isOpen()) return; // already chatting: no nudge needed
+      waLauncher.classList.add('is-nudged');
+      setTimeout(() => peek.classList.add('is-on'), 450);
+      hideT = setTimeout(hidePeek, 12000);
+    };
+
+    peek.addEventListener('click', (e) => {
+      hidePeek();
+      clearTimeout(hideT);
+      if (e.target.closest('.wa-peek-x')) return;
+      openPanel();
+    });
+    waLauncher.addEventListener('click', () => { hidePeek(); fire(); });
+
+    timer = setTimeout(fire, 25000);
+    const ends = ['#testimonials', '#faq'].map(sel => document.querySelector(sel)).filter(Boolean);
+    if (ends.length && 'IntersectionObserver' in window) {
+      io = new IntersectionObserver((entries) => {
+        if (entries.some(en => en.isIntersecting)) setTimeout(fire, 1200);
+      }, { threshold: 0.25 });
+      ends.forEach(el => io.observe(el));
+    }
+  })();
+
   // --- swipe down to dismiss ---
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let offset = 0, velocity = 0, raf = 0;
@@ -1735,12 +1787,12 @@ document.addEventListener('touchstart', () => {}, { passive: true });
 
   const cards = Array.from(wrap.querySelectorAll('.tm-card'));
   const PX_PER_SEC = 28;
-  const SPEED = [1, 0.8, 1.15, 0.92];
+  const SPEED = [1, 0.8, 1.15];
   let count = 0;
 
   const build = () => {
     const w = wrap.clientWidth;
-    const n = w >= 940 ? 4 : w >= 700 ? 3 : w >= 500 ? 2 : 1;
+    const n = w >= 820 ? 3 : w >= 540 ? 2 : 1;
     if (n === count) return;
     count = n;
     wrap.textContent = '';
@@ -1782,6 +1834,69 @@ document.addEventListener('touchstart', () => {}, { passive: true });
   build();
   let t;
   window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(build, 150); });
+})();
+
+// ===========================
+// TESTIMONIALS — OPEN BIG
+// ===========================
+// Clicking a card (or Enter on it) opens a copy of it big in a modal; the
+// columns pause underneath. Delegated, so the cloned cards in the loop work
+// too. Closes on the backdrop, the × button or Escape, and gives focus back.
+(function () {
+  const wrap = document.querySelector('.tm-columns');
+  if (!wrap) return;
+  wrap.querySelectorAll('.tm-card:not([aria-hidden])').forEach(card => {
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-haspopup', 'dialog');
+  });
+
+  let modal = null, opener = null;
+  const close = () => {
+    if (!modal) return;
+    const m = modal;
+    modal = null;
+    m.classList.remove('is-open');
+    wrap.classList.remove('is-paused');
+    document.removeEventListener('keydown', onKey);
+    setTimeout(() => m.remove(), 320);
+    if (opener && !opener.hasAttribute('aria-hidden')) opener.focus({ preventScroll: true });
+  };
+  const onKey = (e) => { if (e.key === 'Escape') close(); };
+
+  const open = (card) => {
+    if (modal) return;
+    opener = card;
+    modal = document.createElement('div');
+    modal.className = 'tm-modal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'המלצה');
+    const big = card.cloneNode(true);
+    ['aria-hidden', 'tabindex', 'role', 'aria-haspopup'].forEach(a => big.removeAttribute(a));
+    const x = document.createElement('button');
+    x.type = 'button';
+    x.className = 'tm-modal-close';
+    x.setAttribute('aria-label', 'סגירה');
+    x.textContent = '×';
+    big.appendChild(x);
+    modal.appendChild(big);
+    document.body.appendChild(modal);
+    wrap.classList.add('is-paused');
+    modal.addEventListener('click', (e) => { if (e.target === modal || e.target === x) close(); });
+    document.addEventListener('keydown', onKey);
+    requestAnimationFrame(() => requestAnimationFrame(() => modal && modal.classList.add('is-open')));
+    x.focus({ preventScroll: true });
+  };
+
+  wrap.addEventListener('click', (e) => {
+    const card = e.target.closest('.tm-card');
+    if (card) open(card);
+  });
+  wrap.addEventListener('keydown', (e) => {
+    const card = e.target.closest('.tm-card');
+    if (card && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(card); }
+  });
 })();
 
 // ===========================

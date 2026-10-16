@@ -284,9 +284,14 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
   floating screen (`.hero-showcase`) over Michael's lower shoulder cycling the 5 project posters every
   3.6s with story-style progress bars + project name ("HERO — SHOWCASE CAROUSEL"); on phones it also
   shows Michael's photo under the copy (otherwise hidden ≤900px) with the screen beside him.
+- About stats: +6 שנות ניסיון / +35 פרויקטים שעלו לאוויר / +15 תחומי עיסוק (15 awaiting Michael's confirmation).
 - Numbers (about stats, process step numbers) are in Anomalia; each `.stat` is space-between so the
   three numerals share one line even when a label wraps (phones).
-- Testimonials: 4 columns on desktop (≥940px wide area; 3/2/1 below), title column narrowed.
+- Testimonials: back to 3 columns (≥820px wide area; 2/1 below): 4 broke the title (Michael). Key
+  phrases in each quote are `<strong>` (bold, `--fg`), wording untouched. Clicking a card (Enter too)
+  opens a copy of it big in a `.tm-modal` (backdrop blur, × / backdrop / Esc closes, columns pause),
+  "TESTIMONIALS — OPEN BIG"; click, not hover, because the columns move. A Google rating badge is
+  wanted here once Michael gives the real rating, count and profile link (never invent it).
 - Footer: no written email/site address and no "אחזור אליכם" note (Michael removed them); `.contact-social`
   is a row of round icons: email (mailto), Instagram (mikikaplin), LinkedIn
   (href still `#`, `data-todo="linkedin-url"`: waiting for Michael's URL), Facebook; outlined round icons.
@@ -323,6 +328,10 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
   page (Michael disliked dark cards on grey). No per-card backdrop blur.
 - The contact section now lives inside `footer.site-end` (see Curtain footer).
 - FAQ is full screen (`min-height: 100svh`, content centered).
+- WhatsApp badge: no dark ring (Michael: looked fake), a thin white rim + shadow. With JS it waits
+  ("WHATSAPP — DELAYED NUDGE"): after 25s, or when testimonials/FAQ come into view, it pops in, the
+  launcher shakes once and a white `.wa-peek` bubble ("היי, איך אני יכול לעזור?") opens the chat on tap
+  (× dismisses, auto-hides after 12s). Once per visit (sessionStorage).
 - WhatsApp sheet body uses WhatsApp's own light wallpaper: cream `#EFEAE2` + `images/wa-doodles.svg`
   (generated tile of 25 scattered line doodles).
 - `.mcp.json` registers the shadcn MCP server (`npx shadcn@latest mcp`) for component inspiration;

@@ -291,15 +291,15 @@ otherwise, and under reduced motion / no JS, the plain list remains. The wave so
   is a row of round icons: email (mailto), Instagram (mikikaplin), LinkedIn
   (href still `#`, `data-todo="linkedin-url"`: waiting for Michael's URL), Facebook; outlined round icons.
 - About (`.about`) is full screen (`min-height: 100svh`): photo + story, then `.about-stats`, a
-  full-width band of oversized thin numerals (+5 / +30 / 100%) split by hairlines; "ABOUT — COUNT-UP
+  full-width band of oversized thin numerals (+6 years / +35 projects / 100%, third stat pending Michael's pick) split by hairlines; "ABOUT — COUNT-UP
   NUMBERS" counts them up once half in view (final values live in the markup).
 - FAQ (`#faq`, between testimonials and contact): an "ask me" conversation right on the page (no
   window, Michael didn't want one) with the 6 real Q&As from mkaplin.com. Markup holds all Q/A
   bubbles (no-JS fallback); "FAQ — CHAT" turns questions into suggestion chips that play out visitor
   bubble (right, cyan) → typing dots → Michael's answer (left, in a `.faq-row` with his round avatar
   at the bubble's outer bottom corner); the first exchange auto-plays when first seen.
-- Craft (`#craft`, "CRAFT — WHAT A SITE IS MADE OF", light zone, between process and magnet): "כל פיקסל,
-  בכוונה." Michael's message that a site is many layers he hand-crafts down to the pixel. A bento
+- Craft (`#craft`, "CRAFT — WHAT A SITE IS MADE OF", light zone, between process and magnet): "לכל פיקסל
+  יש סיבה." (was "כל פיקסל, בכוונה.") Michael's message that a site is many layers he hand-crafts down to the pixel. A bento
   brand-board of 8 `.craft-card`s (4 cols → 2 at ≤1100px → 1 at ≤640px), each visual demonstrates
   its craft: בידול (one green dot among grey), שפה וקול (bubbles), טיפוגרפיה (Anomalia/Polin),
   צבע (brand swatches), כתיבה (generic line struck out → "אין שני לרושם ראשוני."), איקונים

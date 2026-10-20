@@ -254,7 +254,10 @@ and fills each page from the `PROJECTS` table in the script: hero (field label, 
 year, "לאתר החי ↗" button unless `url` is None: סילימנט has no button for now), the site's screen
 recording in a browser window (`case.js` plays it only on screen), optional האתגר / הפיצוח / התוצאה
 blocks (rendered only when their text is filled; Michael's existing texts live on mkaplin.com's
-project pages), the client's quote (light zone), the next project + all others. Page-only styles
+project pages), the client's quote (light zone), then the next project as a giant text link and the rest as
+  text rows (no image tiles: Michael wanted it more special); on desktop the hovered project's screen
+  floats beside the cursor (`.case-float`, eased + velocity tilt in `case.js`), phones get round
+  thumbnails in the rows. The recording window is capped at 920px wide. Page-only styles
 are in `case.css` (bump `CASE_V` in the script when it or `case.js` change). Homepage rows link to
 these pages in the same tab. Edit content in the script, then rerun it; don't hand-edit the HTML.
 

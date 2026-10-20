@@ -15,7 +15,7 @@
   <link rel="preload" href="fonts/anomalia-bold-aaa.woff2" as="font" type="font/woff2" crossorigin />
   <script>if (/[?&]quotes\b/.test(location.search)) document.documentElement.classList.add("show-quotes"); if (/[?&]hero2\b/.test(location.search)) document.documentElement.classList.add("show-hero2");</script>
   <link rel="stylesheet" href="style.css?v=66" />
-  <link rel="stylesheet" href="case.css?v=3" />
+  <link rel="stylesheet" href="case.css?v=4" />
 </head>
 <body class="case-page">
   <!-- NAVBAR -->
@@ -78,14 +78,16 @@
 
     <section class="case-next section">
       <div class="container">
-        <a class="case-next-link" href="projects/lishkatoanim.html">
-          <span class="section-label">הפרויקט הבא</span>
+        <p class="section-label">הפרויקט הבא</p>
+        <a class="case-next-link" href="projects/lishkatoanim.html" data-poster="images/portfolio/lishkatoanim-poster.webp">
           <span class="case-next-name">לשכת הטוענים הרבניים</span>
-          <img src="images/portfolio/lishkatoanim-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" />
+          <span class="case-next-arrow" aria-hidden="true">←</span>
         </a>
         <p class="case-others-label">עוד פרויקטים</p>
-        <ul class="case-others"><li><a href="projects/shimony.html"><img src="images/portfolio/shimony-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" /><b>משרד שמעוני</b><span>רואי חשבון</span></a></li><li><a href="projects/tamar-baniel.html"><img src="images/portfolio/tamar-baniel-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" /><b>תמר בניאל</b><span>עיצוב פנים ואדריכלות</span></a></li><li><a href="projects/lishkatoanim.html"><img src="images/portfolio/lishkatoanim-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" /><b>לשכת הטוענים הרבניים</b><span>מוסדות מקצועיים</span></a></li><li><a href="projects/silyment.html"><img src="images/portfolio/element-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" /><b>סילימנט</b><span>גבס ודקורציה</span></a></li></ul>
+        <ul class="case-others"><li><a class="case-row" href="projects/shimony.html" data-poster="images/portfolio/shimony-poster.webp"><img class="case-row-thumb" src="images/portfolio/shimony-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" /><span class="case-row-name">משרד שמעוני</span><span class="case-row-field">רואי חשבון</span><span class="case-row-arrow" aria-hidden="true">←</span></a></li><li><a class="case-row" href="projects/tamar-baniel.html" data-poster="images/portfolio/tamar-baniel-poster.webp"><img class="case-row-thumb" src="images/portfolio/tamar-baniel-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" /><span class="case-row-name">תמר בניאל</span><span class="case-row-field">עיצוב פנים ואדריכלות</span><span class="case-row-arrow" aria-hidden="true">←</span></a></li><li><a class="case-row" href="projects/silyment.html" data-poster="images/portfolio/element-poster.webp"><img class="case-row-thumb" src="images/portfolio/element-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" /><span class="case-row-name">סילימנט</span><span class="case-row-field">גבס ודקורציה</span><span class="case-row-arrow" aria-hidden="true">←</span></a></li></ul>
       </div>
+      <!-- floats beside the cursor over the links above (desktop) -->
+      <div class="case-float" aria-hidden="true"><img alt="" width="1280" height="690" decoding="async" /></div>
     </section>
 
     <div id="contact" class="page-end"></div>
@@ -232,6 +234,6 @@
   </div>
 
   <script src="script.js?v=66"></script>
-  <script src="case.js?v=3"></script>
+  <script src="case.js?v=4"></script>
 </body>
 </html>

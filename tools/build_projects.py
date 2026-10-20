@@ -16,7 +16,7 @@ import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SCOPE_ALL = ("אפיון", "עיצוב", "פיתוח")
-CASE_V = 3  # bump when case.css / case.js change (cache-buster)
+CASE_V = 4  # bump when case.css / case.js change (cache-buster)
 
 PROJECTS = [
     {
@@ -117,7 +117,7 @@ def section(p, key, label, title):
 def page(p, i, chunks):
     n = len(PROJECTS)
     nxt = PROJECTS[(i + 1) % n]
-    others = [q for q in PROJECTS if q is not p]
+    others = [q for q in PROJECTS if q is not p and q is not nxt]
     meta = []
     if p["scope"]:
         chips = "".join(f'<li class="case-chip">{E(s)}</li>' for s in p["scope"])
@@ -154,9 +154,10 @@ def page(p, i, chunks):
       </div>
     </section>'''
     others_html = "".join(
-        f'<li><a href="projects/{q["slug"]}.html"><img src="images/portfolio/{q["video"]}-poster.webp" alt="" '
-        f'width="1280" height="690" loading="lazy" decoding="async" /><b>{E(q["name"])}</b>'
-        f'<span>{E(q["field"])}</span></a></li>' for q in others)
+        f'<li><a class="case-row" href="projects/{q["slug"]}.html" data-poster="images/portfolio/{q["video"]}-poster.webp">'
+        f'<img class="case-row-thumb" src="images/portfolio/{q["video"]}-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" />'
+        f'<span class="case-row-name">{E(q["name"])}</span><span class="case-row-field">{E(q["field"])}</span>'
+        f'<span class="case-row-arrow" aria-hidden="true">←</span></a></li>' for q in others)
 
     title = f'{p["name"]} | קייס סטדי | מיכאל קאפלין'
     head = chunks["head"]
@@ -207,14 +208,16 @@ def page(p, i, chunks):
 
     <section class="case-next section">
       <div class="container">
-        <a class="case-next-link" href="projects/{nxt["slug"]}.html">
-          <span class="section-label">הפרויקט הבא</span>
+        <p class="section-label">הפרויקט הבא</p>
+        <a class="case-next-link" href="projects/{nxt["slug"]}.html" data-poster="images/portfolio/{nxt["video"]}-poster.webp">
           <span class="case-next-name">{E(nxt["name"])}</span>
-          <img src="images/portfolio/{nxt["video"]}-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" />
+          <span class="case-next-arrow" aria-hidden="true">←</span>
         </a>
         <p class="case-others-label">עוד פרויקטים</p>
         <ul class="case-others">{others_html}</ul>
       </div>
+      <!-- floats beside the cursor over the links above (desktop) -->
+      <div class="case-float" aria-hidden="true"><img alt="" width="1280" height="690" decoding="async" /></div>
     </section>
 
     <div id="contact" class="page-end"></div>

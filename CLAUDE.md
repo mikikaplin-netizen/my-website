@@ -113,6 +113,9 @@ the title (2px, title line-height 0.98 since Anomalia has tall built-in leading)
 at about double that gap (26px) (Michael: not three separate blocks); testimonials/FAQ have side titles, magnet stays centered. Don't reintroduce one centered
 label/title/sub template for every section.
 
+**"חצי כחול" (half blue)**: when Michael asks for a half / semi-transparent blue, he means the
+secondary navy `#232338` at 50% (`--blue-half`, `--blue-2` in `:root`), NOT brand cyan at low opacity.
+
 **Design tokens live in `:root` in `style.css`** (`--bg`, `--bg-2`, `--bg-3`, `--accent`,
 `--accent-2`, `--text`, `--text-muted`, `--radius`, `--font`, `--shadow`, `--glow`, etc.). Brand
 colors are `--accent: #64C1D2` (cyan) and `--accent-2: #1CD31C` (green) on a dark `#101024`
@@ -260,12 +263,16 @@ says it; lead, "מה עשיתי" chips (אפיון/עיצוב/פיתוח; סיל
 חשבון"; no years anywhere), "לאתר החי ↗" unless `url` is None (סילימנט)) → `.case-showcase`: the
 recording in a browser window that grows from 62% to full size as you scroll (`--grow`, sticky) →
 האתגר → `.case-gallery`: a pinned strip of 5 desktop screens (`images/portfolio/screens/<video>-1..5.webp`,
-frames from the recordings) that moves sideways with the scroll (`--gx`, section height set in JS;
-phones show each screen's top at 4:3) → הפיצוח → results → optional `.case-phones` (rendered only once
-`images/portfolio/mobile/<video>-*.webp` exist: real mobile captures still wanted from Michael) → the
+2560×1380 = 2x screenshots of the live sites at a 1280×690 viewport; `element-*` (סילימנט, no public
+URL) are still frames from its recording) that moves sideways with the scroll (`--gx`, section height set in JS;
+phones show each screen's top at 4:3) → הפיצוח → results → `.case-phones` (three phones, rendered when
+`images/portfolio/mobile/<video>-1..3.webp` exist: 780×1688 = 2x captures of the live sites at 390×844;
+none for סילימנט) → the
 client's quote (light zone) → `.case-pager`: previous / next project only (Michael: not a list), two
-semi-transparent blue cards (no image backgrounds: he found them blurry), the hovered project's
-screen floats beside the cursor (`.case-float`, desktop). Story blocks (texts from mkaplin.com, in
+"half blue" cards (`--blue-half`, with a soft cyan glow at the bottom), a round cyan arrow (green on
+hover) and the project's own screen (`screens/<video>-1.webp`) rising from the card's bottom edge,
+lifting on hover (Michael found the empty cards colorless; no blurred image backgrounds).
+`.case-float` CSS/JS remain but the pager no longer renders it. Story blocks (texts from mkaplin.com, in
 Michael's singular voice: he works alone, never "we") have a calm sticky side head (short brand rule,
 the word at about subtitle size, the question under it), then a large Anomalia lead lighting up word
 by word (`.cw`), then muted body text. Reduced motion → `html.case-static` (plain flow). Page-only styles

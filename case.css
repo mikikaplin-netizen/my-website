@@ -305,8 +305,9 @@
 .case-quote figcaption b { display: block; font-size: 1.05rem; color: var(--fg); }
 .case-quote figcaption small { display: block; font-size: 0.9rem; color: var(--text-muted); }
 
-/* --- previous / next project: two half-transparent brand-blue panels;
-       the hovered project's screen floats beside the cursor (case.js) --- */
+/* --- previous / next project: two "half blue" cards (Michael's #232338 at
+       50%, --blue-half) with a cyan glow, a brand arrow and the project's own
+       screen peeking from the bottom; hover lifts the screen --- */
 .case-pager { position: relative; }
 
 .case-pager-grid {
@@ -318,39 +319,42 @@
 .case-pn {
   position: relative;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-height: clamp(180px, 26vh, 260px);
-  justify-content: flex-end;
+  isolation: isolate;
+  display: block;
+  min-height: clamp(340px, 46vh, 460px);
   padding: clamp(24px, 3vw, 40px);
   border-radius: var(--radius-lg);
-  background: rgba(100,193,210,0.1);
-  border: 1px solid rgba(100,193,210,0.22);
+  background:
+    radial-gradient(120% 70% at 50% 115%, rgba(100,193,210,0.32), transparent 62%),
+    var(--blue-half);
+  border: 1px solid rgba(100,193,210,0.18);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
-  /* panels keep dark text colors in either page theme */
+  /* cards keep dark-surface text colors in either page theme */
   --fg: #fff;
   --text-muted: rgba(255,255,255,0.7);
   color: #fff;
-  transition: background 0.5s ease, border-color 0.5s ease;
+  transition: border-color 0.5s ease, box-shadow 0.5s ease;
 }
 
-html.theme-light .case-pn { background: rgba(16,16,36,0.82); border-color: transparent; }
+/* on the grey page half-transparent navy turns muddy: go nearly solid */
+html.theme-light .case-pn {
+  background:
+    radial-gradient(120% 70% at 50% 115%, rgba(100,193,210,0.32), transparent 62%),
+    rgba(35,35,56,0.94);
+}
 
-.case-pn--next { text-align: left; align-items: flex-end; }
+.case-pn:hover { border-color: rgba(100,193,210,0.5); box-shadow: 0 24px 60px -24px rgba(100,193,210,0.35); }
 
-.case-pn:hover { background: rgba(100,193,210,0.2); border-color: rgba(100,193,210,0.45); }
+.case-pn-text { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 8px; }
+.case-pn--next .case-pn-text { padding-inline-end: 64px; }
+.case-pn--prev .case-pn-text { padding-inline-end: 64px; }
 
 .case-pn-label {
   font-size: 0.9rem;
   letter-spacing: 0.04em;
   color: var(--accent);
-  transition: translate 0.5s var(--ease-out);
 }
-
-.case-pn--next:hover .case-pn-label { translate: -8px 0; }
-.case-pn--prev:hover .case-pn-label { translate: 8px 0; }
 
 .case-pn-name {
   font-family: var(--font-display);
@@ -360,6 +364,42 @@ html.theme-light .case-pn { background: rgba(16,16,36,0.82); border-color: trans
 }
 
 .case-pn-field { font-size: 0.95rem; color: var(--text-muted); }
+
+/* round brand arrow in the top corner */
+.case-pn-go {
+  position: absolute;
+  z-index: 2;
+  top: clamp(24px, 3vw, 40px);
+  inset-inline-end: clamp(24px, 3vw, 40px);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  color: var(--bg);
+  transition: background 0.4s ease, translate 0.5s var(--ease-out);
+}
+.case-pn:hover .case-pn-go { background: var(--accent-2); }
+.case-pn--next:hover .case-pn-go { translate: -6px 0; }
+.case-pn--prev:hover .case-pn-go { translate: 6px 0; }
+
+/* the project's screen rising from the bottom edge */
+.case-pn-shot {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 0;
+  width: 78%;
+  aspect-ratio: 1280 / 690;
+  translate: -50% 38%;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.1);
+  transition: translate 0.7s var(--ease-out);
+}
+.case-pn-shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.case-pn:hover .case-pn-shot { translate: -50% 28%; }
 
 /* the floating screen (position/tilt from case.js) */
 .case-float {
@@ -402,7 +442,8 @@ html.theme-light .case-pn { background: rgba(16,16,36,0.82); border-color: trans
   .case-shot img { aspect-ratio: 4 / 3; height: auto; object-fit: cover; object-position: top; }
   .case-gallery-sticky { gap: 28px; }
   .case-pager-grid { grid-template-columns: 1fr; }
-  .case-pn--next { text-align: right; align-items: flex-start; }
+  .case-pn { min-height: 300px; }
+  .case-pn-shot { width: 86%; translate: -50% 30%; }
   .case-float { display: none; }
   .case-phone { width: 30vw; border-radius: 26px; padding: 6px; }
   .case-phone img { border-radius: 20px; }

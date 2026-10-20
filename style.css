@@ -65,6 +65,10 @@
   --accent: #64C1D2;
   --accent-2: #1CD31C;
   --accent-glow: rgba(100,193,210,0.18);
+  /* Michael's "חצי כחול" (half blue): the secondary navy #232338 at 50%.
+     Use it whenever he asks for a semi-transparent blue surface. */
+  --blue-2: #232338;
+  --blue-half: rgba(35,35,56,0.5);
   --text: #ffffff;
   --text-muted: rgba(255,255,255,0.62);
   --radius: 12px;

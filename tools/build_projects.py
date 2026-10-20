@@ -16,7 +16,7 @@ import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SCOPE_ALL = ("אפיון", "עיצוב", "פיתוח")
-CASE_V = 12  # bump when case.css / case.js change (cache-buster)
+CASE_V = 13  # bump when case.css / case.js change (cache-buster)
 
 PROJECTS = [
     {
@@ -205,10 +205,16 @@ def page(p, i, chunks):
     </section>'''
 
     def pn(q, kind, label, arrow):
-        return (f'<a class="case-pn case-pn--{kind}" href="projects/{q["slug"]}.html" data-poster="images/portfolio/{q["video"]}-poster.webp">'
-                f'<span class="case-pn-label">{arrow} {label}</span>'
+        # arrow icon points the way you travel: next = left (RTL forward), prev = right
+        d = "M19 12H5m6-6-6 6 6 6" if kind == "next" else "M5 12h14m-6-6 6 6-6 6"
+        return (f'<a class="case-pn case-pn--{kind}" href="projects/{q["slug"]}.html">'
+                f'<span class="case-pn-text"><span class="case-pn-label">{label}</span>'
                 f'<span class="case-pn-name">{E(q["name"])}</span>'
-                f'<span class="case-pn-field">{E(q["field"])}</span></a>')
+                f'<span class="case-pn-field">{E(q["field"])}</span></span>'
+                f'<span class="case-pn-go" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" '
+                f'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{d}"/></svg></span>'
+                f'<span class="case-pn-shot" aria-hidden="true"><img src="images/portfolio/screens/{q["video"]}-1.webp" alt="" '
+                f'loading="lazy" decoding="async" /></span></a>')
 
     title = f'{p["name"]} | קייס סטדי | מיכאל קאפלין'
     head = chunks["head"]
@@ -262,8 +268,6 @@ def page(p, i, chunks):
         {pn(prv, "prev", "הפרויקט הקודם", "→")}
         {pn(nxt, "next", "הפרויקט הבא", "←")}
       </div>
-      <!-- floats beside the cursor over the links above (desktop) -->
-      <div class="case-float" aria-hidden="true"><img alt="" width="1280" height="690" decoding="async" /></div>
     </nav>
 
     <div id="contact" class="page-end"></div>

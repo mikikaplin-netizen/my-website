@@ -23,7 +23,7 @@
 // screen floating beside the cursor, eased toward it with a slight tilt
 // from its horizontal velocity. Mouse only; not under reduced motion.
 (function () {
-  const section = document.querySelector('.case-next');
+  const section = document.querySelector('.case-pager');
   const float = section && section.querySelector('.case-float');
   if (!float) return;
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
@@ -93,5 +93,57 @@
   const kick = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
   window.addEventListener('scroll', kick, { passive: true });
   window.addEventListener('resize', kick, { passive: true });
+  update();
+})();
+
+// ===========================
+// CASE STUDY — SHOWCASE GROW + SCREENS STRIP
+// ===========================
+// While the showcase is pinned, the site's window grows to full width
+// (--grow 0→1). The screens strip is pinned for as long as it takes to
+// slide sideways across all the screens (section height = strip overflow
+// + one screen). Off under reduced motion / no JS (html.case-static).
+(function () {
+  const show = document.querySelector('.case-showcase');
+  const win = show && show.querySelector('.case-window--hero');
+  const gal = document.querySelector('.case-gallery');
+  const track = gal && gal.querySelector('.case-gallery-track');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('case-static');
+    return;
+  }
+  const clamp01 = v => Math.max(0, Math.min(1, v));
+  const ease = t => 1 - Math.pow(1 - t, 3);
+  let travel = 0;
+
+  function measure() {
+    if (!gal || !track) return;
+    travel = Math.max(0, track.scrollWidth - window.innerWidth);
+    gal.style.height = (window.innerHeight + travel * 0.9) + 'px';
+  }
+
+  function update() {
+    ticking = false;
+    const vh = window.innerHeight;
+    if (win) {
+      const r = show.getBoundingClientRect();
+      const p = clamp01((vh * 0.6 - r.top) / (r.height - vh * 0.4));
+      win.style.setProperty('--grow', ease(p).toFixed(4));
+    }
+    if (gal && track) {
+      const r = gal.getBoundingClientRect();
+      const p = clamp01(-r.top / Math.max(1, r.height - vh));
+      // RTL: the strip starts at the right edge and slides right to bring
+      // the screens on its left into view
+      track.style.setProperty('--gx', (p * travel).toFixed(1) + 'px');
+    }
+  }
+
+  let ticking = false;
+  const kick = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+  window.addEventListener('scroll', kick, { passive: true });
+  window.addEventListener('resize', () => { measure(); kick(); });
+  window.addEventListener('load', () => { measure(); kick(); });
+  measure();
   update();
 })();

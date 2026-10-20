@@ -15,7 +15,7 @@
   <link rel="preload" href="fonts/anomalia-bold-aaa.woff2" as="font" type="font/woff2" crossorigin />
   <script>if (/[?&]quotes\b/.test(location.search)) document.documentElement.classList.add("show-quotes"); if (/[?&]hero2\b/.test(location.search)) document.documentElement.classList.add("show-hero2");</script>
   <link rel="stylesheet" href="style.css?v=66" />
-  <link rel="stylesheet" href="case.css?v=9" />
+  <link rel="stylesheet" href="case.css?v=12" />
 </head>
 <body class="case-page">
   <!-- NAVBAR -->
@@ -44,16 +44,16 @@
     <section class="case-hero section" id="hero">
       <div class="container">
         <a class="case-back" href="#portfolio"><span aria-hidden="true">→</span> כל הפרויקטים</a>
-        <p class="section-label">משרד עורך דין</p>
         <h1 class="section-title case-title">עו"ד ישראל זיסקינד</h1>
         <p class="case-lead">אתר תדמית יוקרתי למשרד עורך דין: חוויה נקייה ומכובדת שמאחדת תחומי עיסוק שונים ומבססת אמון מהרגע הראשון.</p>
         <div class="case-meta"><div class="case-meta-item"><span>מה עשיתי</span><ul class="case-chips"><li class="case-chip">אפיון</li><li class="case-chip">עיצוב</li><li class="case-chip">פיתוח</li></ul></div><div class="case-meta-item"><span>הלקוח</span><b>משרד עורך דין</b></div><a class="btn btn-primary case-live" href="https://ziskind-law.co.il/" target="_blank" rel="noopener">לאתר החי <span aria-hidden="true">↗</span></a></div>
       </div>
     </section>
 
-    <section class="case-screen section">
-      <div class="container">
-        <div class="case-window">
+    <!-- the site playing; the window grows to full width as you scroll -->
+    <section class="case-showcase">
+      <div class="case-showcase-sticky">
+        <div class="case-window case-window--hero">
           <div class="case-window-bar" aria-hidden="true"><i></i><i></i><i></i><span>ziskind-law.co.il</span></div>
           <video class="case-video" muted loop playsinline preload="metadata"
                  poster="images/portfolio/ziskind-poster.webp" data-autoplay>
@@ -75,6 +75,19 @@
           <p class="case-block-lead"><span class="cw">עו״ד</span> <span class="cw">ישראל</span> <span class="cw">זיסקינד</span> <span class="cw">ביקש</span> <span class="cw">לייצר</span> <span class="cw">לעצמו</span> <span class="cw">נוכחות</span> <span class="cw">דיגיטלית</span> <span class="cw">שתשקף</span> <span class="cw">את</span> <span class="cw">הדמות</span> <span class="cw">המקצועית</span> <span class="cw">והמרשימה</span> <span class="cw">שבנה</span> <span class="cw">לאורך</span> <span class="cw">השנים.</span></p><div class="case-block-text"><p>האתגר היה לאחד תחומי עיסוק משפטיים מגוונים, פלילי, אזרחי ומשפחה, לכדי אתר אחד שמסביר את ערכו בצורה ברורה, מבלי לוותר על תחושת אמינות, יוקרה ונגישות ללקוח הפוטנציאלי.</p></div>
         </div>
       </div>
+      </div>
+    </section>
+    <section class="case-gallery" aria-label="מסכים מהאתר">
+      <div class="case-gallery-sticky">
+        <div class="container case-gallery-head">
+          <p class="section-label">מסכים מהאתר</p>
+          <p class="case-gallery-count"><b>5</b> מסכים · גללו</p>
+        </div>
+        <ul class="case-gallery-track"><li class="case-shot"><div class="case-window case-window--shot"><div class="case-window-bar" aria-hidden="true"><i></i><i></i><i></i><span>ziskind-law.co.il</span></div><img src="images/portfolio/screens/ziskind-1.webp" alt="מסך מתוך האתר של עו&quot;ד ישראל זיסקינד" width="1280" height="690" loading="lazy" decoding="async" /></div></li><li class="case-shot"><div class="case-window case-window--shot"><div class="case-window-bar" aria-hidden="true"><i></i><i></i><i></i><span>ziskind-law.co.il</span></div><img src="images/portfolio/screens/ziskind-2.webp" alt="מסך מתוך האתר של עו&quot;ד ישראל זיסקינד" width="1280" height="690" loading="lazy" decoding="async" /></div></li><li class="case-shot"><div class="case-window case-window--shot"><div class="case-window-bar" aria-hidden="true"><i></i><i></i><i></i><span>ziskind-law.co.il</span></div><img src="images/portfolio/screens/ziskind-3.webp" alt="מסך מתוך האתר של עו&quot;ד ישראל זיסקינד" width="1280" height="690" loading="lazy" decoding="async" /></div></li><li class="case-shot"><div class="case-window case-window--shot"><div class="case-window-bar" aria-hidden="true"><i></i><i></i><i></i><span>ziskind-law.co.il</span></div><img src="images/portfolio/screens/ziskind-4.webp" alt="מסך מתוך האתר של עו&quot;ד ישראל זיסקינד" width="1280" height="690" loading="lazy" decoding="async" /></div></li><li class="case-shot"><div class="case-window case-window--shot"><div class="case-window-bar" aria-hidden="true"><i></i><i></i><i></i><span>ziskind-law.co.il</span></div><img src="images/portfolio/screens/ziskind-5.webp" alt="מסך מתוך האתר של עו&quot;ד ישראל זיסקינד" width="1280" height="690" loading="lazy" decoding="async" /></div></li></ul>
+      </div>
+    </section>
+    <section class="case-story section">
+      <div class="container">
       <div class="case-block case-block--solution">
         <div class="case-block-side">
           <span class="case-block-word">הפיצוח</span>
@@ -98,20 +111,14 @@
       </div>
     </section>
 
-    <section class="case-next section">
-      <div class="container">
-        <p class="section-label">הפרויקט הבא</p>
-        <a class="case-next-link" href="projects/lishkatoanim.html" data-poster="images/portfolio/lishkatoanim-poster.webp">
-          <img class="case-next-thumb" src="images/portfolio/lishkatoanim-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" />
-          <span class="case-next-text"><span class="case-next-name">לשכת הטוענים הרבניים</span><span class="case-row-field">הכתובת למתדיינים ולמייצגים בבתי הדין</span></span>
-          <span class="case-next-arrow" aria-hidden="true">←</span>
-        </a>
-        <p class="case-others-label">עוד פרויקטים</p>
-        <ul class="case-others"><li><a class="case-row" href="projects/shimony.html" data-poster="images/portfolio/shimony-poster.webp"><img class="case-row-bg" src="images/portfolio/shimony-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" /><span class="case-row-text"><span class="case-row-name">משרד שמעוני</span><span class="case-row-field">משרד רואי חשבון</span></span><span class="case-row-arrow" aria-hidden="true">←</span></a></li><li><a class="case-row" href="projects/tamar-baniel.html" data-poster="images/portfolio/tamar-baniel-poster.webp"><img class="case-row-bg" src="images/portfolio/tamar-baniel-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" /><span class="case-row-text"><span class="case-row-name">תמר בניאל</span><span class="case-row-field">סטודיו לעיצוב פנים ואדריכלות</span></span><span class="case-row-arrow" aria-hidden="true">←</span></a></li><li><a class="case-row" href="projects/silyment.html" data-poster="images/portfolio/element-poster.webp"><img class="case-row-bg" src="images/portfolio/element-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" /><span class="case-row-text"><span class="case-row-name">סילימנט</span><span class="case-row-field">חברת גבס ודקורציה</span></span><span class="case-row-arrow" aria-hidden="true">←</span></a></li></ul>
+    <nav class="case-pager section" aria-label="פרויקטים נוספים">
+      <div class="container case-pager-grid">
+        <a class="case-pn case-pn--prev" href="projects/tamar-baniel.html" data-poster="images/portfolio/tamar-baniel-poster.webp"><span class="case-pn-label">→ הפרויקט הקודם</span><span class="case-pn-name">תמר בניאל</span><span class="case-pn-field">סטודיו לעיצוב פנים ואדריכלות</span></a>
+        <a class="case-pn case-pn--next" href="projects/lishkatoanim.html" data-poster="images/portfolio/lishkatoanim-poster.webp"><span class="case-pn-label">← הפרויקט הבא</span><span class="case-pn-name">לשכת הטוענים הרבניים</span><span class="case-pn-field">הכתובת למתדיינים ולמייצגים בבתי הדין</span></a>
       </div>
       <!-- floats beside the cursor over the links above (desktop) -->
       <div class="case-float" aria-hidden="true"><img alt="" width="1280" height="690" decoding="async" /></div>
-    </section>
+    </nav>
 
     <div id="contact" class="page-end"></div>
   </main>
@@ -257,6 +264,6 @@
   </div>
 
   <script src="script.js?v=66"></script>
-  <script src="case.js?v=9"></script>
+  <script src="case.js?v=12"></script>
 </body>
 </html>

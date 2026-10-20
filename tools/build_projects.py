@@ -16,7 +16,7 @@ import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SCOPE_ALL = ("אפיון", "עיצוב", "פיתוח")
-CASE_V = 9  # bump when case.css / case.js change (cache-buster)
+CASE_V = 12  # bump when case.css / case.js change (cache-buster)
 
 PROJECTS = [
     {
@@ -133,7 +133,7 @@ def section(p, key, label, title):
 def page(p, i, chunks):
     n = len(PROJECTS)
     nxt = PROJECTS[(i + 1) % n]
-    others = [q for q in PROJECTS if q is not p and q is not nxt]
+    prv = PROJECTS[(i - 1) % n]
     meta = []
     if p["scope"]:
         chips = "".join(f'<li class="case-chip">{E(s)}</li>' for s in p["scope"])
@@ -144,14 +144,50 @@ def page(p, i, chunks):
         live = (f'<a class="btn btn-primary case-live" href="{A(p["url"])}" target="_blank" rel="noopener">'
                 f'לאתר החי <span aria-hidden="true">↗</span></a>')
     url_label = domain(p["url"]) if p["url"] else ""
-    story = (section(p, "challenge", "האתגר", "מה היה צריך לפצח")
-             + section(p, "solution", "הפיצוח", "איך פיצחתי את זה")
-             + section(p, "results", "התוצאה", "מה זה הביא"))
-    story_html = f'''
+    bar = (f'<div class="case-window-bar" aria-hidden="true"><i></i><i></i><i></i>'
+           f'{f"<span>{E(url_label)}</span>" if url_label else ""}</div>')
+
+    def story(key, label, title):
+        html_ = section(p, key, label, title)
+        return f'''
     <section class="case-story section">
-      <div class="container">{story}
+      <div class="container">{html_}
       </div>
-    </section>''' if story else ""
+    </section>''' if html_ else ""
+
+    # desktop screens of the site (frames from its recording), shown in a
+    # horizontal strip that moves sideways with the scroll
+    screens = sorted((ROOT / "images/portfolio/screens").glob(f'{p["video"]}-*.webp'))
+    gallery = ""
+    if screens:
+        items = "".join(
+            f'<li class="case-shot"><div class="case-window case-window--shot">{bar}'
+            f'<img src="images/portfolio/screens/{f.name}" alt="מסך מתוך האתר של {A(p["name"])}" width="1280" height="690" loading="lazy" decoding="async" /></div></li>'
+            for f in screens)
+        gallery = f'''
+    <section class="case-gallery" aria-label="מסכים מהאתר">
+      <div class="case-gallery-sticky">
+        <div class="container case-gallery-head">
+          <p class="section-label">מסכים מהאתר</p>
+          <p class="case-gallery-count"><b>{len(screens)}</b> מסכים · גללו</p>
+        </div>
+        <ul class="case-gallery-track">{items}</ul>
+      </div>
+    </section>'''
+
+    # phone screens, once real mobile captures exist (images/portfolio/mobile/<video>-N.webp)
+    phones = sorted((ROOT / "images/portfolio/mobile").glob(f'{p["video"]}-*.webp')) if (ROOT / "images/portfolio/mobile").exists() else []
+    mobile = ""
+    if phones:
+        ph = "".join(f'<li class="case-phone"><img src="images/portfolio/mobile/{f.name}" alt="" width="390" height="844" loading="lazy" decoding="async" /></li>' for f in phones[:3])
+        mobile = f'''
+    <section class="case-mobile section">
+      <div class="container">
+        <p class="section-label">במובייל</p>
+        <ul class="case-phones">{ph}</ul>
+      </div>
+    </section>'''
+
     quote_html = ""
     if p["quote"]:
         q = p["quote"]
@@ -167,11 +203,12 @@ def page(p, i, chunks):
         </figure>
       </div>
     </section>'''
-    others_html = "".join(
-        f'<li><a class="case-row" href="projects/{q["slug"]}.html" data-poster="images/portfolio/{q["video"]}-poster.webp">'
-        f'<img class="case-row-bg" src="images/portfolio/{q["video"]}-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" />'
-        f'<span class="case-row-text"><span class="case-row-name">{E(q["name"])}</span><span class="case-row-field">{E(q["field"])}</span></span>'
-        f'<span class="case-row-arrow" aria-hidden="true">←</span></a></li>' for q in others)
+
+    def pn(q, kind, label, arrow):
+        return (f'<a class="case-pn case-pn--{kind}" href="projects/{q["slug"]}.html" data-poster="images/portfolio/{q["video"]}-poster.webp">'
+                f'<span class="case-pn-label">{arrow} {label}</span>'
+                f'<span class="case-pn-name">{E(q["name"])}</span>'
+                f'<span class="case-pn-field">{E(q["field"])}</span></a>')
 
     title = f'{p["name"]} | קייס סטדי | מיכאל קאפלין'
     head = chunks["head"]
@@ -199,17 +236,17 @@ def page(p, i, chunks):
     <section class="case-hero section" id="hero">
       <div class="container">
         <a class="case-back" href="#portfolio"><span aria-hidden="true">→</span> כל הפרויקטים</a>
-        <p class="section-label">{E(p["field"])}</p>
         <h1 class="section-title case-title">{E(p["name"])}</h1>
         <p class="case-lead">{E(p["desc"])}</p>
         <div class="case-meta">{"".join(meta)}{live}</div>
       </div>
     </section>
 
-    <section class="case-screen section">
-      <div class="container">
-        <div class="case-window">
-          <div class="case-window-bar" aria-hidden="true"><i></i><i></i><i></i>{f'<span>{E(url_label)}</span>' if url_label else ''}</div>
+    <!-- the site playing; the window grows to full width as you scroll -->
+    <section class="case-showcase">
+      <div class="case-showcase-sticky">
+        <div class="case-window case-window--hero">
+          {bar}
           <video class="case-video" muted loop playsinline preload="metadata"
                  poster="images/portfolio/{p["video"]}-poster.webp" data-autoplay>
             <source src="images/portfolio/{p["video"]}.mp4" type="video/mp4" />
@@ -218,22 +255,16 @@ def page(p, i, chunks):
         </div>
       </div>
     </section>
-{story_html}{quote_html}
+{story("challenge", "האתגר", "מה היה צריך לפצח")}{gallery}{story("solution", "הפיצוח", "איך פיצחתי את זה")}{story("results", "התוצאה", "מה זה הביא")}{mobile}{quote_html}
 
-    <section class="case-next section">
-      <div class="container">
-        <p class="section-label">הפרויקט הבא</p>
-        <a class="case-next-link" href="projects/{nxt["slug"]}.html" data-poster="images/portfolio/{nxt["video"]}-poster.webp">
-          <img class="case-next-thumb" src="images/portfolio/{nxt["video"]}-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" />
-          <span class="case-next-text"><span class="case-next-name">{E(nxt["name"])}</span><span class="case-row-field">{E(nxt["field"])}</span></span>
-          <span class="case-next-arrow" aria-hidden="true">←</span>
-        </a>
-        <p class="case-others-label">עוד פרויקטים</p>
-        <ul class="case-others">{others_html}</ul>
+    <nav class="case-pager section" aria-label="פרויקטים נוספים">
+      <div class="container case-pager-grid">
+        {pn(prv, "prev", "הפרויקט הקודם", "→")}
+        {pn(nxt, "next", "הפרויקט הבא", "←")}
       </div>
       <!-- floats beside the cursor over the links above (desktop) -->
       <div class="case-float" aria-hidden="true"><img alt="" width="1280" height="690" decoding="async" /></div>
-    </section>
+    </nav>
 
     <div id="contact" class="page-end"></div>
   </main>

@@ -258,9 +258,11 @@ says it; lead, "מה עשיתי" chips (אפיון/עיצוב/פיתוח; סיל
 חשבון"; no years anywhere), "לאתר החי ↗" unless `url` is None (סילימנט)) → `.case-showcase`: the
 recording in a browser window that grows from 62% to full size as you scroll (`--grow`, sticky) →
 האתגר → `.case-gallery`: a pinned strip of 5 desktop screens (`images/portfolio/screens/<video>-1..5.webp`,
-frames from the recordings) that moves sideways with the scroll (`--gx`, section height set in JS;
-phones show each screen's top at 4:3) → הפיצוח → results → optional `.case-phones` (rendered only once
-`images/portfolio/mobile/<video>-*.webp` exist: real mobile captures still wanted from Michael) → the
+2560×1380 = 2x screenshots of the live sites at a 1280×690 viewport; `element-*` (סילימנט, no public
+URL) are still frames from its recording) that moves sideways with the scroll (`--gx`, section height set in JS;
+phones show each screen's top at 4:3) → הפיצוח → results → `.case-phones` (three phones, rendered when
+`images/portfolio/mobile/<video>-1..3.webp` exist: 780×1688 = 2x captures of the live sites at 390×844;
+none for סילימנט) → the
 client's quote (light zone) → `.case-pager`: previous / next project only (Michael: not a list), two
 "half blue" cards (`--blue-half`, with a soft cyan glow at the bottom), a round cyan arrow (green on
 hover) and the project's own screen (`screens/<video>-1.webp`) rising from the card's bottom edge,

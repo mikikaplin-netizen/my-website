@@ -16,7 +16,7 @@ import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SCOPE_ALL = ("אפיון", "עיצוב", "פיתוח")
-CASE_V = 13  # bump when case.css / case.js change (cache-buster)
+CASE_V = 14  # bump when case.css / case.js change (cache-buster)
 
 PROJECTS = [
     {

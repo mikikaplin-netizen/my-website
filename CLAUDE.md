@@ -161,7 +161,7 @@ so they render above it. Section backgrounds use semi-transparent colors
 - Motion: magnetic `.btn`/`.nav-cta` (uses the standalone `translate` property so it doesn't
   clash with hover `transform`), hero photo parallax.
 - Portfolio (`.work`, "PORTFOLIO — HOVER-REVEAL LIST + LAPTOP STAND"): 5 projects (שמעוני, תמר בניאל,
-  ישראל זיסקינד, לשכת הטוענים הרבניים, סילימנט (renamed from אלימנט; files stay `element.*`); Michael dropped אלתר ספרים and, for now, WST) in compact full-bleed rows split by a fixed
+  ישראל זיסקינד, לשכת הטוענים הרבניים, סילימנט (renamed from אלימנט; files stay `element.*`); "מוסדות מקצועיים" is banned site-wide (לשכת הטוענים = "הכתובת למתדיינים ולמייצגים בבתי הדין"); Michael dropped אלתר ספרים and, for now, WST) in compact full-bleed rows split by a fixed
   hairline in brand blue at 50%, followed by a "לכל הפרויקטים" `.btn-ghost` (`.work-more`) linking to
   the future `projects.html`; name in brand blue at 50%; on hover/active a letter roll (Michael replaced the old white wipe):
   JS splits each name into `.wn-ch > .wn-in` letters, each rolls up 1.19em and its lit copy (a
@@ -250,14 +250,15 @@ navbar, footer/contact, tab bar, edge blur and WhatsApp widget from `index.html`
 changing those), adds `<base href="../">` (all relative URLs resolve from the root; homepage
 anchors like `#portfolio` go back to the homepage; `#contact` is rewritten to the page itself),
 and fills each page from the `PROJECTS` table in the script: hero (field label, giant name in
-`--font-display`, lead, "מה עשיתי" chips אפיון/עיצוב/פיתוח only when `scope` is confirmed, field,
-year, "לאתר החי ↗" button unless `url` is None: סילימנט has no button for now), the site's screen
+`--font-display`, lead, "מה עשיתי" chips (אפיון/עיצוב/פיתוח; סילימנט = פיתוח only), "הלקוח" (what the
+client is, e.g. "משרד רואי חשבון"; no years anywhere: Michael), "לאתר החי ↗" button unless `url` is None: סילימנט has no button for now), the site's screen
 recording in a browser window (`case.js` plays it only on screen), optional האתגר / הפיצוח / התוצאה
 blocks (rendered only when their text is filled; Michael's existing texts live on mkaplin.com's
 project pages), the client's quote (light zone), then the next project as a giant text link and the rest as
   text rows (no image tiles: Michael wanted it more special); on desktop the hovered project's screen
   floats beside the cursor (`.case-float`, eased + velocity tilt in `case.js`), phones get round
-  thumbnails in the rows. The recording window is capped at 920px wide. Page-only styles
+  thumbnails in the rows. The recording window is capped at 1120px wide; next/other projects show a small screen
+  thumbnail before hover too; names turn navy on the grey zone. Page-only styles
 are in `case.css` (bump `CASE_V` in the script when it or `case.js` change). Homepage rows link to
 these pages in the same tab. Edit content in the script, then rerun it; don't hand-edit the HTML.
 

@@ -16,17 +16,16 @@ import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SCOPE_ALL = ("אפיון", "עיצוב", "פיתוח")
-CASE_V = 4  # bump when case.css / case.js change (cache-buster)
+CASE_V = 6  # bump when case.css / case.js change (cache-buster)
 
 PROJECTS = [
     {
         "slug": "shimony",
         "name": "משרד שמעוני",
-        "field": "רואי חשבון",
-        "year": "2024",
+        "field": "משרד רואי חשבון",
         "desc": "אתר מודרני למשרד רואי חשבון שמבסס מומחיות ומניע לקוחות פוטנציאליים ליצור קשר.",
         "url": "https://www.shimony.com/he/",
-        "scope": None,          # None = not confirmed yet → the services row is hidden
+        "scope": SCOPE_ALL,
         "video": "shimony",
         "challenge": "", "solution": "", "results": "",
         "quote": None,
@@ -34,11 +33,10 @@ PROJECTS = [
     {
         "slug": "tamar-baniel",
         "name": "תמר בניאל",
-        "field": "עיצוב פנים ואדריכלות",
-        "year": "",
+        "field": "סטודיו לעיצוב פנים ואדריכלות",
         "desc": "אתר תדמית למעצבת פנים ואדריכלית: עיצוב גריד מדויק לכל אורך האתר, הצגת פרויקטים ואזור בלוג מרשים.",
         "url": "https://tamarbaniel.co.il/",
-        "scope": None,
+        "scope": SCOPE_ALL,
         "video": "tamar-baniel",
         "challenge": "", "solution": "", "results": "",
         "quote": {
@@ -51,10 +49,9 @@ PROJECTS = [
         "slug": "ziskind",
         "name": "עו\"ד ישראל זיסקינד",
         "field": "משרד עורך דין",
-        "year": "",
         "desc": "אתר תדמית יוקרתי למשרד עורך דין: חוויה נקייה ומכובדת שמאחדת תחומי עיסוק שונים ומבססת אמון מהרגע הראשון.",
         "url": "https://ziskind-law.co.il/",
-        "scope": None,
+        "scope": SCOPE_ALL,
         "video": "ziskind",
         "challenge": "", "solution": "", "results": "",
         "quote": {
@@ -66,8 +63,7 @@ PROJECTS = [
     {
         "slug": "lishkatoanim",
         "name": "לשכת הטוענים הרבניים",
-        "field": "מוסדות מקצועיים",
-        "year": "2024",
+        "field": "הכתובת למתדיינים ולמייצגים בבתי הדין",
         "desc": "מיתוג מחדש ובניית נוכחות דיגיטלית חדשה לארגון מקצועי מוביל: אתר שמשדר סמכות, נגישות ואמינות.",
         "url": "https://www.lishkatoanim.co.il/",
         "scope": SCOPE_ALL,
@@ -82,11 +78,10 @@ PROJECTS = [
     {
         "slug": "silyment",
         "name": "סילימנט",
-        "field": "גבס ודקורציה",
-        "year": "",
+        "field": "חברת גבס ודקורציה",
         "desc": "אתר תדמית לחברת גבס ודקורציה, עם מערכת הדמיה שבה הלקוח מרכיב את התקרה שלו שלב אחר שלב ורואה את התוצאה בלייב.",
         "url": None,            # no live-site button for now (Michael)
-        "scope": None,
+        "scope": ("פיתוח",),
         "video": "element",
         "challenge": "", "solution": "", "results": "",
         "quote": None,
@@ -122,9 +117,7 @@ def page(p, i, chunks):
     if p["scope"]:
         chips = "".join(f'<li class="case-chip">{E(s)}</li>' for s in p["scope"])
         meta.append(f'<div class="case-meta-item"><span>מה עשיתי</span><ul class="case-chips">{chips}</ul></div>')
-    meta.append(f'<div class="case-meta-item"><span>תחום</span><b>{E(p["field"])}</b></div>')
-    if p["year"]:
-        meta.append(f'<div class="case-meta-item"><span>שנה</span><b>{E(p["year"])}</b></div>')
+    meta.append(f'<div class="case-meta-item"><span>הלקוח</span><b>{E(p["field"])}</b></div>')
     live = ""
     if p["url"]:
         live = (f'<a class="btn btn-primary case-live" href="{A(p["url"])}" target="_blank" rel="noopener">'
@@ -210,7 +203,8 @@ def page(p, i, chunks):
       <div class="container">
         <p class="section-label">הפרויקט הבא</p>
         <a class="case-next-link" href="projects/{nxt["slug"]}.html" data-poster="images/portfolio/{nxt["video"]}-poster.webp">
-          <span class="case-next-name">{E(nxt["name"])}</span>
+          <img class="case-next-thumb" src="images/portfolio/{nxt["video"]}-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" />
+          <span class="case-next-text"><span class="case-next-name">{E(nxt["name"])}</span><span class="case-row-field">{E(nxt["field"])}</span></span>
           <span class="case-next-arrow" aria-hidden="true">←</span>
         </a>
         <p class="case-others-label">עוד פרויקטים</p>

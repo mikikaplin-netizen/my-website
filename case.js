@@ -64,3 +64,34 @@
     link.addEventListener('mouseleave', () => { shown = false; leftAt = performance.now(); float.classList.remove('is-on'); });
   });
 })();
+
+// ===========================
+// CASE STUDY — STORY LEAD WORD REVEAL
+// ===========================
+// Each block's opening sentence lights up word by word as it scrolls
+// through the middle of the screen (same feel as the homepage statement).
+(function () {
+  const leads = Array.from(document.querySelectorAll('.case-block-lead'));
+  if (!leads.length) return;
+  const sets = leads.map(el => ({ el, words: Array.from(el.querySelectorAll('.cw')) }));
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    sets.forEach(s => s.words.forEach(w => w.classList.add('on')));
+    return;
+  }
+  let ticking = false;
+  function update() {
+    ticking = false;
+    const vh = window.innerHeight;
+    sets.forEach(({ el, words }) => {
+      const r = el.getBoundingClientRect();
+      const start = vh * 0.85, end = vh * 0.4;
+      const p = Math.max(0, Math.min(1, (start - r.top) / (start - end)));
+      const n = Math.round(p * words.length);
+      words.forEach((w, i) => w.classList.toggle('on', i < n));
+    });
+  }
+  const kick = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+  window.addEventListener('scroll', kick, { passive: true });
+  window.addEventListener('resize', kick, { passive: true });
+  update();
+})();

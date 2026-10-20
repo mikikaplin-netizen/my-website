@@ -121,40 +121,98 @@
   background: #0b0b1c;
 }
 
-/* --- challenge / solution / results --- */
+/* --- challenge / solution / results ---
+   Each block: a giant word on a sticky side column (האתגר as an outline,
+   הפיצוח filled in brand cyan), the question under it; the opening sentence
+   as a large lead whose words light up as it scrolls through (case.js),
+   then the rest as body text. A hairline "path" joins the blocks. */
 .case-story .container {
   display: grid;
-  gap: clamp(48px, 7vh, 96px);
+  gap: clamp(72px, 12vh, 160px);
 }
 
 .case-block {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
-  column-gap: clamp(32px, 6vw, 96px);
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr);
+  column-gap: clamp(32px, 6vw, 110px);
   align-items: start;
 }
 
-.case-block .section-label { grid-column: 1; }
-
-.case-block-title {
-  grid-column: 1;
-  font-family: var(--font-display);
-  font-size: var(--subtitle-size);
-  line-height: 1.05;
-  color: var(--fg);
-  text-wrap: balance;
+.case-block-side {
+  position: sticky;
+  top: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
+.case-block-word {
+  font-family: var(--font-display);
+  font-size: clamp(3.4rem, 8.5vw, 8rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--fg);
+}
+
+.case-block--solution .case-block-word {
+  color: var(--accent);
+  -webkit-text-stroke: 0;
+}
+
+.case-block--results .case-block-word {
+  color: var(--accent-2);
+  -webkit-text-stroke: 0;
+}
+
+.case-block-q {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.case-block-body {
+  padding-top: clamp(8px, 2vw, 28px);
+  border-top: 1px solid var(--border);
+}
+
+.case-block-lead {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 2.8vw, 2.6rem);
+  line-height: 1.25;
+  text-wrap: balance;
+  margin-bottom: clamp(24px, 3vh, 36px);
+}
+
+/* word-by-word light-up (dim → full) */
+.case-block-lead .cw {
+  color: var(--fg);
+  opacity: 0.18;
+  transition: opacity 0.35s ease;
+}
+
+.case-block-lead .cw.on { opacity: 1; }
+
 .case-block-text {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  font-size: 1.15rem;
-  line-height: 1.75;
-  color: var(--text);
+  max-width: 640px;
+  font-size: 1.12rem;
+  line-height: 1.8;
+  color: var(--text-muted);
   text-wrap: pretty;
 }
 
 .case-block-text p + p { margin-top: 1em; }
+
+/* the path between the blocks: a short vertical line + arrow under the
+   challenge, pointing down to the solution */
+.case-block--challenge::after {
+  content: '↓';
+  position: absolute;
+  right: 0;
+  bottom: calc(clamp(72px, 12vh, 160px) * -0.62);
+  font-size: 1.4rem;
+  color: var(--accent);
+}
 
 /* --- client quote (light zone) --- */
 .case-quote figure { max-width: 820px; margin: 0 auto; text-align: center; }
@@ -195,8 +253,7 @@
 
 .case-next-text { display: flex; flex-direction: column; gap: 8px; }
 
-.case-next-thumb,
-.case-row-thumb {
+.case-next-thumb {
   height: auto;
   aspect-ratio: 1280 / 690;
   object-fit: cover;
@@ -204,9 +261,7 @@
 }
 
 .case-next-thumb { width: clamp(180px, 20vw, 280px); border-radius: var(--radius); }
-.case-row-thumb { width: clamp(110px, 11vw, 150px); border-radius: 10px; filter: saturate(0.7) brightness(0.85); }
-.case-row:hover .case-row-thumb,
-.case-next-link:hover .case-next-thumb { scale: 1.04; filter: none; }
+.case-next-link:hover .case-next-thumb { scale: 1.04; }
 
 .case-next-name {
   font-family: var(--font-display);
@@ -245,17 +300,55 @@
   color: var(--text-muted);
 }
 
-.case-others { list-style: none; margin: 0; padding: 0; }
+.case-others {
+  list-style: none;
+  padding: 0;
+  margin: 0 calc(50% - 50vw);   /* rows run edge to edge */
+}
 
 .case-row {
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   align-items: center;
   gap: clamp(16px, 3vw, 40px);
-  padding: clamp(18px, 2.6vh, 28px) 0;
-  border-bottom: 1px solid var(--border);
+  min-height: clamp(130px, 18vh, 190px);
+  padding: 24px 5vw;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  /* rows always sit on the dark image, whatever the page theme */
+  --fg: #fff;
+  --text-muted: rgba(255,255,255,0.7);
+  --border: rgba(255,255,255,0.18);
+  color: #fff;
 }
+
+/* the site itself as the row's background, toned down under a navy veil
+   that is heaviest behind the text (right) */
+.case-row-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+  filter: saturate(0.6);
+  transition: scale 1.2s var(--ease-out), filter 0.6s ease;
+}
+
+.case-row::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(270deg, rgba(16,16,36,0.94) 0%, rgba(16,16,36,0.8) 45%, rgba(16,16,36,0.55) 100%);
+  transition: opacity 0.6s ease;
+}
+
+.case-row:hover .case-row-bg { scale: 1.05; filter: none; }
+.case-row:hover::before { opacity: 0.8; }
 
 /* accent line drawing across the hovered row */
 .case-row::after {
@@ -264,7 +357,7 @@
   right: 0;
   bottom: -1px;
   width: 100%;
-  height: 1px;
+  height: 2px;
   background: var(--accent);
   transform: scaleX(0);
   transform-origin: right;
@@ -272,7 +365,6 @@
 }
 
 .case-row:hover::after { transform: scaleX(1); }
-
 
 .case-row-name {
   font-family: var(--font-display);
@@ -282,9 +374,9 @@
   transition: color 0.4s ease, translate 0.5s var(--ease-out);
 }
 
-.case-row:hover .case-row-name { color: var(--fg); translate: -10px 0; }
-.case-row-field { font-size: 0.9rem; color: var(--text-muted); }
-.case-row-arrow { width: 44px; height: 44px; font-size: 1.05rem; }
+.case-row:hover .case-row-name { color: #fff; translate: -10px 0; }
+.case-row-field { font-size: 0.95rem; color: var(--text-muted); }
+.case-row-arrow { width: 48px; height: 48px; font-size: 1.1rem; }
 
 /* the floating screen (position/tilt from case.js) */
 .case-float {
@@ -308,12 +400,12 @@
 .case-float img { width: 100%; height: 100%; object-fit: cover; }
 
 @media (max-width: 900px) {
-  .case-block { grid-template-columns: 1fr; }
-  .case-block-text { grid-column: 1; grid-row: auto; margin-top: 20px; }
   .case-float { display: none; }
-  .case-row { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .case-row { grid-template-columns: minmax(0, 1fr) auto; min-height: 120px; }
   .case-row .case-row-field { display: none; }
-  .case-row-thumb { width: 96px; }
+  .case-block { grid-template-columns: 1fr; }
+  .case-block-side { position: static; margin-bottom: 24px; }
+  .case-block--challenge::after { display: none; }
   .case-next-link { grid-template-columns: minmax(0, 1fr) auto; }
   .case-next-thumb { grid-column: 1 / -1; width: 100%; }
   .case-live { margin-inline-start: 0; }
@@ -322,7 +414,5 @@
 
 /* on the grey light zone, project names switch to brand navy (cyan on grey
    is unreadable, see CLAUDE.md "Page theme / color zones") */
-html.theme-light .case-next-name,
-html.theme-light .case-row-name { color: var(--fg); }
-html.theme-light .case-next-link:hover .case-next-name,
-html.theme-light .case-row:hover .case-row-name { color: var(--text-muted); }
+html.theme-light .case-next-name { color: var(--fg); }
+html.theme-light .case-next-link:hover .case-next-name { color: var(--text-muted); }

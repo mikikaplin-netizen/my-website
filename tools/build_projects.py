@@ -16,7 +16,7 @@ import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SCOPE_ALL = ("אפיון", "עיצוב", "פיתוח")
-CASE_V = 6  # bump when case.css / case.js change (cache-buster)
+CASE_V = 7  # bump when case.css / case.js change (cache-buster)
 
 PROJECTS = [
     {
@@ -27,8 +27,8 @@ PROJECTS = [
         "url": "https://www.shimony.com/he/",
         "scope": SCOPE_ALL,
         "video": "shimony",
-        "challenge": 'למשרד היה צורך באתר תדמית מודרני בקו עיצוב שתואם את השפה של הענף, ובצורך מיוחד להצגת כל סל שרותיו המקצועים.',
-        "solution": 'לאחר אפיון מעמיק יצרתי אתר דינאמי, עם אזור יעודי לכל שירותי המשרד, ובנוסף בלוג תוכן בשני שפות, שיציג את המשרד ואת שרותיו, בליגה של הגדולים.',
+        "challenge": 'למשרד היה צורך באתר תדמית מודרני בקו עיצוב שתואם את השפה של הענף, ובצורך מיוחד להצגת כל סל שירותיו המקצועיים.',
+        "solution": 'לאחר אפיון מעמיק יצרתי אתר דינאמי, עם אזור ייעודי לכל שירותי המשרד, ובנוסף בלוג תוכן בשתי שפות, שמציג את המשרד ואת שירותיו בליגה של הגדולים.',
         "results": "",
         "quote": None,
     },
@@ -41,7 +41,7 @@ PROJECTS = [
         "scope": SCOPE_ALL,
         "video": "tamar-baniel",
         "challenge": 'תמר מתמחה בעיצוב פנים ואדריכלות מספר שנים וכעת רוצה להציג נוכחות דיגיטלית, לשווק את הפרויקטים דרך האתר כדי להגיע לקהלי יעד איכותיים נוספים.',
-        "solution": 'הקו העיצובי שמלווה את האתר, מדגיש את הדיוק האופטימלי לצד הפונקציונליות בפרוייקטים של תמר, עם אזור הבלוג והפרוייקטים מקבלים קהלי לקוחות חדשים שכבר מתחברים למותג.',
+        "solution": 'הקו העיצובי שמלווה את האתר, מדגיש את הדיוק האופטימלי לצד הפונקציונליות בפרויקטים של תמר. ובזכות אזור הבלוג והפרויקטים, תמר פוגשת קהלי לקוחות חדשים שכבר מתחברים למותג.',
         "results": "",
         "quote": {
             "text": "מיכאל קפלין מצטיין בדיוק מקסימלי להבנת הלקוח וליצירת תדמית מושלמת! נכנסתי עכשיו לאתר שהוא בנה עבורי לעסק, והכל נראה כל כך מושלם! מהמם!",
@@ -58,7 +58,7 @@ PROJECTS = [
         "scope": SCOPE_ALL,
         "video": "ziskind",
         "challenge": 'עו״ד ישראל זיסקינד ביקש לייצר לעצמו נוכחות דיגיטלית שתשקף את הדמות המקצועית והמרשימה שבנה לאורך השנים. האתגר היה לאחד תחומי עיסוק משפטיים מגוונים, פלילי, אזרחי ומשפחה, לכדי אתר אחד שמסביר את ערכו בצורה ברורה, מבלי לוותר על תחושת אמינות, יוקרה ונגישות ללקוח הפוטנציאלי.',
-        "solution": 'פיתוח האתר התמקדנו בחוויית משתמש נקייה ומכובדת, עם שפה עיצובית אחידה וכתיבה שמדגישה את היתרון הייחודי של ישראל. שילבנו דגשים על הצלחותיו ועל כתבות מן העיתונות שממחישים את המוניטין והנוכחות הציבורית שלו, באופן שמעביר את המקצועיות והערכים המרכזיים. התוצאה היא אתר תדמית יוקרתי שמעניק לישראל כלי עוצמתי לביסוס אמון ראשוני מול לקוחות חדשים.',
+        "solution": 'בפיתוח האתר התמקדתי בחוויית משתמש נקייה ומכובדת, עם שפה עיצובית אחידה וכתיבה שמדגישה את היתרון הייחודי של ישראל. שילבתי דגשים על הצלחותיו ועל כתבות מן העיתונות שממחישות את המוניטין והנוכחות הציבורית שלו, באופן שמעביר את המקצועיות והערכים המרכזיים. התוצאה היא אתר תדמית יוקרתי שמעניק לישראל כלי עוצמתי לביסוס אמון ראשוני מול לקוחות חדשים.',
         "results": "",
         "quote": {
             "text": "האתר שמיכאל יצר לי, מאוד מקצועי, משפיע על המבקרים בו ויוצר רושם של עסק רציני ומוביל. ואני ממליץ.",
@@ -92,7 +92,7 @@ PROJECTS = [
         "scope": ("פיתוח",),
         "video": "element",
         "challenge": 'תהליך המכירה של המוצר נתקל בקושי אמיתי. המוצר מורכב משלושה רכיבים שנבחרים בנפרד, בסיס, תאורה ומשרביה, ועם עשרות דגמים בכל קטגוריה נוצר מספר עצום של שילובים שהלקוח לא הצליח לדמיין ולא יכול היה לבחון זה מול זה. התוצאה היתה בחירה מופשטת, מחיר לא שקוף ודרך ארוכה ומסורבלת מהתעניינות להזמנה.',
-        "solution": 'יצרתי לעסק אתר תדמית מרשים שמעניק לעסק נוכחות דיגיטלית שממצבת אותו כמותג רציני בתחום. בתוך האתר בניתי גם מערכת הדמיה ויזואלית שמאפשרת ללקוח להרכיב את התקרה שלו שלב אחר שלב ולראות את התוצאה בלייב, את חוויית המשתמש והאפיון של הממשק עיצבתי כך שהתהליך יהיה אינטואיטיבי ובחוויית גלישה חלקה ונקייה, הוספתי אופציית השוואה שמאפשרת לשמור כמה שילובים זה לצד זה ולבחון אותם במבט אחד, וכך התעניינות הופכת לרכישה ולהגברת מכירות.',
+        "solution": 'יצרתי לעסק אתר תדמית מרשים שמעניק לעסק נוכחות דיגיטלית שממצבת אותו כמותג רציני בתחום. בתוך האתר בניתי גם מערכת הדמיה ויזואלית שמאפשרת ללקוח להרכיב את התקרה שלו שלב אחר שלב ולראות את התוצאה בלייב.\n\nאת חוויית המשתמש והאפיון של הממשק עיצבתי כך שהתהליך יהיה אינטואיטיבי ובחוויית גלישה חלקה ונקייה. הוספתי אופציית השוואה שמאפשרת לשמור כמה שילובים זה לצד זה ולבחון אותם במבט אחד, וכך התעניינות הופכת לרכישה ולהגברת מכירות.',
         "results": "",
         "quote": None,
     },
@@ -110,12 +110,23 @@ def section(p, key, label, title):
     text = p[key].strip()
     if not text:
         return ""
-    paras = "".join(f"<p>{E(t.strip())}</p>" for t in text.split("\n\n") if t.strip())
+    paras = [t.strip() for t in text.split("\n\n") if t.strip()]
+    # the opening sentence becomes the large lead (word-by-word scroll reveal);
+    # everything after it stays body text
+    first, _, rest = paras[0].partition(". ")
+    lead = first if first.endswith(".") or not rest else first + "."
+    body = ([rest] if rest else []) + paras[1:]
+    words = " ".join(f'<span class="cw">{E(w)}</span>' for w in lead.split())
+    body_html = "".join(f"<p>{E(t)}</p>" for t in body)
     return f'''
-      <div class="case-block">
-        <p class="section-label">{label}</p>
-        <h2 class="case-block-title">{title}</h2>
-        <div class="case-block-text">{paras}</div>
+      <div class="case-block case-block--{key}">
+        <div class="case-block-side">
+          <span class="case-block-word">{label}</span>
+          <span class="case-block-q">{title}</span>
+        </div>
+        <div class="case-block-body">
+          <p class="case-block-lead">{words}</p>{f'<div class="case-block-text">{body_html}</div>' if body_html else ''}
+        </div>
       </div>'''
 
 
@@ -134,7 +145,7 @@ def page(p, i, chunks):
                 f'לאתר החי <span aria-hidden="true">↗</span></a>')
     url_label = domain(p["url"]) if p["url"] else ""
     story = (section(p, "challenge", "האתגר", "מה היה צריך לפצח")
-             + section(p, "solution", "הפיצוח", "איך פתרנו את זה")
+             + section(p, "solution", "הפיצוח", "איך פיצחתי את זה")
              + section(p, "results", "התוצאה", "מה זה הביא"))
     story_html = f'''
     <section class="case-story section">
@@ -158,7 +169,7 @@ def page(p, i, chunks):
     </section>'''
     others_html = "".join(
         f'<li><a class="case-row" href="projects/{q["slug"]}.html" data-poster="images/portfolio/{q["video"]}-poster.webp">'
-        f'<img class="case-row-thumb" src="images/portfolio/{q["video"]}-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" />'
+        f'<img class="case-row-bg" src="images/portfolio/{q["video"]}-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" />'
         f'<span class="case-row-name">{E(q["name"])}</span><span class="case-row-field">{E(q["field"])}</span>'
         f'<span class="case-row-arrow" aria-hidden="true">←</span></a></li>' for q in others)
 

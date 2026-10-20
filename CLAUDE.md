@@ -252,10 +252,13 @@ anchors like `#portfolio` go back to the homepage; `#contact` is rewritten to th
 and fills each page from the `PROJECTS` table in the script: hero (field label, giant name in
 `--font-display`, lead, "מה עשיתי" chips (אפיון/עיצוב/פיתוח; סילימנט = פיתוח only), "הלקוח" (what the
 client is, e.g. "משרד רואי חשבון"; no years anywhere: Michael), "לאתר החי ↗" button unless `url` is None: סילימנט has no button for now), the site's screen
-recording in a browser window (`case.js` plays it only on screen), optional האתגר / הפיצוח / התוצאה
-blocks (rendered only when their text is filled; Michael's existing texts live on mkaplin.com's
-project pages), the client's quote (light zone), then the next project as a giant text link and the rest as
-  text rows (no image tiles: Michael wanted it more special); on desktop the hovered project's screen
+recording in a browser window (`case.js` plays it only on screen), האתגר / הפיצוח / התוצאה blocks (texts from
+mkaplin.com's project pages, edited to Michael's singular voice: he works alone, never "we"); each block
+has a giant sticky side word (האתגר outlined via text-stroke, הפיצוח filled cyan, התוצאה green) with
+the question under it, the opening sentence as a large Anomalia lead lighting up word by word on scroll
+(`.cw`, case.js), then muted body text, the client's quote (light zone), then the next project as a text link with a screen thumbnail and the rest as
+  full-bleed rows whose background is the project's own screen under a navy veil (always dark text
+  colors, whatever the page theme); on desktop the hovered project's screen
   floats beside the cursor (`.case-float`, eased + velocity tilt in `case.js`), phones get round
   thumbnails in the rows. The recording window is capped at 1120px wide; next/other projects show a small screen
   thumbnail before hover too; names turn navy on the grey zone. Page-only styles

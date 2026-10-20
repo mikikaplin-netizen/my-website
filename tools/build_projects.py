@@ -16,7 +16,7 @@ import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SCOPE_ALL = ("אפיון", "עיצוב", "פיתוח")
-CASE_V = 7  # bump when case.css / case.js change (cache-buster)
+CASE_V = 9  # bump when case.css / case.js change (cache-buster)
 
 PROJECTS = [
     {
@@ -170,7 +170,7 @@ def page(p, i, chunks):
     others_html = "".join(
         f'<li><a class="case-row" href="projects/{q["slug"]}.html" data-poster="images/portfolio/{q["video"]}-poster.webp">'
         f'<img class="case-row-bg" src="images/portfolio/{q["video"]}-poster.webp" alt="" width="1280" height="690" loading="lazy" decoding="async" />'
-        f'<span class="case-row-name">{E(q["name"])}</span><span class="case-row-field">{E(q["field"])}</span>'
+        f'<span class="case-row-text"><span class="case-row-name">{E(q["name"])}</span><span class="case-row-field">{E(q["field"])}</span></span>'
         f'<span class="case-row-arrow" aria-hidden="true">←</span></a></li>' for q in others)
 
     title = f'{p["name"]} | קייס סטדי | מיכאל קאפלין'

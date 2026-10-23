@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>מעבדה: סרט אתרים</title>
+<style>
+@font-face { font-family: 'Polin'; src: url('../fonts/Polin-Regular.ttf') format('truetype'); font-weight: 100 599; font-display: swap; }
+@font-face { font-family: 'Anomalia'; src: url('../fonts/anomalia-bold-aaa.woff2') format('woff2'); font-weight: 600 1000; font-display: block; }
+:root { --bg: #101024; --paper: #DCDEE2; --accent: #64C1D2; --accent-2: #1CD31C; }
+* { box-sizing: border-box; }
+html, body { margin: 0; overflow-x: clip; }
+body { background: var(--bg); color: #fff; font-family: 'Polin', Arial, sans-serif; transition: background .6s ease, color .6s ease; }
+body.light { background: var(--paper); color: #101024; }
+.stage { position: relative; height: 100svh; min-height: 560px; overflow: clip; }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.bar { position: absolute; z-index: 2; top: 24px; inset-inline: 24px; display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: .85rem; }
+.bar b { color: var(--accent-2); font-weight: 600; }
+body.light .bar b { color: #101024; }
+.bar button { font: inherit; color: inherit; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; padding: 8px 16px; cursor: pointer; }
+body.light .bar button { background: rgba(16,16,36,.06); border-color: rgba(16,16,36,.18); }
+.note { padding: 48px 6vw 80px; max-width: 70ch; line-height: 1.8; color: rgba(255,255,255,.62); }
+body.light .note { color: #4A4C60; }
+</style>
+</head>
+<body>
+<section class="stage" aria-label="סרט אתרים">
+  <h1 class="sr-only">אין שני לרושם ראשוני.</h1>
+  <canvas id="ribbon" aria-hidden="true"></canvas>
+  <div class="bar">
+    <b>מעבדה · סרט האתרים</b>
+    <span><button id="theme" type="button">רקע אפור</button></span>
+  </div>
+</section>
+<p class="note">סרט אחד של מסכים מחמשת הפרויקטים, מתפתל ומסתובב בתלת־ממד וזורם כל הזמן. הוא עובר גם מאחורי הכותרת וגם לפניה, ומתחלף בנשימה איטית בין פס אלכסוני רחוק לבין סחרור קרוב. העכבר מזיז מעט את המצלמה.</p>
+
+<script type="module">
+import * as THREE from './vendor/three-0.169.0.module.min.js';
+
+const canvas = document.getElementById('ribbon');
+const stage = canvas.parentElement;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+
+// ---------- the ribbon: one long strip, bent along an animated path ----------
+const ATLAS_RATIO = 8000 / 410;   // atlas.webp width / height (10 screens with gaps)
+const SEG = 720;                  // segments along the strip
+const LEN = 36;                   // strip span along x (world units)
+let H = 1.7;                      // strip height (taller on phones)
+
+const geo = new THREE.BufferGeometry();
+const pos = new Float32Array((SEG + 1) * 2 * 3);
+const uv = new Float32Array((SEG + 1) * 2 * 2);
+const idx = [];
+for (let i = 0; i < SEG; i++) {
+  const a = i * 2, b = a + 1, c = a + 2, d = a + 3;
+  idx.push(a, c, b, b, c, d);
+}
+geo.setIndex(idx);
+geo.setAttribute('position', new THREE.BufferAttribute(pos, 3).setUsage(THREE.DynamicDrawUsage));
+geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2).setUsage(THREE.DynamicDrawUsage));
+
+const tex = new THREE.TextureLoader().load('ribbon/atlas.webp', () => { if (reduce) draw(3.2); });
+tex.colorSpace = THREE.SRGBColorSpace;
+tex.wrapS = THREE.RepeatWrapping;
+tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+// lit by how much each part faces the camera, so the twist reads as depth
+const ribbonMat = new THREE.ShaderMaterial({
+  uniforms: { map: { value: tex } },
+  side: THREE.DoubleSide,
+  vertexShader: `
+    varying vec2 vUv; varying vec3 vN; varying vec3 vV;
+    void main() {
+      vUv = uv;
+      vec4 mv = modelViewMatrix * vec4(position, 1.0);
+      vV = -mv.xyz; vN = normalMatrix * normal;
+      gl_Position = projectionMatrix * mv;
+    }`,
+  fragmentShader: `
+    uniform sampler2D map;
+    varying vec2 vUv; varying vec3 vN; varying vec3 vV;
+    void main() {
+      vec4 t = texture2D(map, vUv);
+      if (t.a < 0.5) discard;
+      float facing = abs(dot(normalize(vN), normalize(vV)));
+      gl_FragColor = vec4(t.rgb * (0.55 + 0.45 * facing), 1.0);
+      #include <colorspace_fragment>
+    }`
+});
+const ribbon = new THREE.Mesh(geo, ribbonMat);
+ribbon.frustumCulled = false;
+scene.add(ribbon);
+
+// ---------- the headline as a plane at z = 0, so the ribbon passes behind and in front ----------
+const textCanvas = document.createElement('canvas');
+textCanvas.width = 2400; textCanvas.height = 900;   // size before the texture is created (GPU storage is fixed)
+const tctx = textCanvas.getContext('2d');
+const textTex = new THREE.CanvasTexture(textCanvas);
+textTex.colorSpace = THREE.SRGBColorSpace;
+textTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+const textMat = new THREE.MeshBasicMaterial({ map: textTex, transparent: true, alphaTest: 0.04 });
+const textMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), textMat);
+textMesh.renderOrder = 1;
+scene.add(textMesh);
+
+let light = false;
+function paintText() {
+  const W = 2400, Hc = 900;
+  tctx.clearRect(0, 0, W, Hc);
+  tctx.fillStyle = light ? '#101024' : '#ffffff';
+  tctx.direction = 'rtl';
+  tctx.textBaseline = 'alphabetic';
+  tctx.font = '700 330px Anomalia, Polin, Arial';
+  tctx.textAlign = 'right'; tctx.fillText('אין שני', W - 160, 380);
+  tctx.textAlign = 'left';  tctx.fillText('לרושם ראשוני.', 120, 780);
+  textTex.needsUpdate = true;
+}
+
+// ---------- layout ----------
+let portrait = false;
+function resize() {
+  const w = stage.clientWidth, h = stage.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  portrait = w / h < 0.9;
+  H = portrait ? 2.6 : 1.7;
+  camera.position.set(0, 0, portrait ? 30 : 17);
+  camera.updateProjectionMatrix();
+  // text plane fills ~78% of the visible width
+  const visH = 2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+  const visW = visH * camera.aspect;
+  const tw = visW * (portrait ? 0.92 : 0.78);
+  textMesh.scale.set(tw, tw * 900 / 2400, 1);
+  if (reduce) draw(3.2);
+}
+
+// ---------- animation ----------
+const c = new Float32Array((SEG + 1) * 3);
+const T = new THREE.Vector3(), N0 = new THREE.Vector3(), B0 = new THREE.Vector3(), Wd = new THREE.Vector3();
+const UP = new THREE.Vector3(0, 1, 0);
+const ease = (k) => 1 - Math.pow(1 - k, 3);
+let flow = 0, last = 0;
+
+function bend(t, dt) {
+  // slow breathing between a far diagonal band (0) and a close sweep (1)
+  const b = 0.5 + 0.5 * Math.sin(t * 0.32 - 1.2);
+  const intro = reduce ? 1 : ease(Math.min(1, t / 2.4));
+  // centre line
+  for (let i = 0; i <= SEG; i++) {
+    const x = (i / SEG - 0.5) * LEN;
+    const y = (1 - b) * (-x * 0.16)                        // diagonal tilt when far
+            + (0.9 + 0.9 * b) * Math.sin(x * 0.26 + t * 0.55)
+            + 0.5 * Math.sin(x * 0.11 - t * 0.37);
+    const z = -2.5 + 8.5 * b * Math.sin(x * 0.2 + t * 0.42) * Math.exp(-(x * x) / 120)
+            + 1.1 * Math.sin(x * 0.47 + t * 0.8)
+            - (1 - intro) * 14;                            // flies in from the back
+    c[i * 3] = x; c[i * 3 + 1] = y * (portrait ? 1.6 : 1); c[i * 3 + 2] = z;
+  }
+  // strip edges + uv by arc length (screens keep their proportions however it bends)
+  flow += dt * (0.045 + (1 - intro) * 0.5);
+  let arc = 0;
+  for (let i = 0; i <= SEG; i++) {
+    const p = i * 3, a = Math.max(0, i - 1) * 3, n = Math.min(SEG, i + 1) * 3;
+    T.set(c[n] - c[a], c[n + 1] - c[a + 1], c[n + 2] - c[a + 2]).normalize();
+    if (i > 0) arc += Math.hypot(c[p] - c[p - 3], c[p + 1] - c[p - 2], c[p + 2] - c[p - 1]);
+    N0.copy(UP).addScaledVector(T, -T.dot(UP)).normalize();
+    B0.crossVectors(T, N0);
+    const x = c[p];
+    const th = 1.25 * Math.sin(x * 0.15 + t * 0.62) + b * 0.9 * Math.sin(x * 0.31 - t * 0.5);
+    Wd.copy(N0).multiplyScalar(Math.cos(th)).addScaledVector(B0, Math.sin(th)).multiplyScalar(H / 2);
+    const v = i * 6;
+    pos[v] = c[p] + Wd.x; pos[v + 1] = c[p + 1] + Wd.y; pos[v + 2] = c[p + 2] + Wd.z;
+    pos[v + 3] = c[p] - Wd.x; pos[v + 4] = c[p + 1] - Wd.y; pos[v + 5] = c[p + 2] - Wd.z;
+    const u = arc / (H * ATLAS_RATIO) - flow;
+    const q = i * 4;
+    uv[q] = u; uv[q + 1] = 1; uv[q + 2] = u; uv[q + 3] = 0;
+  }
+  geo.attributes.position.needsUpdate = true;
+  geo.attributes.uv.needsUpdate = true;
+  geo.computeVertexNormals();
+}
+
+let mx = 0, my = 0;
+addEventListener('pointermove', (e) => {
+  if (e.pointerType !== 'mouse') return;
+  mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5;
+});
+
+function draw(t, dt = 0) {
+  bend(t, dt);
+  camera.position.x += (mx * 1.6 - camera.position.x) * 0.06;
+  camera.position.y += (-my * 1.0 - camera.position.y) * 0.06;
+  camera.lookAt(0, 0, 0);
+  renderer.render(scene, camera);
+}
+
+let running = false, raf = 0, t0 = 0, visible = true;
+function loop(now) {
+  const t = (now - t0) / 1000;
+  const dt = Math.min(0.05, t - last); last = t;
+  draw(t, dt);
+  raf = requestAnimationFrame(loop);
+}
+function start() { if (running || reduce || !visible || document.hidden) return; running = true; t0 = performance.now() - last * 1000; raf = requestAnimationFrame(loop); }
+function stop() { running = false; cancelAnimationFrame(raf); }
+new IntersectionObserver(([e]) => { visible = e.isIntersecting; visible ? start() : stop(); }).observe(stage);
+document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+
+document.getElementById('theme').addEventListener('click', (e) => {
+  light = !light;
+  document.body.classList.toggle('light', light);
+  e.currentTarget.textContent = light ? 'רקע כהה' : 'רקע אפור';
+  paintText();
+  if (!running) draw(last || 3.2);
+});
+
+addEventListener('resize', resize);
+await document.fonts.load('700 100px Anomalia');
+paintText();
+resize();
+start();
+</script>
+</body>
+</html>

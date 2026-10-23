@@ -55,7 +55,11 @@ visually, prefer taking a Playwright screenshot of `index.html` over describing 
   each primary + secondary on navy and on the grey page; `lab/hero-loop.html` — five always-on looping
   hero ideas with an intro burst (galaxy orbit, tunnel, gyroscope rings, big wheel, flip board),
   subtler 6px corners and depth blur on far screens (Michael: no scroll-driven motion, wow from the
-  first second); `lab/hero-ar.html` — Michael's "AR/VR digital studio" concept: a holographic hand
+  first second); `lab/ribbon.html` — after a Three.js reel Michael sent: one long ribbon of project screens
+  (`lab/ribbon/atlas.webp`, 10 crisp screens in one strip) bent along an animated path, twisting, always flowing,
+  breathing between a far diagonal band and a close sweep; the headline "אין שני / לרושם ראשוני." is a plane at
+  z = 0 so the ribbon passes behind and in front of it; dark/grey toggle; Three.js vendored in `lab/vendor/`
+  (no CDN); `lab/hero-ar.html` — Michael's "AR/VR digital studio" concept: a holographic hand
   swipes every ~4s, the chosen site opens big as a semi-transparent scanlined hologram (playing its
   recording, HUD label 0X/05 + name), the rest recede blurred by distance; A = wheel behind him,
   B = deep-space row pushed aside one by one

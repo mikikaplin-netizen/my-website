@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Language
+
+Always reply to Michael in Hebrew (all chat messages and summaries). Code, commit messages and
+code comments stay in English.
+
 ## What this is
 
 A single-page Hebrew (RTL) personal landing site for Michael Kaplin (מיכאל קאפלין), a freelance
